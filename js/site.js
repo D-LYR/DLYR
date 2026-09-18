@@ -349,6 +349,13 @@
       productId: '76933',
       codes: '162309,162310,162311',
       cats: '162309,162310,162311'
+    },
+    'soiree-decouverte': {
+      productId: '77464',
+      wId: '6155',
+      codes: '180706',
+      cats: '180706',
+      grouptickets: '180706'
     }
   };
 
@@ -372,7 +379,8 @@
   }
 
   function currentProduct() {
-    var slug = (location.pathname.split('/').pop() || '').replace(/\.html?$/i, '');
+    var slug = document.body.getAttribute('data-game') ||
+               (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
     return SMEETZ_PRODUCTS[slug] || null;
   }
 
@@ -380,17 +388,18 @@
     smeetzLoad();
     if (!prod) return;
     var opts = {
-      productId: prod.productId,
       lightbox: true,
       listView: false,
       gId: SMEETZ_GID
     };
+    if (prod.productId) opts.productId = prod.productId;
     if (prod.wId) opts.wId = prod.wId;
     if (prod.widgetId) opts.wId = prod.widgetId;
     if (prod.cats) opts.cats = prod.cats;
     if (prod.codes) opts.codes = prod.codes;
     if (prod.grouptickets || prod.cats) opts.grouptickets = prod.grouptickets || prod.cats;
     if (prod.listView !== undefined) opts.listView = prod.listView;
+    opts.lang = document.documentElement.lang || 'fr';
 
     window._smtz('openwidget', 1 * new Date(), opts);
   }
