@@ -15,7 +15,7 @@
 
   /* Réservation : sur une fiche jeu, ouvre le widget Smeetz (#reserver) ;
      partout ailleurs, renvoie vers la page Expériences VR. */
-  const isGamePage = /jeu-[a-z-]+\.html?$/i.test(location.pathname);
+  const isGamePage = /(?:jeu-[a-z-]+|soiree-decouverte)\.html?$/i.test(location.pathname);
   const BOOK_HREF = isGamePage ? '#reserver' : 'catalogue.html';
 
   const ICONS = {
