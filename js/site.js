@@ -15,8 +15,15 @@
 
   /* Réservation : sur une fiche jeu, ouvre le widget Smeetz (#reserver) ;
      partout ailleurs, renvoie vers la page Expériences VR. */
-  const isGamePage = /(?:jeu-[a-z-]+|soiree-decouverte)\.html?$/i.test(location.pathname);
-  const BOOK_HREF = isGamePage ? '#reserver' : 'catalogue.html';
+  function isGamePage() {
+    var b = document.body;
+    if (b && (b.dataset.page === 'jeux' || b.getAttribute('data-game'))) return true;
+    return /(?:jeu-[a-z-]+|soiree-decouverte)(?:\.html?)?$/i.test(location.pathname);
+  }
+  function getBookHref() {
+    return isGamePage() ? '#reserver' : 'catalogue.html';
+  }
+  const BOOK_HREF = getBookHref();
 
   const ICONS = {
     tiktok: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M16.5 3c.3 2.1 1.6 3.6 3.6 3.8v2.4c-1.3.1-2.5-.3-3.6-1v5.8a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.5a3.2 3.2 0 1 0 2.3 3V3h2.5z"/></svg>',
@@ -49,6 +56,7 @@
     const body = document.body;
     const current = body.dataset.page || '';
     const onPaper = body.dataset.nav === 'paper';
+    const bookHref = getBookHref();
     const links = PAGES.map(p =>
       `<a href="${p.href}"${p.key === current ? ' aria-current="page"' : ''}>${p.label}</a>`
     ).join('');
@@ -61,7 +69,7 @@
         <nav class="nav__links">${links}</nav>
         <div class="nav__cta">
           <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
-          <a class="btn btn--sm btn--cta" href="${BOOK_HREF}">Réserver</a>
+          <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
           <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
         </div>
         <button class="nav__burger" aria-label="Menu" aria-expanded="false">
@@ -89,7 +97,7 @@
       ${PAGES.map(p => `<a href="${p.href}"${p.key === current ? ' aria-current="page"' : ''}>${p.label}</a>`).join('')}
       <div class="drawer__cta">
         <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
-        <a class="btn btn--sm btn--cta" href="${BOOK_HREF}">Réserver</a>
+        <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
         <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
       </div>`;
     body.appendChild(drawer);
@@ -359,6 +367,17 @@
     }
   };
 
+  // Permet l'accès direct aux produits avec ou sans préfixe 'jeu-'
+  Object.keys(SMEETZ_PRODUCTS).forEach(function (k) {
+    if (k.indexOf('jeu-') === 0) {
+      var shortKey = k.replace(/^jeu-/, '');
+      if (!SMEETZ_PRODUCTS[shortKey]) SMEETZ_PRODUCTS[shortKey] = SMEETZ_PRODUCTS[k];
+    } else {
+      var longKey = 'jeu-' + k;
+      if (!SMEETZ_PRODUCTS[longKey]) SMEETZ_PRODUCTS[longKey] = SMEETZ_PRODUCTS[k];
+    }
+  });
+
   function smeetzLoad() {
     if (window._smtz) return;
     var w = window, d = document;
@@ -379,9 +398,14 @@
   }
 
   function currentProduct() {
-    var slug = document.body.getAttribute('data-game') ||
-               (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
-    return SMEETZ_PRODUCTS[slug] || null;
+    var raw = (document.body && document.body.getAttribute('data-game')) ||
+              (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
+    var slug = (raw || '').trim();
+    if (!slug) return null;
+    return SMEETZ_PRODUCTS[slug] ||
+           SMEETZ_PRODUCTS['jeu-' + slug] ||
+           SMEETZ_PRODUCTS[slug.replace(/^jeu-/, '')] ||
+           null;
   }
 
   function smeetzOpen(prod) {
