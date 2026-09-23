@@ -1,6 +1,6 @@
 # D'LYR — Site vitrine
 
-Site statique du centre de loisirs VR D'LYR (Colombes) : jeux VR free-roaming, fléchettes connectées, évènements, bar & snack.
+Site statique du centre de loisir VR D'LYR (Colombes) : jeux VR free-roaming, fléchettes connectées, évènements, bar & snack.
 
 ## Structure
 
