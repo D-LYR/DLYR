@@ -348,3 +348,54 @@ button.smtz-w *,
   }
 }
 
+/* ===== SOLD OUT — Soirée Découverte ===== */
+.soiree-card--soldout {
+  pointer-events: auto;
+}
+.soiree-card--soldout::after {
+  content: "COMPLET";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  background: #e8c72a;
+  color: #1c3024;
+  font-family: var(--f-display);
+  font-weight: 900;
+  font-size: clamp(32px, 4.5vw, 54px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 14px 0;
+  box-shadow: 0 6px 30px rgba(0,0,0,.5);
+  z-index: 10;
+  pointer-events: none;
+}
+html[lang="en"] .soiree-card--soldout::after {
+  content: "SOLD OUT";
+}
+.soiree-card--soldout .soiree-card__media img {
+  filter: brightness(.5) saturate(.5);
+}
+.btn--soldout {
+  background: rgba(255,255,255,.12) !important;
+  color: rgba(232,238,221,.55) !important;
+  border-color: rgba(232,238,221,.2) !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  box-shadow: none !important;
+}
+.soiree-card__upcoming {
+  margin-top: clamp(-32px, -2.6vw, -18px);
+  margin-bottom: clamp(24px, 2.5vw, 34px);
+  font-family: var(--f-display);
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-weight: 800;
+  color: #1c3024;
+  background: #e8c72a;
+  padding: 10px 18px;
+  border-radius: 10px;
+  line-height: 1.35;
+  display: inline-block;
+}
