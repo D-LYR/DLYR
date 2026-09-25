@@ -5,7 +5,7 @@
 .afeat__media{ position:relative; }
 .afeat__img{ border-radius:var(--r-lg); }
 .afeat__img--main{ aspect-ratio:4/3.4; }
-.afeat__img--sub{ position:absolute; width:46%; aspect-ratio:1/1; right:-6%; bottom:-10%; border:8px solid var(--ink); box-shadow:var(--shadow); }
+.afeat__img--sub{ position:absolute; width:42%; aspect-ratio:3/4; aspect-ratio:755/1024; right:-5%; bottom:-12%; border:8px solid var(--ink); box-shadow:var(--shadow); }
 .bg-paper .afeat__img--sub{ border-color:var(--paper); }
 .afeat__deco{ top:-22px; left:-14px; }
 .afeat__body{ display:flex; flex-direction:column; gap:22px; align-items:flex-start; }
