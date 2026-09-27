@@ -1,4 +1,4 @@
-﻿/* D'LYR — Données structurées JSON-LD (SEO). Injectées côté client sur toutes les pages. */
+/* D'LYR — Données structurées JSON-LD (SEO). Injectées côté client sur toutes les pages. */
 (function () {
   function add(obj) {
     var s = document.createElement('script');
@@ -22,7 +22,7 @@
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "11:00", "closes": "22:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "23:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "21:30" }
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "20:00" }
     ],
     "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "ratingCount": "121" }
   };

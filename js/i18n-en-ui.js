@@ -35,7 +35,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   /* ---------- Pied de page ---------- */
   "Contactez-nous": "Contact us",
   "Ouvert 7j/7 · Lun–Ven 11h–22h30": "Open daily · Mon–Fri 11:00–22:30",
-  "Samedi 10h–23h · Dimanche 10h–21h30": "Saturday 10:00–23:00 · Sunday 10:00–21:30",
+  "Samedi 10h–23h · Dimanche 10h–20h": "Saturday 10:00–23:00 · Sunday 10:00–20:00",
   "Activités": "Activities",
   "Laissez-nous un avis ⭐": "Leave us a review ⭐",
   "Jeux VR": "VR Games",
@@ -70,7 +70,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   /* ---------- Où nous trouver ---------- */
   "Où nous trouver ?": "Where to find us",
   "Horaires d'ouverture": "Opening hours",
-  "7j/7 · Lun–Ven 11h–22h30 · Sam. 10h–23h · Dim. 10h–21h30": "Open daily · Mon–Fri 11:00–22:30 · Sat 10:00–23:00 · Sun 10:00–21:30",
+  "7j/7 · Lun–Ven 11h–22h30 · Sam. 10h–23h · Dim. 10h–20h": "Open daily · Mon–Fri 11:00–22:30 · Sat 10:00–23:00 · Sun 10:00–20:00",
   "Comment s'y rendre ?": "How to get here",
   "En métro :": "By metro:",
   "Ligne T2 — arrêt Charlebourg, à 5 min à pied.": "Line T2 — Charlebourg stop, a 5-minute walk away.",

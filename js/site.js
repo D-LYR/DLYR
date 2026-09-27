@@ -128,7 +128,7 @@
           <div class="footer__contact">
             <h4>Contactez-nous</h4>
             <p>${ICONS.pin}<span>1 Bd Charles de Gaulle,<br>92700 Colombes – Hall A - Rez de Jardin</span></p>
-            <p>${ICONS.clock}<span>Ouvert 7j/7 · Lun–Ven 11h–22h30<br>Samedi 10h–23h · Dimanche 10h–21h30</span></p>
+            <p>${ICONS.clock}<span>Ouvert 7j/7 · Lun–Ven 11h–22h30<br>Samedi 10h–23h · Dimanche 10h–20h</span></p>
             <p>${ICONS.phone}<span><a href="tel:+33147848884">01 47 84 88 84</a></span></p>
             <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg><a href="mailto:contact@dlyr-vr.com" style="text-decoration:underline">contact@dlyr-vr.com</a></p>
             <p><a href="https://g.page/r/CbReluTUYyljEBM/review" target="_blank" rel="noopener" style="text-decoration:underline;font-weight:bold;color:var(--lime)">Laissez-nous un avis ⭐</a></p>
@@ -566,7 +566,7 @@
           <div class="pmaps__card">
             <h3 class="h3">Horaires d'ouverture</h3>
             <p class="pmaps__line">${ICONS.pin} 1 Bd Charles de Gaulle, 92700 Colombes – Hall A - Rez de Jardin</p>
-            <p class="pmaps__line">${ICONS.clock} 7j/7 · Lun–Ven 11h–22h30 · Sam. 10h–23h · Dim. 10h–21h30</p>
+            <p class="pmaps__line">${ICONS.clock} 7j/7 · Lun–Ven 11h–22h30 · Sam. 10h–23h · Dim. 10h–20h</p>
             <hr class="pmaps__rule">
             <h3 class="h3">Comment s'y rendre ?</h3>
             <div class="pmaps__how">
