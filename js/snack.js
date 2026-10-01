@@ -38,7 +38,12 @@
     ],
     "alcool": [
       { n: "Bière pression", d: "25 cl", p: "4,20€" },
-      { n: "Bière pression", d: "50 cl", p: "8€" }
+      { n: "Bière pression", d: "50 cl", p: "8€" },
+      { n: "Chardonnay Grand Ardèche Louis Latour", d: "Vin blanc · Verre 12,5 cl", p: "7€" },
+      { n: "Chardonnay Grand Ardèche Louis Latour", d: "Vin blanc · Bouteille 75 cl", p: "33€" },
+      { n: "Sancerre Les Demoiselles, Domaine Bernard Fleuriet et Fils", d: "Vin rouge · Verre 12,5 cl", p: "8,50€" },
+      { n: "Sancerre Les Demoiselles, Domaine Bernard Fleuriet et Fils", d: "Vin rouge · Bouteille 75 cl", p: "42€" },
+      { n: "Gremillet Blanc de Noirs Brut", d: "Champagne · Bouteille 75 cl", p: "65€" }
     ],
     "snack": [
       { n: "Bounty", d: "57g", p: "2,80€" },
@@ -92,7 +97,12 @@
     ],
     "alcool": [
       { n: "Draft Beer", d: "25 cl", p: "€4.20" },
-      { n: "Draft Beer", d: "50 cl", p: "€8" }
+      { n: "Draft Beer", d: "50 cl", p: "€8" },
+      { n: "Chardonnay Grand Ardèche Louis Latour", d: "White wine · Glass 12.5 cl", p: "€7" },
+      { n: "Chardonnay Grand Ardèche Louis Latour", d: "White wine · Bottle 75 cl", p: "€33" },
+      { n: "Sancerre Les Demoiselles, Domaine Bernard Fleuriet et Fils", d: "Red wine · Glass 12.5 cl", p: "€8.50" },
+      { n: "Sancerre Les Demoiselles, Domaine Bernard Fleuriet et Fils", d: "Red wine · Bottle 75 cl", p: "€42" },
+      { n: "Gremillet Blanc de Noirs Brut", d: "Champagne · Bottle 75 cl", p: "€65" }
     ],
     "snack": [
       { n: "Bounty", d: "57g", p: "€2.80" },

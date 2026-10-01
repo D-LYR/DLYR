@@ -64,5 +64,23 @@
   const sSel = document.querySelector('[data-sort]');
   if (sSel) sSel.addEventListener('change', e => { state.sort = e.target.value; apply(); });
 
+  // Barre de filtres collante : fond visible seulement une fois « collée » sous la nav
+  const bar = document.querySelector('[data-cat-bar]');
+  if (bar) {
+    const onScroll = () => {
+      const top = parseFloat(getComputedStyle(bar).top) || 0;
+      bar.classList.toggle('is-stuck', bar.getBoundingClientRect().top <= top + 1 && window.scrollY > 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
+  // Changer de filtre une fois descendu : remonter au début de la grille
+  filtersEl.addEventListener('click', e => {
+    if (!e.target.closest('.cat__chip') || !bar || !bar.classList.contains('is-stuck')) return;
+    const y = gridEl.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - parseFloat(getComputedStyle(bar).top) - 16;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  });
+
   apply();
 })();

@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    D'LYR — Accueil : interactions
    ============================================================ */
 (function () {
@@ -156,6 +156,103 @@
     render();
   }
 
+  /* ---------- Avis Google (section « Note moyenne ») ----------
+     Copier ici les avis de la fiche Google D'LYR :
+       { n: 'Prénom N.', d: 'Visité en septembre 2026', s: 5, t: "Texte de l'avis" }
+     Tant que la liste est vide, le bloc d'avis reste masqué sur le site en ligne ;
+     en local (file:// ou localhost) des cartes d'exemple montrent la mise en page. */
+  const GOOGLE_REVIEWS = [
+    { n: 'Katia BERNARDINI', d: 'Visité en septembre 2026', s: 5, t: "Très bonne expérience de VR entre collègues.\nCadre acceuillant et atypique pour passer de bons moments." },
+    { n: 'Clara Le Corre', d: 'Visité en septembre 2026', s: 5, t: "Expérience validée chez D’lyr, nous avons apprécié la diversité des modes proposés, on a choisi Titanic, l’immersion a dépassé mes attentes !\nGros plus sur l’espace accueil / bar qui fait une forte impression & donne envie de s’attarder boire un verre :)\nOn reviendra tester d’autres modes entre amis!!" },
+    { n: 'Vincent Dussard', d: 'Visité en septembre 2026', s: 5, t: "Super expérience dès l'accueil ! À notre arrivée on a été reçu par une équipe au top, clairement passionnée! L'entrée et la zone d'attente sont magnifiques et super confortable, ça change clairement du standing des autres du genre (escape games etc)\nEt l'expérience en elle même est super immersive, on a eu l'occasion de tester deux jeux; un escape game intelligent et bien adapté à la VR et mon préféré, l'immersif du Titanic, un vrai voyage dans le temps!\n\nOn a hâte d'entendre l'avancé du projet avec les nouveaux jeux et les futurs événements !" },
+    { n: 'Yann', d: 'Visité en septembre 2026', s: 5, t: "Super expérience de réalité virtuelle, nous sommes venus entre amis et avons passé un excellent moment.\nDifférents jeux possibles, il y en a pour tous les goûts !\nL’accueil est au top avec le sourire et des explications claires.\nOn passe un excellent moment, un espace parfait également je pense pour organiser un team building." },
+    { n: 'Margaux Combes', d: 'Visité en septembre 2026', s: 5, t: "L'immersion en réalité virtuelle est tout simplement bluffante et l'espace est vraiment impressionnant. L'équipe est accueillante, passionnée et prend le temps de bien tout expliquer avant de se lancer. Vous pouvez y aller les yeux fermés. Je recommande à 100 % !" },
+    { n: 'Oscar', d: 'Visité en septembre 2026', s: 5, t: "Super expérience, je recommande accueil chaleureux, bonne ambiance, très intuitif à prendre en main, je vous conseille fortement l’expérience Harbor Siege en amis ou entre collègues c’est très fun 😂" },
+  ];
+
+  const isEN = document.documentElement.lang === 'en';
+  const GREV_SAMPLE = Array.from({ length: 5 }, (_, i) => ({
+    n: 'Exemple ' + (i + 1), d: 'Aperçu local', s: 5,
+    t: i % 2
+      ? "Exemple d'avis court pour visualiser la mise en page."
+      : "Exemple d'avis plus long : ce texte sera remplacé par un vrai avis copié depuis la fiche Google de D'LYR. Il permet de vérifier le rendu des cartes, la coupure du texte après quelques lignes et le bouton pour lire la suite de l'avis."
+  }));
+  const GREV_COLORS = ['#43744c', '#55703a', '#8a6d1f', '#2f5d62', '#7a4b2a'];
+  const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+
+  function googleReviews() {
+    const root = document.querySelector('[data-greviews]');
+    if (!root) return;
+    const preview = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+    const list = GOOGLE_REVIEWS.length ? GOOGLE_REVIEWS : (preview ? GREV_SAMPLE : []);
+    if (!list.length) return;
+
+    root.hidden = false;
+
+    const track = root.querySelector('[data-grev-track]');
+    const dots = root.querySelector('[data-grev-dots]');
+    const moreLbl = isEN ? 'Read more' : 'Lire la suite';
+    const lessLbl = isEN ? 'Show less' : 'Réduire';
+    track.innerHTML = list.map((r, i) => {
+      const s = Math.max(1, Math.min(5, r.s || 5));
+      return `
+      <article class="gcard">
+        <div class="gcard__inner">
+          <header class="gcard__top">
+            <span class="gcard__av" style="background:${GREV_COLORS[i % GREV_COLORS.length]}">${esc(r.n.trim()[0] || '?')}</span>
+            <span class="gcard__who"><span class="gcard__name">${esc(r.n)}</span>${r.d ? `<span class="gcard__date">${esc(r.d)}</span>` : ''}</span>
+          </header>
+          <div class="gcard__stars" role="img" aria-label="${s} ${isEN ? 'out of 5 stars' : 'étoiles sur 5'}">${'★'.repeat(s)}<span>${'★'.repeat(5 - s)}</span></div>
+          <p class="gcard__text">${esc(r.t)}</p>
+          <button type="button" class="gcard__more" hidden>${moreLbl}</button>
+        </div>
+      </article>`;
+    }).join('');
+
+    // « Lire la suite » uniquement si le texte est coupé
+    function checkClamp() {
+      track.querySelectorAll('.gcard').forEach(card => {
+        const p = card.querySelector('.gcard__text'), b = card.querySelector('.gcard__more');
+        if (card.classList.contains('is-open')) return;
+        b.hidden = p.scrollHeight <= p.clientHeight + 2;
+      });
+    }
+    track.addEventListener('click', e => {
+      const b = e.target.closest('.gcard__more');
+      if (!b) return;
+      const open = b.closest('.gcard').classList.toggle('is-open');
+      b.textContent = open ? lessLbl : moreLbl;
+    });
+
+    function perView() { return window.innerWidth <= 720 ? 1 : window.innerWidth <= 980 ? 2 : 3; }
+    let idx = 0;
+    function maxIdx() { return Math.max(0, list.length - perView()); }
+    function render() {
+      const pv = perView();
+      track.querySelectorAll('.gcard').forEach(c => c.style.flexBasis = (100 / pv) + '%');
+      idx = Math.min(idx, maxIdx());
+      track.style.transform = `translateX(-${idx * (100 / pv)}%)`;
+      dots.innerHTML = Array.from({ length: maxIdx() + 1 }, (_, i) =>
+        `<button type="button"${i === idx ? ' class="on"' : ''} aria-label="Page ${i + 1}"></button>`).join('');
+      dots.querySelectorAll('button').forEach((b, k) => b.addEventListener('click', () => { idx = k; render(); }));
+      root.querySelector('[data-grev-prev]').disabled = idx === 0;
+      root.querySelector('[data-grev-next]').disabled = idx === maxIdx();
+      // Peu d'avis : cartes centrées, sans flèches ni points
+      const few = list.length <= pv;
+      track.classList.toggle('is-few', few);
+      root.querySelector('.greviews__foot').hidden = few;
+      checkClamp();
+    }
+    const next = () => { idx = Math.min(idx + 1, maxIdx()); render(); };
+    const prev = () => { idx = Math.max(idx - 1, 0); render(); };
+    root.querySelector('[data-grev-next]').addEventListener('click', next);
+    root.querySelector('[data-grev-prev]').addEventListener('click', prev);
+    if (window.DLYR_swipe) window.DLYR_swipe(root.querySelector('.greviews__viewport'), { left: next, right: prev });
+    window.addEventListener('resize', render);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(checkClamp);
+    render();
+  }
+
   /* ---------- Compteurs animés ---------- */
   function counters() {
     const els = document.querySelectorAll('[data-count]');
@@ -179,6 +276,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); counters();
+    icons(); posters(); reviews(); googleReviews(); counters();
   });
 })();

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -30,7 +30,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../uploads/brand/apple-touch-icon.png">
 <link rel="manifest" href="../site.webmanifest">
 </head>
-<body data-page="catalogue" data-nav="paper">
+<body data-page="catalogue" data-nav="dark">
 
   <!-- Horizontal promo banner below navigation (informational, non-clickable) -->
   <aside class="promo-bar-hz" aria-label="Special offer">
@@ -76,32 +76,17 @@
     </div>
   </aside>
 
-<!-- ===== PAGE HERO ===== -->
-<section class="phero">
-  <div class="wrap phero__grid">
-    <div class="reveal">
-      <h1 class="phero__title">Expériences</h1>
-      <p class="phero__lead">Des expériences immersives en réalité virtuelle. Action, aventure, escape game, quiz, culturel entre amis ou en famille : trouvez le monde qui vous fera vibrer.</p>
-      <div class="phero__cue">
-        <span class="btn-arrow btn-arrow--lime" data-arrow></span>
-        <span style="font-family:var(--f-btn);font-size:clamp(18px,1.6vw,24px)">Explorez nos mondes</span>
-      </div>
-    </div>
-    <div class="phero__deco reveal" data-d="1">
-      <div class="ph"><img class="ph__img" loading="lazy" src="../uploads/experiences/paradise-expedition/Paradise Expedition sans Titre.png" alt="Paradise Expedition — jeu VR chez D'LYR"></div>
-      <div class="ph"><img class="ph__img" loading="lazy" src="../uploads/experiences/brain-arena/Personnes dans arene.png" alt="Personnes en immersion VR chez D'LYR"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== CATALOGUE ===== -->
-<section class="section bg-ink cat" id="catalogue-liste">
+<!-- ===== CATALOGUE (directly below the nav) ===== -->
+<section class="section bg-ink cat cat--top" id="catalogue-liste">
   <div class="wrap">
-    <div class="cat__bar reveal">
+    <div class="cat__head">
+      <h1 class="cat__title">Expériences</h1>
+      <p class="cat__count" data-count></p>
+    </div>
+    <div class="cat__bar" data-cat-bar>
       <div class="cat__filters" data-genre-filters></div>
     </div>
 
-    <p class="cat__count" data-count></p>
     <div class="cat__grid" data-grid></div>
     <p class="cat__empty" data-empty hidden>Aucune expérience ne correspond à ces filtres.</p>
   </div>
