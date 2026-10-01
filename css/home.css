@@ -5,13 +5,13 @@
 
 /* ---------- HERO ---------- */
 .hero{
-  min-height:100svh; background:var(--ink); position:relative; overflow:hidden;
+  min-height:clamp(540px, 72vh, 780px); background:var(--ink); position:relative; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
   padding-top:88px;
-  padding-bottom:clamp(40px,6vh,72px);
+  padding-bottom:clamp(36px,5vh,56px);
 }
 .hero__bg{ position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
-.hero__photo{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block; animation:none!important; transform:none!important; }
+.hero__photo{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 42%; display:block; animation:none!important; transform:none!important; }
 .visually-hidden{ position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 .hero__veil{
   position:absolute; inset:0;
@@ -360,8 +360,8 @@
   .pinfo__meta{ justify-content:center; }
   .pnav{ width:44px; height:44px; }
   .intro__title{ white-space:normal; }
-  .hero{ min-height:clamp(520px, 85vh, 720px); padding-bottom:clamp(48px,8vh,80px); }
-  .hero__photo{ object-fit:cover; object-position:50% 25%; transform:none!important; }
+  .hero{ min-height:clamp(480px, 75vh, 620px); padding-bottom:clamp(32px,5vh,48px); }
+  .hero__photo{ object-fit:cover; object-position:50% 36%; transform:none!important; }
   .hero__scroll{ display:none; }
   .hero__intro{ font-size:16px; padding:16px 18px; }
   .hero__logo{ max-width:140px; }
