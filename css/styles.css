@@ -196,10 +196,10 @@ ul {
   pointer-events: none;
   z-index: 0;
   background:
-    url("../uploads/home/bois-rond-1.png") var(--b1x, -4%) var(--b1y, -6%) / var(--b1s, 340px) no-repeat,
-    url("../uploads/home/bois-rond-2.png") var(--b2x, 104%) var(--b2y, 108%) / var(--b2s, 480px) no-repeat,
-    url("../uploads/home/bois-rond-2.png") var(--b3x, 55%) var(--b3y, -12%) / var(--b3s, 220px) no-repeat,
-    url("../uploads/home/bois-rond-1.png") var(--b4x, 15%) var(--b4y, 112%) / var(--b4s, 260px) no-repeat;
+    url("../uploads/decor/bois-rond-1.png") var(--b1x, -4%) var(--b1y, -6%) / var(--b1s, 340px) no-repeat,
+    url("../uploads/decor/bois-rond-2.png") var(--b2x, 104%) var(--b2y, 108%) / var(--b2s, 480px) no-repeat,
+    url("../uploads/decor/bois-rond-2.png") var(--b3x, 55%) var(--b3y, -12%) / var(--b3s, 220px) no-repeat,
+    url("../uploads/decor/bois-rond-1.png") var(--b4x, 15%) var(--b4y, 112%) / var(--b4s, 260px) no-repeat;
   opacity: .14;
 }
 

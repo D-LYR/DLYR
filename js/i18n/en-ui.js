@@ -339,5 +339,83 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Lire la bande-annonce": "Watch the trailer",
   "Avis": "Reviews",
   "Note": "Average",
-  "moyenne": "rating"
+  "moyenne": "rating",
+  "Plus d'expériences": "More experiences",
+  "Découvrir": "Discover",
+
+  /* ---------- 404 ---------- */
+  "Page introuvable — retournez à l'accueil de D'LYR, centre de loisirs VR à Colombes.": "Page not found — head back to the home page of D'LYR, VR leisure centre in Colombes.",
+
+  /* ---------- Catalogue : pass multi-sessions ---------- */
+  "Profitez de tarifs avantageux avec nos pass multi-sessions.": "Enjoy great rates with our multi-session passes.",
+  "2 sessions VR au choix.": "2 VR sessions of your choice.",
+  "3 sessions VR au choix.": "3 VR sessions of your choice.",
+  "4 sessions VR au choix.": "4 VR sessions of your choice.",
+  "Adapté aux enfants": "Kid-friendly",
+
+  /* ---------- Contact ---------- */
+  "Une question, une date à bloquer, un groupe à accueillir ? Écrivez-nous : notre équipe vous répond sous 24/48h.": "A question, a date to hold, a group to host? Write to us: our team replies within 24–48 hours.",
+  "Écrivez-nous": "Write to us",
+  "Nous écrire": "Contact us",
+  "Réservations de groupe, anniversaires, privatisation, objets oubliés ou simple curiosité : tout arrive dans la même boîte, et rien ne reste sans réponse.": "Group bookings, birthdays, private hire, lost property or simple curiosity: everything lands in the same inbox, and nothing goes unanswered.",
+  "92700 Colombes – Hall A - Rez de Jardin": "92700 Colombes – Hall A - Garden Level",
+  "Prénom": "First name",
+  "Votre prénom": "Your first name",
+  "Réservation": "Booking",
+  "Envoyer le message": "Send message",
+  "Dites-nous tout : date, nombre de joueurs, questions…": "Tell us everything: date, number of players, questions…",
+  "Porte d'entrée de D'LYR à Colombes": "D'LYR entrance door in Colombes",
+  "Enseigne D'LYR à Colombes": "D'LYR sign in Colombes",
+  "Laurent Dubernais — Président & Co-fondateur D'LYR": "Laurent Dubernais — President & Co-founder of D'LYR",
+  "Frédéric Koukerdjinian — Directeur Général & Co-fondateur D'LYR": "Frédéric Koukerdjinian — CEO & Co-founder of D'LYR",
+
+  /* ---------- Entreprises ---------- */
+  "Team building, séminaire, réunion d'équipe, soirée d'entreprise & lancement de produit : privatisez D'LYR et fédérez vos équipes autour d'expériences immersives inoubliables. Une équipe dédiée construit votre programme sur mesure.": "Team building, seminars, team meetings, corporate parties & product launches: book D'LYR privately and bring your teams together around unforgettable immersive experiences. A dedicated team builds your tailor-made programme.",
+
+  /* ---------- Évènements ---------- */
+  "Anniversaires, enterrements de vie de garçon ou de jeune fille : privatisez D'LYR et confiez-nous vos plus beaux moments entre amis ou en famille.": "Birthdays, stag and hen parties: book D'LYR privately and trust us with your best moments with friends or family.",
+  "Marquez le coup avant le grand jour : défis VR en équipe, fléchettes, quiz et cocktails dans une ambiance survoltée.": "Celebrate before the big day: team VR challenges, darts, quizzes and cocktails in an electric atmosphere.",
+  "Soirée étudiante": "Student night",
+  "Soirées étudiantes": "Student nights",
+  "Intégration, BDE ou fin d'examens : tournois VR, fléchettes et tarifs préférentiels pour des soirées inoubliables.": "Freshers' events, student unions or end of exams: VR tournaments, darts and preferential rates for unforgettable nights.",
+  "Tarifs étudiants": "Student rates",
+  "Racontez-nous votre projet": "Tell us about your project",
+  "On vous recontacte sous 24h à 48h avec une proposition sur mesure.": "We'll get back to you within 24 to 48 hours with a tailor-made proposal.",
+  "Une idée, une date, un budget ? Parlons-en. Réponse garantie sous 24h à 48h.": "An idea, a date, a budget? Let's talk. Guaranteed reply within 24 to 48 hours.",
+  "EVG et EVJF chez D'LYR": "Stag and hen parties at D'LYR",
+
+  /* ---------- FAQ ---------- */
+  "Tout ce qu'il faut savoir avant votre visite : la VR, la restauration, les activités et la privatisation. Une question sans réponse ?": "Everything you need to know before your visit: VR, food and drink, activities and private hire. A question we haven't answered?",
+
+  /* ---------- Fléchettes ---------- */
+  "Visez le mille sur notre borne de fléchettes nouvelle génération ! Envie d'un défi entre deux parties de VR ? Découvrez notre borne Gran Board, un bijou de technologie au look rétro. Que vous soyez un pro du lancer ou un débutant curieux, venez tester votre précision sur une cible haute précision.": "Hit the bullseye on our next-generation darts machine! Fancy a challenge between two VR games? Discover our Gran Board machine, a gem of technology with a retro look. Whether you're a seasoned thrower or a curious beginner, come and test your aim on a high-precision board.",
+  "Un classique indémodable, une expérience connectée": "A timeless classic, a connected experience",
+  "Pour prolonger la soirée autour d'un verre, rien ne vaut une partie de fléchettes. Notre borne connectée réinvente ce grand classique : fini les calculs mentaux, l'écran s'occupe de tout !": "To make the evening last over a drink, nothing beats a game of darts. Our connected machine reinvents this great classic: no more mental arithmetic, the screen takes care of everything!",
+  "Installée dans notre espace détente, elle est le point de ralliement idéal pour défier vos amis dans une ambiance électrique. Avec son tapis de tir intégré et son laser de précision, vous êtes dans les meilleures conditions pour devenir le champion de la soirée. Prenez les fléchettes, visez juste et grimpez dans le classement de D'LYR !": "Set up in our lounge area, it's the perfect meeting point to challenge your friends in an electric atmosphere. With its built-in throwing mat and precision laser, you have everything you need to become the champion of the night. Grab the darts, aim true and climb the D'LYR leaderboard!",
+  "Pourquoi vous allez adorer": "Why you'll love it",
+  "Une technologie de pointe conçue pour offrir un confort de jeu inégalé et des moments inoubliables.": "Cutting-edge technology designed for unrivalled playing comfort and unforgettable moments.",
+  "Plus de 30 modes de jeux": "Over 30 game modes",
+  "Du classique 501 aux jeux les plus funs et animés, il y en a pour tous les goûts et tous les niveaux.": "From classic 501 to the most fun and lively games, there's something for every taste and every level.",
+  "Effets sonores et jeux de lumières LED dynamiques qui réagissent à chacun de vos lancers.": "Sound effects and dynamic LED lighting that react to every throw.",
+  "Confort de jeu": "Playing comfort",
+  "Écran Full HD haute définition pour suivre vos scores, volées et statistiques en temps réel.": "High-definition Full HD screen to follow your scores, rounds and stats in real time.",
+  "Détente & Convivialité": "Relaxation & Good Times",
+  "30 min de fléchettes connectées + 1 pizza au choix + 1 boisson non alcoolisée (sauf Redbull) au choix.": "30 min of connected darts + 1 pizza of your choice + 1 soft drink of your choice (excluding Red Bull).",
+  "Bientôt disponible": "Coming soon",
+  "Fléchettes + VR": "Darts + VR",
+  "30 min de fléchettes + 1 session de 30 minutes VR au choix.": "30 min of darts + one 30-minute VR session of your choice.",
+  "Expérience Complète": "Full Experience",
+  "Fléchettes + VR + Apéro": "Darts + VR + Drinks",
+  "30 min de fléchettes + 1 session de 30 minutes VR au choix + 1 pizza au choix + 1 boisson non alcoolisée (sauf Redbull) au choix.": "30 min of darts + one 30-minute VR session of your choice + 1 pizza of your choice + 1 soft drink of your choice (excluding Red Bull).",
+
+  /* ---------- Offrir ---------- */
+  "Faites plaisir à coup sûr : offrez une carte cadeau D'LYR et laissez l'heureux(se) élu(e) choisir son immersion VR, ses fléchettes, son quiz ou sa soirée au bar.": "A gift that's sure to please: give a D'LYR gift card and let the lucky recipient choose their VR immersion, darts, quiz or evening at the bar.",
+  "Sélectionnez le montant de votre choix parmi nos différentes propositions, ajoutez un petit mot personnalisé, et la carte est envoyée par email instantanément. Valable sur toutes nos activités.": "Choose the amount you want from our options, add a personal message, and the card is sent by email instantly. Valid for all our activities.",
+  "Dès 20 euros": "From €20",
+  "L'expérience VR à offrir": "The VR experience to give",
+
+  /* ---------- Bar&Snack / accès ---------- */
+  "Boissons au bar de D'LYR": "Drinks at the D'LYR bar",
+  "L'espace snack de D'LYR": "The D'LYR snack area",
+  "Parking Q-Park à 300m — tarif négocié.": "Q-Park car park 300 m away — negotiated rate."
 });

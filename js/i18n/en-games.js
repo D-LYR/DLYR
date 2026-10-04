@@ -123,5 +123,21 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Vivez l'Histoire.": "Live History.",
   "Embarquez pour une aventure extraordinaire à travers les âges. À la suite d'une mystérieuse perturbation temporelle, vous êtes propulsés dans les plus grandes civilisations de l'Histoire. Explorez la majesté de la Rome impériale, découvrez les trésors de la légendaire Maison de la Sagesse de Bagdad et plongez au cœur de l'Inde moghole dans une expérience immersive unique.": "Embark on an extraordinary adventure through the ages. Following a mysterious temporal disturbance, you are propelled into the greatest civilisations in History. Explore the majesty of imperial Rome, discover the treasures of Baghdad's legendary House of Wisdom and dive into the heart of Mughal India in a unique immersive experience.",
   "Voyagez librement avec votre groupe à travers des mondes reconstitués à taille réelle, rencontrez leurs habitants, percez leurs secrets et vivez l'Histoire comme si vous y étiez.": "Travel freely with your group through life-size reconstructed worlds, meet their inhabitants, unlock their secrets and live History as if you were there.",
-  "Une expérience culturelle spectaculaire où technologie, découverte et émerveillement se rencontrent pour vous faire voyager au-delà du temps.": "A spectacular cultural experience where technology, discovery and wonder come together to carry you beyond time."
+  "Une expérience culturelle spectaculaire où technologie, découverte et émerveillement se rencontrent pour vous faire voyager au-delà du temps.": "A spectacular cultural experience where technology, discovery and wonder come together to carry you beyond time.",
+
+  /* Accroches avec <br> : le moteur traduit chaque nœud texte séparément */
+  "Redécouvrez le Titanic.": "Rediscover the Titanic.",
+  "Remontez le temps.": "Travel back in time.",
+  "Pénétrez dans la tête du maître.": "Step inside the master's mind.",
+  "Poursuivez le rêve de la Sagrada Familia.": "Pursue the dream of the Sagrada Familia.",
+  "Explorez le Versailles du XVIIe siècle.": "Explore 17th-century Versailles.",
+  "Guidés par André Le Nôtre.": "Guided by André Le Nôtre.",
+
+  /* Fiches : Icarus Station, Brain Arena, Titanic */
+  "Escape Game VR coopératif": "Co-op VR escape game",
+  "Mais ici, connaître la réponse ne suffit pas. Il faut également être le plus rapide. Chaque seconde compte et chaque bonne réponse peut faire basculer le classement.": "But here, knowing the answer isn't enough. You also have to be the fastest. Every second counts and every right answer can shake up the leaderboard.",
+  "Entre compétition acharnée, éclats de rire et surprises, Brain Arena transforme la culture générale en une véritable expérience immersive où chacun peut devenir champion.": "Between fierce competition, bursts of laughter and surprises, Brain Arena turns general knowledge into a true immersive experience where anyone can become champion.",
+  "Embarquez pour une aventure sous-marine extraordinaire et redécouvrez le Titanic comme si vous y étiez ! Préparez-vous à vivre une expérience immersive et narrative unique, mêlant Histoire, technologie et émotions sur le plus célèbre des paquebots !": "Embark on an extraordinary underwater adventure and rediscover the Titanic as if you were there! Get ready to experience a unique immersive and narrative journey, blending History, technology, and emotion on the most famous liner!",
+  "Au cours de cette plongée virtuelle à 3800 mètres sous la surface de l'Atlantique, vous explorerez l'épave du Titanic comme jamais auparavant.": "During this virtual dive to 3,800 meters below the surface of the Atlantic, you will explore the wreck of the Titanic like never before.",
+  "Grâce à une technologie de reconstitution révolutionnaire, vous allez remonter le temps et embarquer à bord du Titanic pour son voyage inaugural. Quels secrets du passé allez-vous découvrir dans les profondeurs de l'océan ?": "Thanks to a revolutionary reconstruction technology, you will travel back in time and board the Titanic for its maiden voyage. What secrets of the past will you discover in the depths of the ocean?"
 });

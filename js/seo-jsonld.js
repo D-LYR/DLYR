@@ -14,7 +14,7 @@
     "name": "D'LYR",
     "description": "Centre de loisirs VR à Colombes : jeux en réalité virtuelle free-roaming, fléchettes connectées, quiz Hologame, évènements et Bar&Snack.",
     "url": BASE,
-    "image": BASE + "uploads/brand/DLYR-09-ea5d8366.png",
+    "image": BASE + "uploads/brand/badge-vr.png",
     "email": "contact@dlyr-vr.com",
     "priceRange": "€€",
     "address": { "@type": "PostalAddress", "streetAddress": "3 Boulevard Charles de Gaulle", "postalCode": "92700", "addressLocality": "Colombes", "addressCountry": "FR" },
@@ -56,7 +56,7 @@
       "@type": "Product",
       "name": (game && game.name) || document.title.replace(/^D'LYR — /, '').replace(/ · Jeu VR$/, ''),
       "description": (document.querySelector('meta[name="description"]') || {}).content || '',
-      "image": game && game.img ? BASE + game.img : BASE + "uploads/brand/DLYR-09-ea5d8366.png",
+      "image": game && game.img ? BASE + game.img : BASE + "uploads/brand/badge-vr.png",
       "brand": { "@type": "Brand", "name": "D'LYR" },
       "offers": { "@type": "Offer", "price": "25", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": BASE + slug + '.html' }
     });

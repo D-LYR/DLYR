@@ -6,7 +6,7 @@ window.DLYR_GAMES = [
     slug: 'harbor-siege', name: 'Harbor Siege', genre: 'Action',
     tags: ['Conquête', 'Stratégie', "Esprit d'équipe"],
     type: 'Domination', pl: '2 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/harbor-siege/Harbor Siege sans titre.png',
+    img: 'uploads/experiences/harbor-siege/harbor-siege-affiche.jpg',
     objective: 'Capturer et défendre les zones de contrôle pour mener votre équipe à la victoire.',
     tagline: 'Prenez le contrôle du port.<br>Dominez le champ de bataille.',
     story: [
@@ -20,7 +20,7 @@ window.DLYR_GAMES = [
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
     objective: 'Survivre, éliminer les menaces et révéler le secret de X-Labs.',
     tagline: "Survivez à une invasion<br>de zombies",
-    img: 'uploads/experiences/outbreak-lab/Outbreak Lab 3-4.png',
+    img: 'uploads/experiences/outbreak-lab/outbreak-lab-affiche.jpg',
     story: [
       "Le laboratoire secret de X-Labs a cessé toute communication. L'équipe Alpha, envoyée sur place pour rétablir le contact, ne donne plus aucun signe de vie. C'est désormais à vous d'entrer en scène.",
       "Équipe Bravo, à vous de jouer\u00a0! Dès votre déploiement, vous allez vite comprendre que la mission a viré au cauchemar. Des expériences interdites ont échappé à tout contrôle, et des créatures terrifiantes hantent désormais les couloirs du complexe.",
@@ -32,7 +32,7 @@ window.DLYR_GAMES = [
     slug: 'paradise-expedition', name: 'Paradise Expedition', genre: 'Action',
     tags: ['Free For All', 'Compétition', 'Survie'],
     type: 'Free For All', pl: '2 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/paradise-expedition/Paradise Expedition sans Titre.png',
+    img: 'uploads/experiences/paradise-expedition/paradise-expedition-affiche.jpg',
     objective: "Éliminer un maximum d'adversaires et réaliser le meilleur score.",
     tagline: 'Dans ce paradis perdu, chaque<br>rencontre peut être votre dernière',
     story: [
@@ -45,7 +45,7 @@ window.DLYR_GAMES = [
     slug: 'volcanic-warfare', name: 'Volcanic Warfare', genre: 'Action',
     tags: ['Team Deathmatch', 'Coopération', 'Tactique'],
     type: 'Team Deathmatch', pl: '4 à 8 joueurs', players: 8, dur: 30,
-    img: 'uploads/experiences/volcanic-warfare/Volcanic Warfare sans titre.png',
+    img: 'uploads/experiences/volcanic-warfare/volcanic-warfare-affiche.jpg',
     objective: "Éliminer un maximum d'adversaires et permettre à votre équipe d'atteindre le score le plus élevé.",
     tagline: 'Deux équipes.<br>Une seule victoire.',
     story: [
@@ -58,7 +58,7 @@ window.DLYR_GAMES = [
     slug: 'snow-village', name: 'Snow Village', genre: 'Adapté aux enfants',
     tags: ['Famille', 'Coopératif', 'Magie de Noël'],
     type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/snow-village/Snow Village Sans titre.png',
+    img: 'uploads/experiences/snow-village/snow-village-affiche.jpg',
     objective: 'Défendre le village du Père Noël, sauver les habitants et vaincre les armées du sorcier maléfique.',
     tagline: 'La magie de Noël est en danger.<br>Devenez les héros de Snow Village.',
     story: [
@@ -72,7 +72,7 @@ window.DLYR_GAMES = [
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
     type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
-    img: 'uploads/experiences/brain-arena/Brain Arena sans titre.png',
+    img: 'uploads/experiences/brain-arena/brain-arena-affiche.png',
     objective: 'Accumuler le maximum de points en répondant correctement et rapidement aux questions pour terminer en tête du classement.',
     tagline: 'La connaissance est<br>votre meilleure arme',
     story: [
@@ -87,12 +87,12 @@ window.DLYR_GAMES = [
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
     tags: ['Escape Game', 'Coopératif', 'Science-fiction'],
     type: 'Escape Game VR coopératif', pl: '2 à 6 joueurs', players: 6, dur: 45,
-    img: 'uploads/experiences/icarus-station/Icarus Station sans titre.png',
+    img: 'uploads/experiences/icarus-station/icarus-station-affiche.png',
     objective: "Réparer les systèmes de la station, traverser les secteurs sinistrés et rejoindre la plateforme d'extraction avant l'effondrement d'Icarus-7.",
     tagline: "Échappez-vous avant que la station<br>ne sombre dans le vide spatial",
     story: [
       "Une catastrophe sans précédent frappe la station spatiale Icarus-7. Alors qu'elle poursuit sa mission aux confins de l'espace, un mystérieux virus informatique prend le contrôle des systèmes critiques de la station. En quelques minutes, les communications sont coupées, les protocoles de sécurité désactivés et la commandante de bord neutralisée. Vous faites partie des derniers survivants.",
-      "Privée de contrôle, la station se désagrège peu à peu. Les sas se verrouillent, les systems vitaux tombent en panne et des secteurs entiers sont désormais inaccessibles. Dans le silence glacé de l'espace, chaque erreur peut être fatale.",
+      "Privée de contrôle, la station se désagrège peu à peu. Les sas se verrouillent, les systèmes vitaux tombent en panne et des secteurs entiers sont désormais inaccessibles. Dans le silence glacé de l'espace, chaque erreur peut être fatale.",
       "Votre mission est simple\u00a0: traverser les différentes zones endommagées, réactiver les systèmes essentiels, résoudre les pannes provoquées par l'attaque et atteindre la plateforme mobile d'extraction avant qu'il ne soit trop tard.",
       "Mais vous n'êtes pas seuls. Une présence inconnue semble évoluer dans les couloirs de la station, tandis que le compte à rebours vers la destruction approche inexorablement de son terme. Le temps presse. L'ennemi se rapproche. L'espace ne pardonne aucune erreur."
     ]
@@ -101,7 +101,7 @@ window.DLYR_GAMES = [
     slug: 'titanic-le-reve-englouti', name: 'Titanic — Le Rêve Englouti', genre: 'Culturel',
     tags: ['Culturel', 'Histoire', 'Exploration'],
     type: 'Exploration historique immersive', pl: '1 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/titanic/Titanic sans titre.png',
+    img: 'uploads/experiences/titanic/titanic-affiche.jpg',
     objective: 'Explorer le Titanic, percer ses mystères et revivre son voyage inaugural.',
     tagline: 'Redécouvrez le Titanic.<br>Remontez le temps.',
     story: [
