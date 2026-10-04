@@ -95,6 +95,7 @@
 
       form.innerHTML = `<div class="quote__done"><strong>Merci ${nom || ''} !</strong><br>Votre demande a bien été envoyée. Notre équipe vous recontacte sous 24/48h.</div>`;
       window.DLYR_toast && window.DLYR_toast('Demande de devis envoyée !');
+      window.DLYR_track && window.DLYR_track('Lead');
     } catch (err) {
       btn.disabled = false;
       btn.textContent = original;

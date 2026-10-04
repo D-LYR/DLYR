@@ -59,6 +59,7 @@
 
         f.innerHTML = `<div class="quote__done"><strong>${en ? 'Thank you' : 'Merci'} ${nom || ''} !</strong><br>${en ? 'Your message has been sent. We reply within 24/48h.' : 'Votre message a bien été envoyé. Nous vous répondons sous 24/48h.'}</div>`;
         window.DLYR_toast && window.DLYR_toast(en ? 'Message sent!' : 'Message envoyé !');
+        window.DLYR_track && window.DLYR_track('Lead');
       } catch (err) {
         btn.disabled = false;
         btn.textContent = original;

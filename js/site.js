@@ -141,7 +141,7 @@
             </div>
           </div>
           ${col('Activités', [['Expériences','catalogue.html'],['Fléchettes','flechettes.html']])}
-          ${col('Mentions légales', [['Politique de confidentialité','politique-confidentialite.html'],['Mentions légales','mentions-legales.html'],['CGV','cgv.html']])}
+          ${col('Mentions légales', [['Politique de confidentialité','politique-confidentialite.html'],['Mentions légales','mentions-legales.html'],['CGV','cgv.html'],['Gérer les cookies','#gerer-cookies']])}
           ${col('Plan du site', [['Accueil','index.html'],['Expériences','catalogue.html'],['Fléchettes','flechettes.html'],['Évènements','evenements.html'],['Entreprises','entreprises.html'],['Offrir','offrir.html'],['Bar&Snack','snack-bar.html'],['FAQ','faq.html'],['Contact','contact.html']])}
         </div>
       </div>
@@ -446,6 +446,7 @@
             listView: false
           });
         }
+        window.DLYR_track('InitiateCheckout', { content_name: (document.body.getAttribute('data-game') || location.pathname.split('/').pop() || '').replace(/\.html?$/i, '') });
         smeetzOpen(p);
         return;
       }
@@ -495,13 +496,43 @@
     y.parentNode.insertBefore(t, y);
   }
 
+  /* ============================================================
+     Pixel Meta (Facebook) — chargé UNIQUEMENT après consentement
+     ============================================================ */
+  var META_PIXEL_ID = '1443068404365497';
+
+  function loadMetaPixel() {
+    if (window.__metaPixelLoaded) return;
+    window.__metaPixelLoaded = true;
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', META_PIXEL_ID);
+    window.fbq('track', 'PageView');
+  }
+
+  // Évènement de conversion Meta : sans consentement (pixel non chargé), ne fait rien.
+  window.DLYR_track = function (ev, params) {
+    if (window.__metaPixelLoaded && window.fbq) window.fbq('track', ev, params || {});
+  };
+
   function analytics() {
     var KEY = 'dlyr_cookie_consent';
     try {
-      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadClarity(); }
+      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
     } catch (e) {}
     window.addEventListener('dlyr:consent', function (e) {
-      if (e.detail === 'accepted') { loadGTM(); loadClarity(); }
+      if (e.detail === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
+    });
+    // Clic sur un lien téléphone ou mail → évènement « Contact »
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="tel:"], a[href^="mailto:"]');
+      if (a) window.DLYR_track('Contact');
     });
   }
 
@@ -515,7 +546,7 @@
     b.setAttribute('aria-label', 'Gestion des cookies');
     b.innerHTML =
       '<div class="cookiebar__txt"><strong>Cookies &amp; confidentialit\u00e9</strong>' +
-      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity). Notre module de r\u00e9servation (Smeetz) d\u00e9pose \u00e9galement ses propres cookies. ' +
+      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). Notre module de r\u00e9servation (Smeetz) d\u00e9pose \u00e9galement ses propres cookies. ' +
       '<a href="politique-confidentialite.html#cookies">En savoir plus</a></div>' +
       '<div class="cookiebar__btns">' +
       '<button class="btn btn--lime btn--sm" data-cc="accepted">Tout accepter</button>' +
@@ -539,6 +570,39 @@
         b.style.transform = 'translate(-50%,0)';
       }
     }, 900);
+  }
+
+  /* ---------- « Gérer les cookies » (pied de page) : retrait / modification du consentement ---------- */
+  function cookieSettings() {
+    var KEY = 'dlyr_cookie_consent';
+    // Cookies posés par GTM/Google, Clarity et le pixel Meta
+    var TRACKERS = /^(_ga|_gid|_gat|_gcl|_clck|_clsk|_fbp|_fbc)/;
+    function clearTrackers() {
+      var host = location.hostname, parts = host.split('.');
+      var domains = ['', host, '.' + host];
+      if (parts.length > 2) domains.push('.' + parts.slice(-2).join('.'));
+      document.cookie.split(';').forEach(function (c) {
+        var name = c.split('=')[0].trim();
+        if (!TRACKERS.test(name)) return;
+        domains.forEach(function (d) {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + (d ? '; domain=' + d : '');
+        });
+      });
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href="#gerer-cookies"]');
+      if (!a) return;
+      e.preventDefault();
+      var prev = null;
+      try { prev = localStorage.getItem(KEY); localStorage.removeItem(KEY); } catch (err) { return; }
+      if (document.querySelector('.cookiebar')) return;
+      window.addEventListener('dlyr:consent', function (ev) {
+        // Accord retiré : on efface les cookies de mesure/publicité et on recharge
+        // pour couper les scripts déjà chargés sur cette page.
+        if (prev === 'accepted' && ev.detail === 'refused') { clearTrackers(); setTimeout(function () { location.reload(); }, 450); }
+      }, { once: true });
+      cookies();
+    });
   }
 
   /* ---------- Toast léger ---------- */
@@ -623,7 +687,7 @@
   }
 
   function init() {
-    [buildNav, buildFooter, buildMaps, buildSnackTeaser, toastInit, reserve, marquees, cookies, analytics, lightboxInit, woodRings].forEach(fn => {
+    [buildNav, buildFooter, buildMaps, buildSnackTeaser, toastInit, reserve, marquees, cookies, cookieSettings, analytics, lightboxInit, woodRings].forEach(fn => {
       try { fn(); } catch (e) { console.warn('[DLYR]', fn.name, e); }
     });
     try { reveal(); } catch (e) { console.warn('[DLYR] reveal', e); }
