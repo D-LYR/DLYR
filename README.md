@@ -34,8 +34,7 @@ Site statique du centre de loisir VR D'LYR (Colombes) : jeux VR free-roaming, fl
 │   ├── home/               Visuels propres à l'accueil
 │   ├── evenements/         Visuels évènements & entreprises
 │   ├── flechettes/         Visuels fléchettes
-│   ├── experiences/<jeu>/  <jeu>-affiche.(jpg|png), <jeu>-bande-annonce.mp4
-│   └── videos/             Vidéos d'ambiance
+│   └── experiences/<jeu>/  <jeu>-affiche.(jpg|png)
 ├── robots.txt, sitemap.xml, site.webmanifest
 ```
 
