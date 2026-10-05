@@ -253,6 +253,72 @@
     render();
   }
 
+  /* ---------- Carrousel d'évènements ----------
+     Une slide par carte .evcar__slide dans la page : pour ajouter un
+     évènement, dupliquer une carte dans index.html et en/index.html. */
+  function eventsCarousel() {
+    const root = document.querySelector('[data-evcar]');
+    if (!root) return;
+    const track = root.querySelector('[data-evcar-track]');
+    const slides = Array.from(track.children);
+    if (slides.length < 2) { root.setAttribute('data-single', ''); return; }
+    const dots = root.querySelector('[data-evcar-dots]');
+    const lbl = isEN ? 'Event' : 'Évènement';
+    dots.innerHTML = slides.map((_, i) => `<button type="button" aria-label="${lbl} ${i + 1}"></button>`).join('');
+    const dotBtns = Array.from(dots.children);
+    let idx = 0, timer = null;
+
+    // Petit écran : cartes empilées, de hauteurs différentes → la hauteur suit la carte affichée
+    const compact = () => window.matchMedia('(max-width: 880px)').matches;
+
+    function render() {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      track.style.height = compact() ? slides[idx].offsetHeight + 'px' : '';
+      track.style.transform = `translateX(calc(${-idx} * (100% + ${gap}px)))`;
+      slides.forEach((s, i) => {
+        s.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+        if ('inert' in s) s.inert = i !== idx;
+      });
+      dotBtns.forEach((b, i) => {
+        b.classList.toggle('on', i === idx);
+        b.setAttribute('aria-current', i === idx ? 'true' : 'false');
+      });
+    }
+    function go(i) { idx = (i + slides.length) % slides.length; render(); }
+
+    // Défilement automatique (grand écran seulement, pour ne pas faire bouger la page sur mobile) :
+    // suspendu au survol, au focus et quand l'onglet est masqué
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function start() { stop(); if (!reduce && !compact()) timer = setInterval(() => go(idx + 1), 7000); }
+    const next = () => { go(idx + 1); start(); };
+    const prev = () => { go(idx - 1); start(); };
+
+    root.querySelector('[data-evcar-next]').addEventListener('click', next);
+    root.querySelector('[data-evcar-prev]').addEventListener('click', prev);
+    dotBtns.forEach((b, i) => b.addEventListener('click', () => { go(i); start(); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+    if (window.DLYR_swipe) window.DLYR_swipe(root.querySelector('.evcar__viewport'), { left: next, right: prev });
+
+    // Les images des slides masquées sont chargées dès que le carrousel approche de l'écran
+    const loadImgs = () => root.querySelectorAll('img[loading="lazy"]').forEach(im => { im.loading = 'eager'; });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((en) => {
+        if (en.some(x => x.isIntersecting)) { io.disconnect(); loadImgs(); }
+      }, { rootMargin: '400px 0px' });
+      io.observe(root);
+    } else { loadImgs(); }
+
+    window.addEventListener('resize', () => { render(); start(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+    render();
+    start();
+  }
+
   /* ---------- Compteurs animés ---------- */
   function counters() {
     const els = document.querySelectorAll('[data-count]');
@@ -276,6 +342,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); googleReviews(); counters();
+    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters();
   });
 })();
