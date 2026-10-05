@@ -21,6 +21,9 @@
     return /(?:jeu-[a-z-]+|soiree-decouverte)(?:\.html?)?$/i.test(location.pathname);
   }
   function getBookHref() {
+    /* Billetterie propre à la page (attribut data-book-url du <body>) */
+    var b = document.body;
+    if (b && b.dataset.bookUrl) return b.dataset.bookUrl.replace(/&/g, '&amp;');
     return isGamePage() ? '#reserver' : 'catalogue.html';
   }
   const BOOK_HREF = getBookHref();
@@ -432,6 +435,14 @@
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
+      /* Page à billetterie propre : le lien s'ouvre normalement, on suit juste le clic */
+      var bookUrl = document.body && document.body.dataset.bookUrl;
+      if (bookUrl) {
+        if (e.target.closest('a[href="' + bookUrl + '"]')) {
+          window.DLYR_track('InitiateCheckout', { content_name: document.body.getAttribute('data-game') || '' });
+        }
+        return;
+      }
       const a = e.target.closest('a[href="#reserver"], [data-smeetz-open]');
       if (!a) return;
       var p = currentProduct();
