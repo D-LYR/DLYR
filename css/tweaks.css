@@ -399,3 +399,87 @@ html[lang="en"] .soiree-card--soldout::after {
   line-height: 1.35;
   display: inline-block;
 }
+
+/* ============================================================
+   Carrousel d'évènements (accueil) — une carte .soiree-card par slide
+   ============================================================ */
+.evcar { position: relative; }
+.evcar__viewport {
+  overflow: hidden;
+  margin: -10px -12px -48px;
+  padding: 10px 12px 48px;
+  touch-action: pan-y;
+}
+.evcar__track {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  transition: transform .55s cubic-bezier(.6, 0, .2, 1);
+}
+.evcar__slide { flex: 0 0 100%; min-width: 0; }
+.evcar__foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: clamp(18px, 2.4vw, 26px);
+}
+.evcar[data-single] .evcar__foot { display: none; }
+.evcar__nav {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink, #1c3024);
+  border: 2px solid rgba(28, 48, 36, .4);
+  cursor: pointer;
+  transition: background .22s, color .22s, border-color .22s, transform .22s;
+}
+@media (hover: hover) {
+  .evcar__nav:hover { background: var(--ink, #1c3024); color: var(--paper, #e8eedd); border-color: var(--ink, #1c3024); }
+}
+.evcar__nav:active { transform: scale(.94); }
+.evcar__dots { display: flex; gap: 10px; }
+.evcar__dots button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(28, 48, 36, .3);
+  cursor: pointer;
+  transition: .2s;
+}
+.evcar__dots button.on { background: var(--ink, #1c3024); width: 28px; border-radius: 6px; }
+.evcar__soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--lime);
+  border: 1.5px dashed rgba(212, 188, 114, .6);
+  padding: 11px 18px;
+  border-radius: 12px;
+}
+/* Visuel au format affiche (3:4) : affiché en entier, sans recadrage */
+.soiree-card__media--poster { aspect-ratio: 765 / 1024; max-width: 358px; }
+.soiree-card__media--poster img { object-position: center; }
+@media (max-width: 880px) {
+  /* Mobile : la hauteur suit la carte affichée (réglée par js/home.js) */
+  .evcar__track {
+    align-items: flex-start;
+    transition: transform .55s cubic-bezier(.6, 0, .2, 1), height .35s ease;
+  }
+  .soiree-card__media--poster { aspect-ratio: 765 / 1024; max-width: 284px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evcar__track { transition: none; }
+}
