@@ -6,9 +6,9 @@
 /* ---------- HERO ----------
    Composition éditoriale : texte à gauche sur fond sapin profond,
    photo « Dream like your reality » plein cadre à droite, fondue
-   dans le fond par un masque. Le haut est dégagé pour la nav + bandeau promo. */
+   dans le fond par un masque. Le haut est dégagé pour la nav. */
 .hero{
-  --hero-top:168px; /* nav (≈110px) + bandeau promo (58px) */
+  --hero-top:110px; /* nav (≈110px) */
   position:relative; overflow:hidden; isolation:isolate;
   min-height:clamp(640px, 92svh, 900px);
   display:flex; flex-direction:column; justify-content:center;
@@ -147,7 +147,7 @@
 
 /* Tablette & mobile : photo en haut, texte dessous */
 @media (max-width: 900px){
-  .hero{ --hero-top:144px; min-height:0; justify-content:flex-end; padding-top:calc(var(--hero-top) + 42vh); }
+  .hero{ --hero-top:96px; min-height:0; justify-content:flex-end; padding-top:calc(var(--hero-top) + 42vh); }
   .hero__media{
     width:100%; bottom:auto; height:46vh;
     -webkit-mask-image:linear-gradient(to bottom, #000 55%, transparent 100%);
@@ -157,7 +157,7 @@
   .hero__content{ max-width:620px; }
 }
 @media (max-width: 600px){
-  .hero{ --hero-top:130px; padding-top:calc(var(--hero-top) + 37vh); padding-bottom:40px; }
+  .hero{ --hero-top:88px; padding-top:calc(var(--hero-top) + 37vh); padding-bottom:40px; }
   .hero__media{ height:40vh; }
   .hero__photo{ object-position:64% 45%; }
   .hero__title{ font-size:clamp(40px,12vw,56px); }
