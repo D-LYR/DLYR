@@ -20,10 +20,38 @@
     if (b && (b.dataset.page === 'jeux' || b.getAttribute('data-game'))) return true;
     return /(?:jeu-[a-z-]+|soiree-decouverte)(?:\.html?)?$/i.test(location.pathname);
   }
+  /* Réservation directe dans l'application D'LYR (remplace le widget Smeetz).
+     Une ligne par page : nom de la page → code de l'expérience (paramètre « exp »).
+     Sur ces pages, tous les boutons « Réserver » mènent à BOOK_BASE + code. */
+  var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
+  var BOOK_EXP = {
+    'jeu-brain-arena': 'brain',
+    'jeu-harbor-siege': 'harbor',
+    'jeu-icarus-station': 'icarus',
+    'jeu-outbreak-lab': 'outbreak',
+    'jeu-paradise-expedition': 'paradise',
+    'jeu-snow-village': 'snow',
+    'jeu-titanic-le-reve-englouti': 'titanic',
+    'jeu-volcanic-warfare': 'volcanic',
+    'flechettes': 'flechettes'
+  };
+  function pageSlug() {
+    var raw = (document.body && document.body.getAttribute('data-game')) ||
+      (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
+    return (raw || '').trim();
+  }
+  function directBookUrl() {
+    if (document.body && document.body.dataset.bookUrl) return '';
+    var s = pageSlug();
+    var key = BOOK_EXP.hasOwnProperty(s) ? s : 'jeu-' + s;
+    return BOOK_EXP.hasOwnProperty(key) ? BOOK_BASE + BOOK_EXP[key] : '';
+  }
   function getBookHref() {
     /* Billetterie propre à la page (attribut data-book-url du <body>) */
     var b = document.body;
     if (b && b.dataset.bookUrl) return b.dataset.bookUrl.replace(/&/g, '&amp;');
+    var direct = directBookUrl();
+    if (direct) return direct.replace(/&/g, '&amp;');
     return isGamePage() ? '#reserver' : 'catalogue.html';
   }
   const BOOK_HREF = getBookHref();
@@ -432,6 +460,18 @@
   }
 
   function reserve() {
+    /* Réservation directe : les boutons « Réserver » de la page mènent à l'application D'LYR */
+    var direct = directBookUrl();
+    if (direct) {
+      document.querySelectorAll('a[href="#reserver"]').forEach(function (a) { a.setAttribute('href', direct); });
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href="#reserver"], a[href="' + direct + '"], [data-smeetz-open]');
+        if (!a) return;
+        window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
+        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = direct; }
+      });
+      return;
+    }
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
