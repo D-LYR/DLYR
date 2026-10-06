@@ -35,6 +35,18 @@
     'jeu-volcanic-warfare': 'volcanic',
     'flechettes': 'flechettes'
   };
+  /* Pass VR (page Expériences) et bon cadeau (page Offrir) : liens directs vers l'application D'LYR.
+     Pass : repère du bouton « Sélectionner » (data-smeetz-cat) → code du pack (paramètre « pack »). */
+  var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
+  var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
+  var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
+  /* Adresse directe d'un bouton (pass VR ou bon cadeau), sinon '' */
+  function buttonBookUrl(a) {
+    var cat = a.getAttribute('data-smeetz-cat');
+    if (cat && PACK_BY_CAT.hasOwnProperty(cat)) return PACK_BASE + PACK_BY_CAT[cat];
+    if (document.body && document.body.dataset.page === 'offrir' && a.getAttribute('href') === '#reserver') return GIFT_URL;
+    return '';
+  }
   function pageSlug() {
     var raw = (document.body && document.body.getAttribute('data-game')) ||
       (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
@@ -472,6 +484,11 @@
       });
       return;
     }
+    /* Pass VR et bon cadeau : ces boutons mènent à l'application D'LYR */
+    document.querySelectorAll('a[href="#reserver"], a[data-smeetz-cat]').forEach(function (a) {
+      var u = buttonBookUrl(a);
+      if (u) a.setAttribute('href', u);
+    });
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
@@ -483,8 +500,17 @@
         }
         return;
       }
+      var d = e.target.closest('a[href^="' + PACK_BASE + '"], a[href="' + GIFT_URL + '"]');
+      if (d) { window.DLYR_track('InitiateCheckout', { content_name: pageSlug() }); return; }
       const a = e.target.closest('a[href="#reserver"], [data-smeetz-open]');
       if (!a) return;
+      var u = buttonBookUrl(a);
+      if (u) {
+        e.preventDefault();
+        window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
+        location.href = u;
+        return;
+      }
       var p = currentProduct();
       if (p) {
         e.preventDefault();
