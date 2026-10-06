@@ -40,6 +40,7 @@
   var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
   var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
   var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
+  var GIFT_HREF = GIFT_URL.replace(/&/g, '&amp;'); /* même adresse, prête à être écrite dans le HTML du menu */
   /* Adresse directe d'un bouton (pass VR ou bon cadeau), sinon '' */
   function buttonBookUrl(a) {
     var cat = a.getAttribute('data-smeetz-cat');
@@ -113,7 +114,7 @@
         <div class="nav__cta">
           <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
           <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
-          <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
+          <a class="btn btn--sm btn--cta" href="${GIFT_HREF}">Offrir</a>
         </div>
         <button class="nav__burger" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -141,7 +142,7 @@
       <div class="drawer__cta">
         <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
         <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
-        <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
+        <a class="btn btn--sm btn--cta" href="${GIFT_HREF}">Offrir</a>
       </div>`;
     body.appendChild(drawer);
 
@@ -489,6 +490,8 @@
       var u = buttonBookUrl(a);
       if (u) a.setAttribute('href', u);
     });
+    /* Accueil : la carte « Offrir » mène directement au bon cadeau (comme le bouton « Offrir » du menu) */
+    document.querySelectorAll('a.hero__cta-card--offrir').forEach(function (a) { a.setAttribute('href', GIFT_URL); });
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
