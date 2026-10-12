@@ -115,7 +115,7 @@ window.DLYR_GAMES = [
     slug: 'gaudi-latelier-du-divin', name: "Gaudí — L'Atelier du Divin", genre: 'Culturel',
     tags: ['Culturel', 'Art', 'Architecture'],
     type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/gaudi/gaudi-affiche.png',
+    img: 'uploads/experiences/gaudi/gaudi-affiche.jpg',
     objective: 'Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.',
     tagline: 'Pénétrez dans la tête du maître.<br>Poursuivez le rêve de la Sagrada Familia.',
     story: [
