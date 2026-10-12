@@ -16,6 +16,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab', name: 'Outbreak Lab', genre: 'Aventure',
+    cardBottom: '17%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
     objective: 'Survivre, éliminer les menaces et révéler le secret de X-Labs.',
@@ -86,6 +87,7 @@ window.DLYR_GAMES = [
 
   {
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
+    cardBottom: '13%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Escape Game', 'Coopératif', 'Science-fiction'],
     type: 'Escape Game VR coopératif', pl: '2 à 6 joueurs', players: 6, dur: 45,
     img: 'uploads/experiences/icarus-station/icarus-station-affiche.png',
@@ -100,6 +102,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'titanic-le-reve-englouti', name: 'Titanic — Le Rêve Englouti', genre: 'Culturel',
+    cardBottom: '4%', /* catalogue : hauteur du titre sur l'affiche (pas de slogan : titre tout en bas) */
     tags: ['Culturel', 'Histoire', 'Exploration'],
     type: 'Exploration historique immersive', pl: '1 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/titanic/titanic-affiche.jpg',
@@ -116,7 +119,6 @@ window.DLYR_GAMES = [
     tags: ['Culturel', 'Art', 'Architecture'],
     type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/gaudi/gaudi-affiche.jpg',
-    cardText: 'bottom', /* catalogue : titre et durée en bas de l'affiche (le haut porte déjà le titre du jeu) */
     objective: 'Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.',
     tagline: 'Pénétrez dans la tête du maître.<br>Poursuivez le rêve de la Sagrada Familia.',
     story: [

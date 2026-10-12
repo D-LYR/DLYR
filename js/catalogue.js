@@ -8,7 +8,7 @@
 
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: 'jeu-' + g.slug + '.html', cardText: g.cardText
+    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
   const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
@@ -28,7 +28,8 @@
   const clock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   const ppl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"/></svg>';
 
-  /* Titre + durée/joueurs d'une carte (en haut par défaut, en bas si cardText: 'bottom') */
+  /* Titre + durée/joueurs d'une carte : en bas de l'affiche, juste au-dessus de son slogan
+     (hauteur réglable par expérience avec cardBottom, ex. '14%') */
   function titleMeta(g) {
     return `<h3 class="xcard__name">${g.name}</h3>
           <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}${g.pl ? `<span>${ppl} ${g.pl}</span>` : ''}</div>`;
@@ -55,9 +56,8 @@
             <span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>
             ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
           </div>
-          ${g.cardText === 'bottom' ? '' : titleMeta(g)}
         </div>
-        ${g.cardText === 'bottom' ? `<div class="xcard__footer">${titleMeta(g)}</div>` : ''}
+        <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
       </a>`).join('');
 
     if (window.DLYR_reveal) window.DLYR_reveal();
