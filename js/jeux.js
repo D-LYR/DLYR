@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    D'LYR — Jeux VR : vidéo, avis, plus de jeux, marquee
    ============================================================ */
 (function () {
@@ -84,7 +84,7 @@
   })();
 
   /* ---- Plus de jeux ---- */
-  const GAMES = ALL.filter(g => g.slug !== slug).slice(0, 3).map(g => ({
+  const GAMES = ALL.filter(g => g.slug !== slug && !g.hidden).slice(0, 3).map(g => ({
     name: g.name, genre: g.genre,
     dur: g.dur ? g.dur + ' min' : '', pl: g.pl || '',
     href: 'jeu-' + g.slug + '.html', img: g.img

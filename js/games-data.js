@@ -70,6 +70,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
+    hidden: true, /* masqué des Expériences : supprimer cette ligne pour le réafficher */
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
     type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
     img: 'uploads/experiences/brain-arena/brain-arena-affiche.png',

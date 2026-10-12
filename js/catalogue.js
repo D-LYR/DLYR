@@ -6,11 +6,13 @@
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';
 
-  const GAMES = (window.DLYR_GAMES || []).map(g => ({
+  const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
     img: g.img, href: 'jeu-' + g.slug + '.html'
   }));
-  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants'];
+  /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
+    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
   const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
 
   const state = { genre: 'Tous', players: 'all', sort: 'az' };
