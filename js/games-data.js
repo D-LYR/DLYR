@@ -109,5 +109,18 @@ window.DLYR_GAMES = [
       "Au cours de cette plongée virtuelle à 3800 mètres sous la surface de l'Atlantique, vous explorerez l'épave du Titanic comme jamais auparavant.",
       "Grâce à une technologie de reconstitution révolutionnaire, vous allez remonter le temps et embarquer à bord du Titanic pour son voyage inaugural. Quels secrets du passé allez-vous découvrir dans les profondeurs de l'océan ?"
     ]
+  },
+  {
+    slug: 'gaudi-latelier-du-divin', name: "Gaudí — L'Atelier du Divin", genre: 'Culturel',
+    tags: ['Culturel', 'Art', 'Architecture'],
+    type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
+    img: 'uploads/experiences/gaudi/gaudi-affiche.png',
+    objective: 'Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.',
+    tagline: 'Pénétrez dans la tête du maître.<br>Poursuivez le rêve de la Sagrada Familia.',
+    story: [
+      "Affaibli par l'âge et sentant la mort venir, Gaudí invite ses nouveaux assistants à découvrir son atelier pour comprendre sa vision et prolonger son rêve. En se glissant dans le costume d'un disciple et guidé par la voix de Gaudí lui-même, l'utilisateur découvre la personnalité hors du commun de l'architecte, sa méthode de travail révolutionnaire et son univers foisonnant.",
+      "Avec un objectif, comprendre Gaudí et pour reprendre, au moment venu, l'œuvre auquel il a consacré sa vie : la Sagrada Familia.",
+      "Avec Gaudí, L'Atelier du Divin, nous voulons emmener l'utilisateur dans la tête du célèbre architecte : la reconstitution exceptionnelle de l'atelier disparu en 1926 est l'occasion de créer un parcours narratif dans la psyché unique du maître catalan."
+    ]
   }
 ];
