@@ -116,6 +116,7 @@ window.DLYR_GAMES = [
     tags: ['Culturel', 'Art', 'Architecture'],
     type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/gaudi/gaudi-affiche.jpg',
+    cardText: 'bottom', /* catalogue : titre et durée en bas de l'affiche (le haut porte déjà le titre du jeu) */
     objective: 'Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.',
     tagline: 'Pénétrez dans la tête du maître.<br>Poursuivez le rêve de la Sagrada Familia.',
     story: [
