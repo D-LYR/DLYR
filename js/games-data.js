@@ -116,6 +116,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'gaudi-latelier-du-divin', name: "Gaudí — L'Atelier du Divin", genre: 'Culturel',
+    hidden: true, /* masqué : accord de diffusion non reçu — supprimer cette ligne pour le réafficher */
     tags: ['Culturel', 'Art', 'Architecture'],
     type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/gaudi/gaudi-affiche.jpg',
