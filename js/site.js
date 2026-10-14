@@ -627,7 +627,7 @@
     b.setAttribute('aria-label', 'Gestion des cookies');
     b.innerHTML =
       '<div class="cookiebar__txt"><strong>Cookies &amp; confidentialit\u00e9</strong>' +
-      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). Notre module de r\u00e9servation (Smeetz) d\u00e9pose \u00e9galement ses propres cookies. ' +
+      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). ' +
       '<a href="politique-confidentialite.html#cookies">En savoir plus</a></div>' +
       '<div class="cookiebar__btns">' +
       '<button class="btn btn--lime btn--sm" data-cc="accepted">Tout accepter</button>' +
