@@ -472,6 +472,11 @@ html[lang="en"] .soiree-card--soldout::after {
 /* Visuel au format affiche (3:4) : affiché en entier, sans recadrage */
 .soiree-card__media--poster { aspect-ratio: 765 / 1024; max-width: 358px; }
 .soiree-card__media--poster img { object-position: center; }
+/* Prix sur une affiche : l'étiquette déborde sous l'affiche pour ne pas masquer son texte */
+.soiree-card__media--poster { overflow: visible; }
+.soiree-card__media--poster img { border-radius: inherit; }
+.soiree-card:hover .soiree-card__media--poster img { transform: none; }
+.soiree-card__media--poster .soiree-card__price-tag { bottom: -18px; }
 @media (max-width: 880px) {
   /* Mobile : la hauteur suit la carte affichée (réglée par js/home.js) */
   .evcar__track {
