@@ -49,7 +49,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
 
   /* ---------- Bandeau cookies ---------- */
   "Cookies & confidentialité": "Cookies & privacy",
-  "Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). Notre module de réservation (Smeetz) dépose également ses propres cookies.": "We use cookies to keep the site running smoothly and, with your consent, to measure its audience (Microsoft Clarity) and to show you relevant ads (Meta). Our booking module (Smeetz) also sets its own cookies.",
+  "Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta).": "We use cookies to keep the site running smoothly and, with your consent, to measure its audience (Microsoft Clarity) and to show you relevant ads (Meta).",
   "En savoir plus": "Learn more",
   "Tout accepter": "Accept all",
   "Gérer les cookies": "Manage cookies",
