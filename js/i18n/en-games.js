@@ -67,6 +67,10 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Plongez au cœur d'un ancien port abandonné, un véritable labyrinthe de ruelles étroites, d'entrepôts oubliés et de caisses de marchandises. Dans cet environnement chargé d'histoire, chaque recoin peut cacher un adversaire.": "Dive into the heart of an old abandoned harbor, a true maze of narrow alleys, forgotten warehouses and cargo crates. In this environment steeped in history, every corner can hide an opponent.",
   "Formez votre équipe et partez à la conquête des zones stratégiques du port. Plus vous contrôlez de territoires, plus vous accumulez de points. Mais attention : vos adversaires feront tout pour reprendre le contrôle et inverser le cours de la bataille.": "Form your team and set out to conquer the harbor's strategic zones. The more territory you control, the more points you rack up. But beware: your opponents will do everything to take back control and turn the tide of battle.",
   "Coordination, rapidité et sens tactique seront les clés de la victoire dans cette expérience immersive où chaque décision compte.": "Coordination, speed and tactical thinking will be the keys to victory in this immersive experience where every decision counts.",
+  /* Outbreak Lab II */
+  "S'évader d'Apocalypse Stadium et survivre aux hordes de zombies de Nécropolia.": "Break out of Apocalypse Stadium and survive the zombie hordes of Necropolia.",
+  "L'ultime épreuve.<br>Évadez-vous d'Apocalypse Stadium.": "The ultimate trial.<br>Break out of Apocalypse Stadium.",
+  "Capturés et jetés dans l'arène d'Apocalypse Stadium : brisez vos chaînes, emparez-vous d'un blindé et faites pleuvoir le plomb sur les hordes de Nécropolia !": "Captured and thrown into the arena of Apocalypse Stadium: break your chains, seize an armoured vehicle and rain lead on the hordes of Necropolia!",
   /* Outbreak Lab */
   "Survivre, éliminer les menaces et révéler le secret de X-Labs.": "Survive, eliminate the threats and uncover the secret of X-Labs.",
   "Survivez à une invasion": "Survive an invasion",
