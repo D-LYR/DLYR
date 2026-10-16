@@ -26,6 +26,7 @@
   var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
   var BOOK_EXP = {
     'jeu-brain-arena': 'brain',
+    'jeu-desert-village': 'custom-desert-village-rhrg',
     'jeu-gaudi-latelier-du-divin': 'custom-gaudi-l-atelier-du-divin-ca02',
     'jeu-harbor-siege': 'harbor',
     'jeu-icarus-station': 'icarus',

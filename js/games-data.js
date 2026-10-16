@@ -70,6 +70,21 @@ window.DLYR_GAMES = [
     ]
   },
   {
+    slug: 'desert-village', name: 'Desert Village', genre: 'Adapté aux enfants',
+    cardBottom: '15%', /* catalogue : hauteur du titre sur l'affiche (slogan en gros caractères) */
+    tags: ['Famille', 'Coopératif', 'Cartoon'],
+    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    img: 'uploads/experiences/desert-village/desert-village-affiche.jpg',
+    objective: 'Repousser les petits monstres du constructeur, protéger les habitants et sauver le village.',
+    tagline: 'La menace du désert.<br>Unissez-vous pour sauver le village.',
+    story: [
+      "Au cœur de dunes dorées et étincelantes se cache Desert Village, un paisible petit hameau bordé de palmiers et de maisons en terre. Mais ce havre de paix est aujourd'hui en grand danger ! Un vilain constructeur sans scrupules a jeté son dévolu sur le village : il veut tout raser pour y implanter un gigantesque complexe pétrolier.",
+      "Pour accomplir son sombre dessein, il déploie une armée de petits monstres… plus mignons que vraiment effrayants !",
+      "Armés de votre courage et de votre sens de l'entraide, plongez en famille au centre de l'action. Dans ce décor au style cartoon éclatant, unissez vos forces en équipe pour repousser les vagues d'ennemis, protéger les habitants et préserver la magie du village.",
+      "Une aventure féerique, drôle et accessible à tous, idéale pour faire ses premiers pas dans le monde merveilleux de la réalité virtuelle !"
+    ]
+  },
+  {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     hidden: true, /* masqué des Expériences : supprimer cette ligne pour le réafficher */
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
