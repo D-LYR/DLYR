@@ -8,7 +8,7 @@
 
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom
+    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom, cardPos: g.cardPos
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
   const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
@@ -49,7 +49,7 @@
 
     gridEl.innerHTML = list.map((g, i) => `
       <a class="xcard reveal" data-d="${i % 4}" href="${g.href}">
-        <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}">` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
+        <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
         <span class="xcard__scrim"></span>
         <div class="xcard__header">
           <div class="xcard__tags">

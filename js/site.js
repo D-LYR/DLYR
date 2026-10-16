@@ -31,6 +31,7 @@
     'jeu-harbor-siege': 'harbor',
     'jeu-icarus-station': 'icarus',
     'jeu-outbreak-lab': 'outbreak',
+    'jeu-outbreak-lab-2': 'custom-outbreak-lab-2-w0xj',
     'jeu-paradise-expedition': 'paradise',
     'jeu-snow-village': 'snow',
     'jeu-titanic-le-reve-englouti': 'titanic',

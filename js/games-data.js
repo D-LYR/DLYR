@@ -30,6 +30,19 @@ window.DLYR_GAMES = [
     ]
   },
   {
+    slug: 'outbreak-lab-2', name: 'Outbreak Lab II', genre: 'Aventure',
+    tags: ['Survie', 'Action', 'Zombies'],
+    type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    objective: "S'évader d'Apocalypse Stadium et survivre aux hordes de zombies de Nécropolia.",
+    tagline: "L'ultime épreuve.<br>Évadez-vous d'Apocalypse Stadium.",
+    img: 'uploads/experiences/outbreak-lab-2/outbreak-lab-2-affiche.jpg',
+    cardPos: '50% 8%', cardBottom: '6%',
+    story: [
+      "Après la découverte du mythique Temple Solaire, votre escouade d'élite est capturée et plongée en cryogénie. À votre réveil, vos galons ne comptent plus : vous êtes enchaînés au cœur d'Apocalypse Stadium, un Colisée futuriste où vous devez vous battre comme gladiateurs pour survivre sous les yeux d'une foule assoiffée de sang.",
+      "En brisant vos chaînes et en forçant le passage hors de l'arène, vous vous emparez d'un véhicule blindé surarmé. Votre évasion vous propulse directement à Nécropolia, une terre dévastée transformée par vos geôliers en un safari apocalyptique haut de gamme. En mouvement perpétuel au milieu des ruines, il ne vous reste qu'un moyen de vous en sortir : faire pleuvoir le plomb sur des hordes de zombies et de créatures monstrueuses !"
+    ]
+  },
+  {
     slug: 'paradise-expedition', name: 'Paradise Expedition', genre: 'Action',
     tags: ['Free For All', 'Compétition', 'Survie'],
     type: 'Free For All', pl: '2 à 12 joueurs', players: 12, dur: 30,
