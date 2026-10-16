@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.dlyr-vr.com/</loc><priority>1.0</priority></url>
   <url><loc>https://www.dlyr-vr.com/jeu-outbreak-lab.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.dlyr-vr.com/jeu-outbreak-lab-2.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.dlyr-vr.com/jeu-harbor-siege.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.dlyr-vr.com/jeu-paradise-expedition.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.dlyr-vr.com/jeu-volcanic-warfare.html</loc><priority>0.8</priority></url>
@@ -32,6 +33,7 @@
   <url><loc>https://www.dlyr-vr.com/en/jeu-harbor-siege.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.dlyr-vr.com/en/jeu-icarus-station.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.dlyr-vr.com/en/jeu-outbreak-lab.html</loc><priority>0.5</priority></url>
+  <url><loc>https://www.dlyr-vr.com/en/jeu-outbreak-lab-2.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.dlyr-vr.com/en/jeu-paradise-expedition.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.dlyr-vr.com/en/jeu-snow-village.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.dlyr-vr.com/en/jeu-desert-village.html</loc><priority>0.5</priority></url>
