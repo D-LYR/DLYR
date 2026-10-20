@@ -9,6 +9,7 @@ Site statique du centre de loisir VR D'LYR (Colombes) : jeux VR free-roaming, fl
 ├── catalogue.html          Catalogue des expériences VR
 ├── jeu-*.html              Fiches jeux (11)
 ├── soiree-decouverte.html  Soirée découverte
+├── soiree-halloween.html   Halloween VR Nights
 ├── flechettes.html         Fléchettes
 ├── evenements.html         Évènements & privatisation
 ├── entreprises.html        Team building / séminaires

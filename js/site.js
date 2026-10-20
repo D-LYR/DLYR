@@ -364,6 +364,21 @@
       codes: '180706',
       cats: '180706',
       grouptickets: '180706'
+    },
+    // Halloween VR Nights : un produit par date (boutons data-smeetz-product)
+    'halloween-30': {
+      productId: '77776',
+      wId: '6303',
+      codes: '211855',
+      cats: '211855',
+      grouptickets: '211855'
+    },
+    'halloween-31': {
+      productId: '77777',
+      wId: '6304',
+      codes: '211859',
+      cats: '211859',
+      grouptickets: '211859'
     }
   };
 
@@ -432,8 +447,16 @@
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
-      const a = e.target.closest('a[href="#reserver"], [data-smeetz-open]');
+      const a = e.target.closest('a[href="#reserver"], [data-smeetz-open], [data-smeetz-product]');
       if (!a) return;
+      // Bouton lié à un produit précis (ex. une date d'événement)
+      var key = a.getAttribute('data-smeetz-product');
+      if (key && SMEETZ_PRODUCTS[key]) {
+        e.preventDefault();
+        window.DLYR_track('InitiateCheckout', { content_name: key });
+        smeetzOpen(SMEETZ_PRODUCTS[key]);
+        return;
+      }
       var p = currentProduct();
       if (p) {
         e.preventDefault();

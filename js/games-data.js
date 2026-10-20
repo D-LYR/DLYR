@@ -68,6 +68,7 @@ window.DLYR_GAMES = [
       "Le destin du village repose désormais entre leurs mains."
     ]
   },
+  /* BRAIN ARENA désactivé — retirer ce commentaire pour réactiver
   {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
@@ -82,6 +83,7 @@ window.DLYR_GAMES = [
       "Entre compétition acharnée, éclats de rire et surprises, Brain Arena transforme la culture générale en une véritable expérience immersive où chacun peut devenir champion. Alors, êtes-vous prêt à prouver que vous êtes le plus brillant de l'arène\u00a0?"
     ]
   },
+  */
 
   {
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
