@@ -48,7 +48,7 @@
   if (slug.indexOf('jeu-') === 0 && window.DLYR_GAMES) {
     var game = null;
     for (var i = 0; i < window.DLYR_GAMES.length; i++) {
-      if ((window.DLYR_GAMES[i].href || '').indexOf(slug) !== -1) { game = window.DLYR_GAMES[i]; break; }
+      if ('jeu-' + window.DLYR_GAMES[i].slug === slug) { game = window.DLYR_GAMES[i]; break; }
     }
     var h1 = document.querySelector('h1');
     add({
@@ -59,6 +59,19 @@
       "image": game && game.img ? BASE + game.img : BASE + "uploads/brand/badge-vr.png",
       "brand": { "@type": "Brand", "name": "D'LYR" },
       "offers": { "@type": "Offer", "price": "25", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": BASE + slug + '.html' }
+    });
+  }
+
+  /* Catalogue : liste des jeux, construite depuis DLYR_GAMES (toujours à jour) */
+  if (page === 'catalogue' && window.DLYR_GAMES) {
+    var prefix = document.documentElement.lang === 'en' ? 'en/' : '';
+    add({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "numberOfItems": window.DLYR_GAMES.length,
+      "itemListElement": window.DLYR_GAMES.map(function (g, i) {
+        return { "@type": "ListItem", "position": i + 1, "name": g.name, "url": BASE + prefix + 'jeu-' + g.slug + '.html' };
+      })
     });
   }
 

@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- BRAIN ARENA DISABLED — Remove these 2 lines + noindex to re-enable -->
-<meta http-equiv="refresh" content="0;url=catalogue.html">
-<script>location.replace('catalogue.html');</script>
-<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D'LYR — Brain Arena · VR Game</title>
-<meta name="description" content="Brain Arena — Quiz, Multiplayer, General Knowledge. Accumulate maximum points by answering correctly and quickly to finish on top.">
+<title>D'LYR — Brain Arena · Multiplayer VR Quiz in Colombes</title>
+<meta name="description" content="Brain Arena, D'LYR's immersive virtual reality quiz in Colombes: general knowledge, speed and a real-time leaderboard. 2 to 8 players, 30 minutes.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Cuprum:ital,wght@0,400;0,700;1,700&family=Sora:wght@400;600;700;800&family=Inter:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@500;700&family=Iceland&display=swap">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="../css/pages.css">
@@ -21,10 +17,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="D'LYR">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="D'LYR — Brain Arena · VR Game">
-<meta property="og:description" content="Brain Arena — Quiz, Multiplayer, General Knowledge. Accumulate maximum points by answering correctly and quickly to finish on top.">
+<meta property="og:title" content="D'LYR — Brain Arena · Multiplayer VR Quiz">
+<meta property="og:description" content="Brain Arena, D'LYR's immersive virtual reality quiz in Colombes: general knowledge, speed and a real-time leaderboard. 2 to 8 players, 30 minutes.">
 <meta property="og:url" content="https://www.dlyr-vr.com/en/jeu-brain-arena.html">
-<meta property="og:image" content="https://www.dlyr-vr.com/uploads/brand/badge-vr.png">
+<meta property="og:image" content="https://www.dlyr-vr.com/uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg">
+<meta property="og:image:alt" content="Brain Arena: a player in a VR headset celebrating in front of the real-time leaderboard">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1c3024">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,60 +32,62 @@
 </head>
 <body data-page="jeux" data-game="brain-arena" data-nav="dark">
 
-<!-- ===== HERO : TITRE + 2 COLONNES ===== -->
+<!-- ===== HERO : TITLE + 2 COLUMNS ===== -->
 <section class="jhero bg-ink">
   <div class="wrap">
     <h1 class="jhero__title reveal">Brain Arena</h1>
     <div class="jhero__cta reveal">
-      <a class="btn btn--lime" href="#reserver">Réserver</a>
+      <a class="btn btn--lime" href="#reserver">Book</a>
     </div>
     <div class="jhero__content">
+      <!-- Left Column: Synopsis -->
       <div class="jhero__left reveal">
         <h2 class="eyebrow-bar jhero__sh"><span>Synopsis</span></h2>
-        <p class="lead">Bienvenue dans Brain Arena, le premier jeu télévisé immersif où votre intelligence devient votre véritable super-pouvoir.</p>
-        <p class="lead">Dans une arène futuriste digne des plus grands shows de compétition, vous affrontez vos amis dans une série de défis de culture générale aussi amusants qu'intenses. Histoire, cinéma, musique, sport, sciences, jeux vidéo, géographie ou encore pop culture : choisissez vos catégories et préparez-vous à faire chauffer vos neurones.</p>
-        <p class="lead">Mais ici, connaître la réponse ne suffit pas. Il faut également être le plus rapide. Chaque seconde compte et chaque bonne réponse peut faire basculer le classement.</p>
-        <p class="lead">Entre compétition acharnée, éclats de rire et surprises, Brain Arena transforme la culture générale en une véritable expérience immersive où chacun peut devenir champion.</p>
+        <p class="lead">Welcome to Brain Arena, the first immersive game show where your intelligence becomes your true superpower.</p>
+        <p class="lead">In a futuristic arena worthy of the greatest competition shows, you take on your friends in a series of general-knowledge challenges as fun as they are intense. History, cinema, music, sport, science, video games, geography or pop culture: pick your categories and get ready to fire up your neurons.</p>
+        <p class="lead">But here, knowing the answer isn't enough. You also have to be the fastest. Every second counts and every right answer can shake up the leaderboard.</p>
+        <p class="lead">Between fierce competition, bursts of laughter and surprises, Brain Arena turns general knowledge into a true immersive experience where anyone can become champion.</p>
       </div>
+      <!-- Right Column: Poster -->
       <div class="jhero__stage reveal" data-d="1">
         <div class="jhero__video" aria-label="Game poster">
-          <div class="ph ph--dark jhero__videobg"><img class="ph__img" loading="lazy" src="../uploads/experiences/brain-arena/brain-arena-affiche.png" alt="Brain Arena — VR game poster"></div>
+          <div class="ph ph--dark jhero__videobg"><img class="ph__img" loading="eager" src="../uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg" alt="Brain Arena poster, immersive VR quiz at D'LYR: a player in a VR headset celebrating in front of the real-time leaderboard"></div>
           <span class="jhero__scrim"></span>
         </div>
       </div>
     </div>
-    <!-- Métadonnées sur la même ligne (sous la vidéo) -->
+    <!-- Metadata full width (under poster) -->
     <div class="jhero__meta reveal">
-      <div class="jmeta"><span class="jmeta__k">Type de jeu</span><span class="jmeta__v">Quiz immersif multijoueur</span></div>
-      <div class="jmeta"><span class="jmeta__k">Durée</span><span class="jmeta__v">30 minutes</span></div>
-      <div class="jmeta"><span class="jmeta__k">Nombre de joueurs</span><span class="jmeta__v">2 à 8 joueurs</span></div>
-      <div class="jmeta"><span class="jmeta__k">Objectif</span><span class="jmeta__v">Accumuler le maximum de points en répondant correctement et rapidement aux questions pour terminer en tête du classement.</span></div>
+      <div class="jmeta"><span class="jmeta__k">Game type</span><span class="jmeta__v">Immersive multiplayer quiz</span></div>
+      <div class="jmeta"><span class="jmeta__k">Duration</span><span class="jmeta__v">30 minutes</span></div>
+      <div class="jmeta"><span class="jmeta__k">Number of players</span><span class="jmeta__v">2 to 8 players</span></div>
+      <div class="jmeta"><span class="jmeta__k">Objective</span><span class="jmeta__v">Rack up as many points as possible by answering questions correctly and quickly to finish top of the leaderboard.</span></div>
     </div>
   </div>
 </section>
 
-<!-- ===== AVIS ===== -->
+<!-- ===== REVIEWS ===== -->
 <section class="section bg-ink javis">
   <div class="wrap">
     <div class="javis__head reveal">
-      <h2 class="eyebrow-bar"><span>Avis</span></h2>
-      <div class="javis__score"><span class="javis__scorelabel">Note<br>moyenne</span><span class="javis__scorenum">9,5/10</span></div>
+      <h2 class="eyebrow-bar"><span>Reviews</span></h2>
+      <div class="javis__score"><span class="javis__scorelabel">Average<br>rating</span><span class="javis__scorenum">9,5/10</span></div>
     </div>
     <div class="javis__carousel reveal" data-d="1" data-javis>
-      <button class="rev__nav rev__nav--prev" aria-label="Précédent"><svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7" /></svg></button>
+      <button class="rev__nav rev__nav--prev" aria-label="Previous"><svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7" /></svg></button>
       <div class="javis__viewport"><div class="javis__track" data-javis-track></div></div>
-      <button class="rev__nav rev__nav--next" aria-label="Suivant"><svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7" /></svg></button>
+      <button class="rev__nav rev__nav--next" aria-label="Next"><svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7" /></svg></button>
     </div>
     <div class="javis__dots" data-javis-dots></div>
   </div>
 </section>
 
-<!-- ===== PLUS D'EXPÉRIENCES ===== -->
+<!-- ===== MORE EXPERIENCES ===== -->
 <section class="section bg-ink jmore">
   <div class="wrap">
-    <h2 class="eyebrow-bar jmore__h"><span>Plus d'expériences</span></h2>
+    <h2 class="eyebrow-bar jmore__h"><span>More experiences</span></h2>
     <div class="jmore__grid reveal" data-d="1"></div>
-    <div class="jmore__cta reveal"><a class="btn btn--lime" href="catalogue.html">Voir tout le catalogue</a></div>
+    <div class="jmore__cta reveal"><a class="btn btn--lime" href="catalogue.html">View the full catalogue</a></div>
   </div>
 </section>
 
