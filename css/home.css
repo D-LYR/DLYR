@@ -24,10 +24,10 @@
   position:absolute; top:var(--hero-top); right:0; bottom:0; width:64%;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, rgba(0,0,0,.55) 22%, #000 46%),
-    linear-gradient(to bottom, transparent 0, #000 120px, #000 88%, transparent 100%);
+    linear-gradient(to bottom, #000 88%, transparent 100%);
           mask-image:
     linear-gradient(to right, transparent 0, rgba(0,0,0,.55) 22%, #000 46%),
-    linear-gradient(to bottom, transparent 0, #000 120px, #000 88%, transparent 100%);
+    linear-gradient(to bottom, #000 88%, transparent 100%);
   -webkit-mask-composite:source-in;
           mask-composite:intersect;
 }
@@ -150,8 +150,8 @@
   .hero{ --hero-top:96px; min-height:0; justify-content:flex-end; padding-top:calc(var(--hero-top) + 42vh); }
   .hero__media{
     width:100%; bottom:auto; height:46vh;
-    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 70px, #000 55%, transparent 100%);
-            mask-image:linear-gradient(to bottom, transparent 0, #000 70px, #000 55%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom, #000 55%, transparent 100%);
+            mask-image:linear-gradient(to bottom, #000 55%, transparent 100%);
   }
   .hero__photo{ object-position:62% 40%; }
   .hero__content{ max-width:620px; }
