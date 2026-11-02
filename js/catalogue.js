@@ -6,11 +6,13 @@
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';
 
-  const GAMES = (window.DLYR_GAMES || []).map(g => ({
+  const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: 'jeu-' + g.slug + '.html'
+    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom, cardPos: g.cardPos
   }));
-  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants'];
+  /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
+    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
   const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
 
   const state = { genre: 'Tous', players: 'all', sort: 'az' };
@@ -26,6 +28,13 @@
   const clock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   const ppl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"/></svg>';
 
+  /* Titre + durée/joueurs d'une carte : en bas de l'affiche, juste au-dessus de son slogan
+     (hauteur réglable par expérience avec cardBottom, ex. '14%') */
+  function titleMeta(g) {
+    return `<h3 class="xcard__name">${g.name}</h3>
+          <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}${g.pl ? `<span>${ppl} ${g.pl}</span>` : ''}</div>`;
+  }
+
   function playersBucket(p) { return p <= 1 ? 'solo' : p <= 4 ? 'small' : 'large'; }
 
   function apply() {
@@ -40,16 +49,15 @@
 
     gridEl.innerHTML = list.map((g, i) => `
       <a class="xcard reveal" data-d="${i % 4}" href="${g.href}">
-        <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}">` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
+        <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
         <span class="xcard__scrim"></span>
         <div class="xcard__header">
           <div class="xcard__tags">
             <span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>
             ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
           </div>
-          <h3 class="xcard__name">${g.name}</h3>
-          <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}${g.pl ? `<span>${ppl} ${g.pl}</span>` : ''}</div>
         </div>
+        <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
       </a>`).join('');
 
     if (window.DLYR_reveal) window.DLYR_reveal();

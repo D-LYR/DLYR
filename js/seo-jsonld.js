@@ -17,8 +17,8 @@
     "image": BASE + "uploads/brand/badge-vr.png",
     "email": "contact@dlyr-vr.com",
     "priceRange": "€€",
-    "address": { "@type": "PostalAddress", "streetAddress": "1 Boulevard Charles de Gaulle", "postalCode": "92700", "addressLocality": "Colombes", "addressCountry": "FR" },
-    "hasMap": "https://www.google.com/maps/search/?api=1&query=D%27LYR%2C+1+Boulevard+Charles+de+Gaulle%2C+92700+Colombes",
+    "address": { "@type": "PostalAddress", "streetAddress": "3 Boulevard Charles de Gaulle", "postalCode": "92700", "addressLocality": "Colombes", "addressCountry": "FR" },
+    "hasMap": "https://www.google.com/maps/search/?api=1&query=D%27LYR%2C+3+Boulevard+Charles+de+Gaulle%2C+92700+Colombes",
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "11:00", "closes": "22:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "23:00" },
@@ -29,9 +29,6 @@
   add(biz);
 
   var page = (document.body && document.body.getAttribute('data-page')) || '';
-  var EN = document.documentElement.lang === 'en';
-  /* Adresse officielle de la page = sa balise canonical (sans .html) */
-  var CANON = (document.querySelector('link[rel="canonical"]') || {}).href || (location.origin + location.pathname);
 
   /* FAQPage : construit depuis les données FAQ déjà chargées */
   if (page === 'faq' && window.DLYR_FAQ_DATA) {
@@ -51,7 +48,7 @@
   if (slug.indexOf('jeu-') === 0 && window.DLYR_GAMES) {
     var game = null;
     for (var i = 0; i < window.DLYR_GAMES.length; i++) {
-      if ('jeu-' + window.DLYR_GAMES[i].slug === slug) { game = window.DLYR_GAMES[i]; break; }
+      if ((window.DLYR_GAMES[i].href || '').indexOf(slug) !== -1) { game = window.DLYR_GAMES[i]; break; }
     }
     var h1 = document.querySelector('h1');
     add({
@@ -61,20 +58,7 @@
       "description": (document.querySelector('meta[name="description"]') || {}).content || '',
       "image": game && game.img ? BASE + game.img : BASE + "uploads/brand/badge-vr.png",
       "brand": { "@type": "Brand", "name": "D'LYR" },
-      "offers": { "@type": "Offer", "price": "25", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": CANON }
-    });
-  }
-
-  /* Catalogue : liste des jeux, construite depuis DLYR_GAMES (toujours à jour) */
-  if (page === 'catalogue' && window.DLYR_GAMES) {
-    var prefix = EN ? 'en/' : '';
-    add({
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "numberOfItems": window.DLYR_GAMES.length,
-      "itemListElement": window.DLYR_GAMES.map(function (g, i) {
-        return { "@type": "ListItem", "position": i + 1, "name": g.name, "url": BASE + prefix + 'jeu-' + g.slug };
-      })
+      "offers": { "@type": "Offer", "price": "25", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": BASE + slug + '.html' }
     });
   }
 
@@ -85,8 +69,8 @@
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": EN ? "Home" : "Accueil", "item": BASE + (EN ? 'en/' : '') },
-        { "@type": "ListItem", "position": 2, "name": t, "item": CANON }
+        { "@type": "ListItem", "position": 1, "name": "Accueil", "item": BASE },
+        { "@type": "ListItem", "position": 2, "name": t, "item": BASE + location.pathname.split('/').pop() }
       ]
     });
   }

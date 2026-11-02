@@ -16,6 +16,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab', name: 'Outbreak Lab', genre: 'Aventure',
+    cardBottom: '17%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
     objective: 'Survivre, éliminer les menaces et révéler le secret de X-Labs.',
@@ -26,6 +27,19 @@ window.DLYR_GAMES = [
       "Équipe Bravo, à vous de jouer\u00a0! Dès votre déploiement, vous allez vite comprendre que la mission a viré au cauchemar. Des expériences interdites ont échappé à tout contrôle, et des créatures terrifiantes hantent désormais les couloirs du complexe.",
       "Votre objectif\u00a0: progressez dans les profondeurs du laboratoire, affrontez des hordes de monstres, découvrez ce qui est arrivé à vos frères d'armes et neutralisez l'origine de la catastrophe avant qu'il ne soit trop tard.",
       "Bonne chance, Bravo. Rompez."
+    ]
+  },
+  {
+    slug: 'outbreak-lab-2', name: 'Outbreak Lab II', genre: 'Aventure',
+    tags: ['Survie', 'Action', 'Zombies'],
+    type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    objective: "S'évader d'Apocalypse Stadium et survivre aux hordes de zombies de Nécropolia.",
+    tagline: "L'ultime épreuve.<br>Évadez-vous d'Apocalypse Stadium.",
+    img: 'uploads/experiences/outbreak-lab-2/outbreak-lab-2-affiche.jpg',
+    cardPos: '50% 8%', cardBottom: '6%',
+    story: [
+      "Après la découverte du mythique Temple Solaire, votre escouade d'élite est capturée et plongée en cryogénie. À votre réveil, vos galons ne comptent plus : vous êtes enchaînés au cœur d'Apocalypse Stadium, un Colisée futuriste où vous devez vous battre comme gladiateurs pour survivre sous les yeux d'une foule assoiffée de sang.",
+      "En brisant vos chaînes et en forçant le passage hors de l'arène, vous vous emparez d'un véhicule blindé surarmé. Votre évasion vous propulse directement à Nécropolia, une terre dévastée transformée par vos geôliers en un safari apocalyptique haut de gamme. En mouvement perpétuel au milieu des ruines, il ne vous reste qu'un moyen de vous en sortir : faire pleuvoir le plomb sur des hordes de zombies et de créatures monstrueuses !"
     ]
   },
   {
@@ -69,6 +83,21 @@ window.DLYR_GAMES = [
     ]
   },
   {
+    slug: 'desert-village', name: 'Desert Village', genre: 'Adapté aux enfants',
+    cardBottom: '15%', /* catalogue : hauteur du titre sur l'affiche (slogan en gros caractères) */
+    tags: ['Famille', 'Coopératif', 'Cartoon'],
+    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    img: 'uploads/experiences/desert-village/desert-village-affiche.jpg',
+    objective: 'Repousser les petits monstres du constructeur, protéger les habitants et sauver le village.',
+    tagline: 'La menace du désert.<br>Unissez-vous pour sauver le village.',
+    story: [
+      "Au cœur de dunes dorées et étincelantes se cache Desert Village, un paisible petit hameau bordé de palmiers et de maisons en terre. Mais ce havre de paix est aujourd'hui en grand danger ! Un vilain constructeur sans scrupules a jeté son dévolu sur le village : il veut tout raser pour y implanter un gigantesque complexe pétrolier.",
+      "Pour accomplir son sombre dessein, il déploie une armée de petits monstres… plus mignons que vraiment effrayants !",
+      "Armés de votre courage et de votre sens de l'entraide, plongez en famille au centre de l'action. Dans ce décor au style cartoon éclatant, unissez vos forces en équipe pour repousser les vagues d'ennemis, protéger les habitants et préserver la magie du village.",
+      "Une aventure féerique, drôle et accessible à tous, idéale pour faire ses premiers pas dans le monde merveilleux de la réalité virtuelle !"
+    ]
+  },
+  {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
     type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
@@ -85,6 +114,7 @@ window.DLYR_GAMES = [
 
   {
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
+    cardBottom: '13%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Escape Game', 'Coopératif', 'Science-fiction'],
     type: 'Escape Game VR coopératif', pl: '2 à 6 joueurs', players: 6, dur: 45,
     img: 'uploads/experiences/icarus-station/icarus-station-affiche.png',
@@ -99,6 +129,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'titanic-le-reve-englouti', name: 'Titanic — Le Rêve Englouti', genre: 'Culturel',
+    cardBottom: '4%', /* catalogue : hauteur du titre sur l'affiche (pas de slogan : titre tout en bas) */
     tags: ['Culturel', 'Histoire', 'Exploration'],
     type: 'Exploration historique immersive', pl: '1 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/titanic/titanic-affiche.jpg',
@@ -108,6 +139,20 @@ window.DLYR_GAMES = [
       "Embarquez pour une aventure sous-marine extraordinaire et redécouvrez le Titanic comme si vous y étiez ! Préparez-vous à vivre une expérience immersive et narrative unique, mêlant Histoire, technologie et émotions sur le plus célèbre des paquebots !",
       "Au cours de cette plongée virtuelle à 3800 mètres sous la surface de l'Atlantique, vous explorerez l'épave du Titanic comme jamais auparavant.",
       "Grâce à une technologie de reconstitution révolutionnaire, vous allez remonter le temps et embarquer à bord du Titanic pour son voyage inaugural. Quels secrets du passé allez-vous découvrir dans les profondeurs de l'océan ?"
+    ]
+  },
+  {
+    slug: 'gaudi-latelier-du-divin', name: "Gaudí — L'Atelier du Divin", genre: 'Culturel',
+    hidden: true, /* masqué : accord de diffusion non reçu — supprimer cette ligne pour le réafficher */
+    tags: ['Culturel', 'Art', 'Architecture'],
+    type: 'Exploration narrative', pl: '1 à 12 joueurs', players: 12, dur: 30,
+    img: 'uploads/experiences/gaudi/gaudi-affiche.jpg',
+    objective: 'Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.',
+    tagline: 'Pénétrez dans la tête du maître.<br>Poursuivez le rêve de la Sagrada Familia.',
+    story: [
+      "Affaibli par l'âge et sentant la mort venir, Gaudí invite ses nouveaux assistants à découvrir son atelier pour comprendre sa vision et prolonger son rêve. En se glissant dans le costume d'un disciple et guidé par la voix de Gaudí lui-même, l'utilisateur découvre la personnalité hors du commun de l'architecte, sa méthode de travail révolutionnaire et son univers foisonnant.",
+      "Avec un objectif, comprendre Gaudí et pour reprendre, au moment venu, l'œuvre auquel il a consacré sa vie : la Sagrada Familia.",
+      "Avec Gaudí, L'Atelier du Divin, nous voulons emmener l'utilisateur dans la tête du célèbre architecte : la reconstitution exceptionnelle de l'atelier disparu en 1926 est l'occasion de créer un parcours narratif dans la psyché unique du maître catalan."
     ]
   }
 ];

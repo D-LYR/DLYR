@@ -20,7 +20,54 @@
     if (b && (b.dataset.page === 'jeux' || b.getAttribute('data-game'))) return true;
     return /(?:jeu-[a-z-]+|soiree-decouverte)(?:\.html?)?$/i.test(location.pathname);
   }
+  /* Réservation directe dans l'application D'LYR (remplace le widget Smeetz).
+     Une ligne par page : nom de la page → code de l'expérience (paramètre « exp »).
+     Sur ces pages, tous les boutons « Réserver » mènent à BOOK_BASE + code. */
+  var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
+  var BOOK_EXP = {
+    'jeu-brain-arena': 'brain',
+    'jeu-desert-village': 'custom-desert-village-rhrg',
+    'jeu-gaudi-latelier-du-divin': 'custom-gaudi-l-atelier-du-divin-ca02',
+    'jeu-harbor-siege': 'harbor',
+    'jeu-icarus-station': 'icarus',
+    'jeu-outbreak-lab': 'outbreak',
+    'jeu-outbreak-lab-2': 'custom-outbreak-lab-2-w0xj',
+    'jeu-paradise-expedition': 'paradise',
+    'jeu-snow-village': 'snow',
+    'jeu-titanic-le-reve-englouti': 'titanic',
+    'jeu-volcanic-warfare': 'volcanic',
+    'flechettes': 'flechettes'
+  };
+  /* Pass VR (page Expériences) et bon cadeau (page Offrir) : liens directs vers l'application D'LYR.
+     Pass : repère du bouton « Sélectionner » (data-smeetz-cat) → code du pack (paramètre « pack »). */
+  var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
+  var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
+  var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
+  var GIFT_HREF = GIFT_URL.replace(/&/g, '&amp;'); /* même adresse, prête à être écrite dans le HTML du menu */
+  /* Adresse directe d'un bouton (pass VR ou bon cadeau), sinon '' */
+  function buttonBookUrl(a) {
+    var cat = a.getAttribute('data-smeetz-cat');
+    if (cat && PACK_BY_CAT.hasOwnProperty(cat)) return PACK_BASE + PACK_BY_CAT[cat];
+    if (document.body && document.body.dataset.page === 'offrir' && a.getAttribute('href') === '#reserver') return GIFT_URL;
+    return '';
+  }
+  function pageSlug() {
+    var raw = (document.body && document.body.getAttribute('data-game')) ||
+      (location.pathname.split('/').filter(Boolean).pop() || '').replace(/\.html?$/i, '');
+    return (raw || '').trim();
+  }
+  function directBookUrl() {
+    if (document.body && document.body.dataset.bookUrl) return '';
+    var s = pageSlug();
+    var key = BOOK_EXP.hasOwnProperty(s) ? s : 'jeu-' + s;
+    return BOOK_EXP.hasOwnProperty(key) ? BOOK_BASE + BOOK_EXP[key] : '';
+  }
   function getBookHref() {
+    /* Billetterie propre à la page (attribut data-book-url du <body>) */
+    var b = document.body;
+    if (b && b.dataset.bookUrl) return b.dataset.bookUrl.replace(/&/g, '&amp;');
+    var direct = directBookUrl();
+    if (direct) return direct.replace(/&/g, '&amp;');
     return isGamePage() ? '#reserver' : 'catalogue.html';
   }
   const BOOK_HREF = getBookHref();
@@ -70,7 +117,7 @@
         <div class="nav__cta">
           <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
           <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
-          <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
+          <a class="btn btn--sm btn--cta" href="${GIFT_HREF}">Offrir</a>
         </div>
         <button class="nav__burger" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -98,7 +145,7 @@
       <div class="drawer__cta">
         <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
         <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
-        <a class="btn btn--sm btn--cta" href="offrir.html">Offrir</a>
+        <a class="btn btn--sm btn--cta" href="${GIFT_HREF}">Offrir</a>
       </div>`;
     body.appendChild(drawer);
 
@@ -364,21 +411,6 @@
       codes: '180706',
       cats: '180706',
       grouptickets: '180706'
-    },
-    // Halloween VR Nights : un produit par date (boutons data-smeetz-product)
-    'halloween-30': {
-      productId: '77776',
-      wId: '6303',
-      codes: '211855',
-      cats: '211855',
-      grouptickets: '211855'
-    },
-    'halloween-31': {
-      productId: '77777',
-      wId: '6304',
-      codes: '211859',
-      cats: '211859',
-      grouptickets: '211859'
     }
   };
 
@@ -444,17 +476,45 @@
   }
 
   function reserve() {
+    /* Réservation directe : les boutons « Réserver » de la page mènent à l'application D'LYR */
+    var direct = directBookUrl();
+    if (direct) {
+      document.querySelectorAll('a[href="#reserver"]').forEach(function (a) { a.setAttribute('href', direct); });
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href="#reserver"], a[href="' + direct + '"], [data-smeetz-open]');
+        if (!a) return;
+        window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
+        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = direct; }
+      });
+      return;
+    }
+    /* Pass VR et bon cadeau : ces boutons mènent à l'application D'LYR */
+    document.querySelectorAll('a[href="#reserver"], a[data-smeetz-cat]').forEach(function (a) {
+      var u = buttonBookUrl(a);
+      if (u) a.setAttribute('href', u);
+    });
+    /* Accueil : la carte « Offrir » mène directement au bon cadeau (comme le bouton « Offrir » du menu) */
+    document.querySelectorAll('a.hero__cta-card--offrir').forEach(function (a) { a.setAttribute('href', GIFT_URL); });
     var prod = currentProduct();
     smeetzLoad();
     document.addEventListener('click', (e) => {
-      const a = e.target.closest('a[href="#reserver"], [data-smeetz-open], [data-smeetz-product]');
+      /* Page à billetterie propre : le lien s'ouvre normalement, on suit juste le clic */
+      var bookUrl = document.body && document.body.dataset.bookUrl;
+      if (bookUrl) {
+        if (e.target.closest('a[href="' + bookUrl + '"]')) {
+          window.DLYR_track('InitiateCheckout', { content_name: document.body.getAttribute('data-game') || '' });
+        }
+        return;
+      }
+      var d = e.target.closest('a[href^="' + PACK_BASE + '"], a[href="' + GIFT_URL + '"]');
+      if (d) { window.DLYR_track('InitiateCheckout', { content_name: pageSlug() }); return; }
+      const a = e.target.closest('a[href="#reserver"], [data-smeetz-open]');
       if (!a) return;
-      // Bouton lié à un produit précis (ex. une date d'événement)
-      var key = a.getAttribute('data-smeetz-product');
-      if (key && SMEETZ_PRODUCTS[key]) {
+      var u = buttonBookUrl(a);
+      if (u) {
         e.preventDefault();
-        window.DLYR_track('InitiateCheckout', { content_name: key });
-        smeetzOpen(SMEETZ_PRODUCTS[key]);
+        window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
+        location.href = u;
         return;
       }
       var p = currentProduct();
@@ -569,7 +629,7 @@
     b.setAttribute('aria-label', 'Gestion des cookies');
     b.innerHTML =
       '<div class="cookiebar__txt"><strong>Cookies &amp; confidentialit\u00e9</strong>' +
-      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). Notre module de r\u00e9servation (Smeetz) d\u00e9pose \u00e9galement ses propres cookies. ' +
+      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). ' +
       '<a href="politique-confidentialite.html#cookies">En savoir plus</a></div>' +
       '<div class="cookiebar__btns">' +
       '<button class="btn btn--lime btn--sm" data-cc="accepted">Tout accepter</button>' +

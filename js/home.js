@@ -25,13 +25,15 @@
   /* ---------- Slider Expériences VR ---------- */
   const GAMES = [
     { name: 'Outbreak Lab', genre: 'Aventure', theme: 'Survie · Zombies', pitch: "Un laboratoire contaminé, des couloirs plongés dans le noir et une horde qui se rapproche : survivrez-vous assez longtemps pour percer le secret de X-Labs ?", dur: '30 min', pl: '2 à 12 joueurs', img: 'uploads/experiences/outbreak-lab/outbreak-lab-affiche.jpg', href: 'jeu-outbreak-lab.html' },
+    { name: 'Outbreak Lab II', genre: 'Aventure', theme: 'Survie · Zombies', pitch: "Capturés et jetés dans l'arène d'Apocalypse Stadium : brisez vos chaînes, emparez-vous d'un blindé et faites pleuvoir le plomb sur les hordes de Nécropolia !", dur: '30 min', pl: '2 à 12 joueurs', img: 'uploads/experiences/outbreak-lab-2/outbreak-lab-2-affiche.jpg', href: 'jeu-outbreak-lab-2.html' },
     { name: 'Titanic — Le Rêve Englouti', genre: 'Culturel', theme: 'Histoire · Exploration', pitch: "Explorer le Titanic, percer ses mystères et revivre son voyage inaugural.", dur: '30 min', pl: '1 à 12 joueurs', img: 'uploads/experiences/titanic/titanic-affiche.jpg', href: 'jeu-titanic-le-reve-englouti.html' },
     { name: 'Volcanic Warfare', genre: 'Action', theme: 'Team Deathmatch · Tactique', pitch: "La lave dévale l'île et le sol tremble sous vos pieds. Deux équipes s'affrontent, une seule victoire : jouez serré, la montagne ne pardonne pas.", dur: '30 min', pl: '4 à 8 joueurs', img: 'uploads/experiences/volcanic-warfare/volcanic-warfare-affiche.jpg', href: 'jeu-volcanic-warfare.html' },
     /* CULTUREL désactivé — { name: 'Versailles — Les Jardins Disparus du Roi Soleil', genre: 'Culturel', theme: 'Histoire · Exploration', pitch: "Explorer les jardins disparus et découvrir les trésors cachés de Versailles.", dur: '30 min', pl: '1 à 12 joueurs', img: 'uploads/experiences/versailles/versailles-affiche.png', href: 'jeu-versailles-les-jardins-disparus-du-roi-soleil.html' }, */
     { name: 'Paradise Expedition', genre: 'Action', theme: 'Free For All · Survie', pitch: "Une serre tropicale magnifique… et impitoyable. Chacun pour soi : dans ce paradis perdu, chaque rencontre peut être votre dernière.", dur: '30 min', pl: '2 à 12 joueurs', img: 'uploads/experiences/paradise-expedition/paradise-expedition-affiche.jpg', href: 'jeu-paradise-expedition.html' },
     /* CULTUREL désactivé — { name: 'Quantum Dome Project — Le Louvre Abu Dhabi', genre: 'Culturel', theme: 'Aventure · Histoire', pitch: "Embarquez pour une aventure extraordinaire à travers les âges. Explorez la Rome impériale, la Maison de la Sagesse de Bagdad et l'Inde moghole.", dur: '30 min', pl: '1 à 12 joueurs', img: 'uploads/experiences/quantum-dome/quantum-dome-affiche.png', href: 'jeu-quantum-dome-project.html' }, */
     { name: 'Harbor Siege', genre: 'Action', theme: 'Conquête · Stratégie', pitch: "Deux équipes, un port abandonné, des ruelles à prendre mètre par mètre. Coordonnez-vous, tenez vos positions et dominez le champ de bataille.", dur: '30 min', pl: '2 à 12 joueurs', img: 'uploads/experiences/harbor-siege/harbor-siege-affiche.jpg', href: 'jeu-harbor-siege.html' },
-    /* CULTUREL désactivé — { name: 'Gaudí — L\'Atelier du Divin', genre: 'Culturel', theme: 'Art · Architecture', pitch: "Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.", dur: '30 min', pl: '1 à 12 joueurs', img: 'uploads/experiences/gaudi/gaudi-affiche.png', href: 'jeu-gaudi-latelier-du-divin.html' }, */
+    { name: 'Desert Village', genre: 'Adapté aux enfants', theme: 'Coopératif · Cartoon', pitch: "Un constructeur sans scrupules veut raser le village. En famille, repoussez ses petits monstres et sauvez Desert Village !", dur: '30 min', pl: '2 à 12 joueurs', img: 'uploads/experiences/desert-village/desert-village-affiche.jpg', href: 'jeu-desert-village.html' },
+    /* MASQUÉ (accord de diffusion non reçu) — { name: 'Gaudí — L\'Atelier du Divin', genre: 'Culturel', theme: 'Art · Architecture', pitch: "Comprendre Gaudí, plonger dans son atelier et reprendre son œuvre : la Sagrada Familia.", dur: '30 min', pl: '1 à 12 joueurs', img: 'uploads/experiences/gaudi/gaudi-affiche.jpg', href: 'jeu-gaudi-latelier-du-divin.html' }, */
   ];
   function posters() {
     const grid = document.querySelector('[data-posters]');
@@ -253,6 +255,72 @@
     render();
   }
 
+  /* ---------- Carrousel d'évènements ----------
+     Une slide par carte .evcar__slide dans la page : pour ajouter un
+     évènement, dupliquer une carte dans index.html et en/index.html. */
+  function eventsCarousel() {
+    const root = document.querySelector('[data-evcar]');
+    if (!root) return;
+    const track = root.querySelector('[data-evcar-track]');
+    const slides = Array.from(track.children);
+    if (slides.length < 2) { root.setAttribute('data-single', ''); return; }
+    const dots = root.querySelector('[data-evcar-dots]');
+    const lbl = isEN ? 'Event' : 'Évènement';
+    dots.innerHTML = slides.map((_, i) => `<button type="button" aria-label="${lbl} ${i + 1}"></button>`).join('');
+    const dotBtns = Array.from(dots.children);
+    let idx = 0, timer = null;
+
+    // Petit écran : cartes empilées, de hauteurs différentes → la hauteur suit la carte affichée
+    const compact = () => window.matchMedia('(max-width: 880px)').matches;
+
+    function render() {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      track.style.height = compact() ? slides[idx].offsetHeight + 'px' : '';
+      track.style.transform = `translateX(calc(${-idx} * (100% + ${gap}px)))`;
+      slides.forEach((s, i) => {
+        s.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+        if ('inert' in s) s.inert = i !== idx;
+      });
+      dotBtns.forEach((b, i) => {
+        b.classList.toggle('on', i === idx);
+        b.setAttribute('aria-current', i === idx ? 'true' : 'false');
+      });
+    }
+    function go(i) { idx = (i + slides.length) % slides.length; render(); }
+
+    // Défilement automatique (grand écran seulement, pour ne pas faire bouger la page sur mobile) :
+    // suspendu au survol, au focus et quand l'onglet est masqué
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function start() { stop(); if (!reduce && !compact()) timer = setInterval(() => go(idx + 1), 7000); }
+    const next = () => { go(idx + 1); start(); };
+    const prev = () => { go(idx - 1); start(); };
+
+    root.querySelector('[data-evcar-next]').addEventListener('click', next);
+    root.querySelector('[data-evcar-prev]').addEventListener('click', prev);
+    dotBtns.forEach((b, i) => b.addEventListener('click', () => { go(i); start(); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+    if (window.DLYR_swipe) window.DLYR_swipe(root.querySelector('.evcar__viewport'), { left: next, right: prev });
+
+    // Les images des slides masquées sont chargées dès que le carrousel approche de l'écran
+    const loadImgs = () => root.querySelectorAll('img[loading="lazy"]').forEach(im => { im.loading = 'eager'; });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((en) => {
+        if (en.some(x => x.isIntersecting)) { io.disconnect(); loadImgs(); }
+      }, { rootMargin: '400px 0px' });
+      io.observe(root);
+    } else { loadImgs(); }
+
+    window.addEventListener('resize', () => { render(); start(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+    render();
+    start();
+  }
+
   /* ---------- Compteurs animés ---------- */
   function counters() {
     const els = document.querySelectorAll('[data-count]');
@@ -276,6 +344,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); googleReviews(); counters();
+    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters();
   });
 })();
