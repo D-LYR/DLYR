@@ -99,10 +99,9 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
-    hidden: true, /* masqué des Expériences : supprimer cette ligne pour le réafficher */
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
     type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
-    img: 'uploads/experiences/brain-arena/brain-arena-affiche.png',
+    img: 'uploads/experiences/brain-arena/brain-arena-affiche.jpg',
     objective: 'Accumuler le maximum de points en répondant correctement et rapidement aux questions pour terminer en tête du classement.',
     tagline: 'La connaissance est<br>votre meilleure arme',
     story: [
