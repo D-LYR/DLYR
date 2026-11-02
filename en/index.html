@@ -83,32 +83,91 @@
     <div class="hero__scroll" aria-hidden="true"><span></span></div>
   </header>
 
-  <!-- ===================== SPECIAL EVENT: HALLOWEEN NIGHT ===================== -->
-  <section class="section bg-paper tex soiree-teaser" id="soiree-halloween">
+  <!-- ===================== EVENTS: CAROUSEL (one .evcar__slide card per event) ===================== -->
+  <section class="section bg-paper tex soiree-teaser" id="soiree-decouverte">
     <div class="wrap">
-      <h2 class="h2 eyebrow-bar" style="margin-bottom:clamp(20px, 3vw, 32px)"><span>Exclusive Event</span></h2>
-      <div class="soiree-card reveal">
-        <div class="soiree-card__content">
-          <div class="soiree-card__badge">
-            <span class="soiree-card__badge-dot"></span>
-            October 30 &amp; 31 · 8:00 PM – 11:00 PM
-          </div>
-          <h3 class="soiree-card__title">Halloween <strong>VR Nights</strong></h3>
-          <ul class="soiree-card__features">
-            <li class="soiree-card__feature"><span>✓</span> €25 / person</li>
-            <li class="soiree-card__feature"><span>✓</span> 40 spots max. per night</li>
-            <li class="soiree-card__feature"><span>✓</span> Bar &amp; pizzas on site*</li>
-            <li class="soiree-card__feature"><span>✓</span> 8 spots to win for the best players…</li>
-          </ul>
-          <div class="soiree-card__actions">
-            <a class="btn btn--lime" href="soiree-halloween.html">
-              Discover the Halloween night
-            </a>
-            <span class="soiree-card__subtext">*Bar and pizzas at extra cost, not included in the price.</span>
+      <h2 class="h2 eyebrow-bar" style="margin-bottom:clamp(20px, 3vw, 32px)"><span>Upcoming Events</span></h2>
+      <div class="evcar reveal" data-evcar role="region" aria-roledescription="carousel" aria-label="Upcoming events">
+        <div class="evcar__viewport">
+          <div class="evcar__track" data-evcar-track>
+            <div class="soiree-card evcar__slide">
+              <div class="soiree-card__content">
+                <div class="soiree-card__badge">
+                  <span class="soiree-card__badge-dot"></span>
+                  Saturday, November 28 · 8:00 PM – 11:00 PM
+                </div>
+                <h3 class="soiree-card__title">Discovery Night: <strong>Unlimited VR</strong></h3>
+                <p class="soiree-card__desc">
+                  Experience an exceptional night reserved for the first 40 guests. Quick back-to-back sessions: play, take a break, and play again! Everyone gets the chance to go several times. On the programme: Zombie Shooter, Arena PVP and Strategic Domination, at an exclusive rate of just €25!
+                </p>
+                <ul class="soiree-card__features">
+                  <li class="soiree-card__feature"><span>✓</span> 3 hours unlimited VR access</li>
+                  <li class="soiree-card__feature"><span>✓</span> €25 / person</li>
+                  <li class="soiree-card__feature"><span>✓</span> Limited to 40 players</li>
+                  <li class="soiree-card__feature"><span>✓</span> Lounge &amp; connected darts</li>
+                </ul>
+                <div class="soiree-card__actions">
+                  <a class="btn btn--lime" href="soiree-decouverte.html">
+                    Discover the event
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </a>
+                  <span class="soiree-card__subtext">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Tickets open · 40 spots max
+                  </span>
+                </div>
+              </div>
+              <div class="soiree-card__media">
+                <img loading="lazy" src="../uploads/evenements/high-five.jpg" alt="Group of VR players high-fiving at D'LYR">
+                <div class="soiree-card__price-tag">
+                  <strong>€25</strong> · Unlimited Pass
+                </div>
+              </div>
+            </div>
+            <!-- HALLOWEEN 2026 masqué (évènement passé) — retirer ces marques pour le réafficher
+            <div class="soiree-card evcar__slide">
+              <div class="soiree-card__content">
+                <div class="soiree-card__badge">
+                  <span class="soiree-card__badge-dot"></span>
+                  Friday, October 30 &amp; Saturday, October 31 · 8:00 PM – 11:00 PM
+                </div>
+                <h3 class="soiree-card__title">This Halloween, dare the great <strong>D'LYR!</strong></h3>
+                <p class="soiree-card__desc">
+                  This year, don't watch a horror movie… step inside one! Put on your headset, gather your team and face your fears in virtual reality adventures. Chills, screams and fits of laughter to share with friends…
+                </p>
+                <ul class="soiree-card__features">
+                  <li class="soiree-card__feature"><span>✓</span> 3 hours of VR chills</li>
+                  <li class="soiree-card__feature"><span>✓</span> €25 / person</li>
+                </ul>
+                <div class="soiree-card__actions">
+                  <a class="btn btn--lime" href="https://admin.dlyr-vr.com/?client=1&amp;evenement=EVT-5558B08F">
+                    Book October 30
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </a>
+                  <a class="btn btn--lime" href="https://admin.dlyr-vr.com/?client=1&amp;evenement=EVT-0052D0A1">
+                    Book October 31
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </a>
+                  <span class="soiree-card__subtext">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Tickets on sale
+                  </span>
+                </div>
+              </div>
+              <div class="soiree-card__media soiree-card__media--poster">
+                <img loading="lazy" src="../uploads/evenements/halloween-affiche.jpg" alt="Halloween at D'LYR poster: two frightened participants wearing VR headsets, surrounded by pumpkins">
+                <div class="soiree-card__price-tag">
+                  <strong>€25</strong> · per person
+                </div>
+              </div>
+            </div>
+            HALLOWEEN 2026 -->
           </div>
         </div>
-        <div class="soiree-card__media">
-          <img loading="lazy" src="../uploads/evenements/halloween-vr-nights-visuel.jpg" alt="Halloween VR Nights at D'LYR: players in VR headsets in a Halloween setting">
+        <div class="evcar__foot">
+          <button type="button" class="evcar__nav" data-evcar-prev aria-label="Previous event"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button>
+          <div class="evcar__dots" data-evcar-dots></div>
+          <button type="button" class="evcar__nav" data-evcar-next aria-label="Next event"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </div>
     </div>
