@@ -418,6 +418,7 @@
 .maps__card .h3{ color:var(--ink); }
 .maps__line{ display:flex; align-items:center; gap:10px; font-size:16px; }
 .maps__line svg{ width:22px; height:22px; color:var(--blue); flex:none; }
+.maps__line a{ color:inherit; text-decoration:underline; text-underline-offset:3px; }
 .maps__rule{ border:none; border-top:2px solid var(--lime); margin:8px 0; }
 .maps__how{ display:flex; flex-direction:column; gap:10px; }
 .maps__how p{ font-size:15px; line-height:1.45; }
