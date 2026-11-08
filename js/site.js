@@ -582,7 +582,7 @@
   /* ============================================================
      Pixel Meta (Facebook) — chargé UNIQUEMENT après consentement
      ============================================================ */
-  var META_PIXEL_ID = '1443068404365497';
+  var META_PIXEL_IDS = ['1443068404365497', '1855618918965512'];
 
   function loadMetaPixel() {
     if (window.__metaPixelLoaded) return;
@@ -595,7 +595,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window,document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    window.fbq('init', META_PIXEL_ID);
+    META_PIXEL_IDS.forEach(function (id) { window.fbq('init', id); });
     window.fbq('track', 'PageView');
   }
 
