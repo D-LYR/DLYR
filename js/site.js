@@ -599,6 +599,25 @@
     window.fbq('track', 'PageView');
   }
 
+  /* ============================================================
+     Google Ads (gtag.js) — chargé UNIQUEMENT après consentement
+     ============================================================ */
+  var GOOGLE_ADS_ID = 'AW-18466204211';
+
+  function loadGoogleAds() {
+    if (window.__googleAdsLoaded) return;
+    window.__googleAdsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GOOGLE_ADS_ID);
+    var t = document.createElement('script');
+    t.async = true;
+    t.src = 'https://www.googletagmanager.com/gtag/js?id=' + GOOGLE_ADS_ID;
+    var y = document.getElementsByTagName('script')[0];
+    y.parentNode.insertBefore(t, y);
+  }
+
   // Évènement de conversion Meta : sans consentement (pixel non chargé), ne fait rien.
   window.DLYR_track = function (ev, params) {
     if (window.__metaPixelLoaded && window.fbq) window.fbq('track', ev, params || {});
@@ -607,10 +626,10 @@
   function analytics() {
     var KEY = 'dlyr_cookie_consent';
     try {
-      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
+      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
     } catch (e) {}
     window.addEventListener('dlyr:consent', function (e) {
-      if (e.detail === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
+      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
     });
     // Clic sur un lien téléphone ou mail → évènement « Contact »
     document.addEventListener('click', function (e) {
