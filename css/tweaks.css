@@ -515,3 +515,11 @@ html[lang="en"] .soiree-card--soldout::after {
 .stat__google-txt{ border-bottom:1px solid rgba(232,238,221,.35); padding-bottom:1px; transition:border-color .2s ease, color .2s ease; }
 .stat__google-txt strong{ font-family:var(--f-display); font-weight:800; }
 .stat__google:hover .stat__google-txt,.stat__google:focus-visible .stat__google-txt{ color:var(--lime); border-color:var(--lime); }
+
+/* ---- Accueil, section Lounge : 3 photos de même taille ---- */
+.snack__grid{ grid-template-columns:repeat(3, 1fr); }
+.snack__grid .snack__media,
+.snack__grid .snack__media--tall{ grid-column:auto; grid-row:auto; aspect-ratio:4/3; min-height:0; }
+@media (max-width:980px){
+  .snack__grid{ grid-template-columns:1fr; }
+}
