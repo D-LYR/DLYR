@@ -446,5 +446,22 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Faites plaisir à coup sûr : offrez une carte cadeau D'LYR et laissez l'heureux(se) élu(e) choisir son immersion VR ou ses fléchettes.": "A gift that always hits the mark: give a D'LYR gift card and let the lucky recipient choose their VR immersion or darts.",
   "Sélectionnez le montant de votre choix parmi nos différentes propositions, ajoutez un petit mot personnalisé, et la carte est envoyée par email instantanément. Valable sur nos expériences VR et nos fléchettes.": "Choose your amount, add a personal note, and the card is emailed instantly. Valid on our VR experiences and darts.",
   "Un montant suggéré ou le montant de votre choix, par tranches de 20 €.": "A suggested amount or any amount you like, in €20 steps.",
-  "Ajoutez un petit mot : il figurera sur la carte.": "Add a short note: it will appear on the card."
+  "Ajoutez un petit mot : il figurera sur la carte.": "Add a short note: it will appear on the card.",
+
+  /* ---------- Réserver par date (nov. 2026) ---------- */
+  "Réserver par date": "Book by date",
+  "Je préfère choisir mon jeu d'abord": "I'd rather pick my game first",
+  "Quel jour ?": "Which day?",
+  "Combien de participants ?": "How many participants?",
+  "Choisissez votre expérience": "Choose your experience",
+  "participants": "participants",
+  "Au-delà de 12 participants, nous organisons votre venue sur mesure (plusieurs arènes, privatisation).": "For more than 12 participants, we organise a tailor-made visit (several arenas, private booking).",
+  "Demander un devis": "Request a quote",
+  "Aucune expérience ne se joue à ce nombre de participants.": "No experience can be played with this number of participants.",
+  "Choisir une date": "Choose a date",
+  "Un participant de moins": "One participant fewer",
+  "Un participant de plus": "One more participant",
+  "Vous savez déjà quand venir ?": "Already know when you're coming?",
+  "Choisissez d'abord votre date, on vous montre les expériences adaptées à votre groupe.": "Pick your date first and we'll show you the experiences that suit your group.",
+  "Choisir ma date": "Pick my date"
 });
