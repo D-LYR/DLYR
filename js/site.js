@@ -582,7 +582,7 @@
   /* ============================================================
      Pixel Meta (Facebook) — chargé UNIQUEMENT après consentement
      ============================================================ */
-  var META_PIXEL_ID = '1443068404365497';
+  var META_PIXEL_IDS = ['1443068404365497', '1855618918965512'];
 
   function loadMetaPixel() {
     if (window.__metaPixelLoaded) return;
@@ -595,27 +595,62 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window,document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    window.fbq('init', META_PIXEL_ID);
+    META_PIXEL_IDS.forEach(function (id) { window.fbq('init', id); });
     window.fbq('track', 'PageView');
   }
 
+  /* ============================================================
+     Google Ads (gtag.js) — chargé UNIQUEMENT après consentement
+     ============================================================ */
+  var GOOGLE_ADS_ID = 'AW-18466204211';
+  // Libellés des actions de conversion (partie après « AW-18466204211/ »)
+  var GOOGLE_ADS_ITINERAIRE = 'STvZCOL457MdELPUr-VE';
+  var GOOGLE_ADS_RESERVER = 'sGclCJLQvLQdELPUr-VE'; // clic sur « Réserver »
+
+  // Envoie une conversion Google Ads ; sans consentement (tag non chargé) ou sans libellé, ne fait rien.
+  function adsConversion(label) {
+    if (!label || !window.__googleAdsLoaded || !window.gtag) return;
+    window.gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + label, transport_type: 'beacon' });
+  }
+
+  function loadGoogleAds() {
+    if (window.__googleAdsLoaded) return;
+    window.__googleAdsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GOOGLE_ADS_ID);
+    var t = document.createElement('script');
+    t.async = true;
+    t.src = 'https://www.googletagmanager.com/gtag/js?id=' + GOOGLE_ADS_ID;
+    var y = document.getElementsByTagName('script')[0];
+    y.parentNode.insertBefore(t, y);
+  }
+
   // Évènement de conversion Meta : sans consentement (pixel non chargé), ne fait rien.
+  // « InitiateCheckout » (clic sur un bouton de réservation) part aussi vers Google Ads.
   window.DLYR_track = function (ev, params) {
     if (window.__metaPixelLoaded && window.fbq) window.fbq('track', ev, params || {});
+    if (ev === 'InitiateCheckout') adsConversion(GOOGLE_ADS_RESERVER);
   };
 
   function analytics() {
     var KEY = 'dlyr_cookie_consent';
     try {
-      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
+      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
     } catch (e) {}
     window.addEventListener('dlyr:consent', function (e) {
-      if (e.detail === 'accepted') { loadGTM(); loadClarity(); loadMetaPixel(); }
+      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
     });
     // Clic sur un lien téléphone ou mail → évènement « Contact »
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href^="tel:"], a[href^="mailto:"]');
       if (a) window.DLYR_track('Contact');
+    });
+    // Clic sur l'adresse (itinéraire Google Maps) → conversion Google Ads « Itinéraire »
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[data-itineraire]');
+      if (a) adsConversion(GOOGLE_ADS_ITINERAIRE);
     });
   }
 
@@ -712,7 +747,7 @@
           <div class="ph pmaps__map map-embed"><iframe src="https://www.google.com/maps?q=1+Boulevard+Charles+de+Gaulle+92700+Colombes&output=embed&hl=fr" title="Carte — D'LYR, 1 Bd Charles de Gaulle, Colombes" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
           <div class="pmaps__card">
             <h3 class="h3">Horaires d'ouverture</h3>
-            <p class="pmaps__line">${ICONS.pin} 1 Bd Charles de Gaulle, 92700 Colombes – Hall A - Rez de Jardin</p>
+            <p class="pmaps__line">${ICONS.pin} <a href="https://www.google.com/maps/dir/?api=1&destination=1+Boulevard+Charles+de+Gaulle+92700+Colombes" target="_blank" rel="noopener" data-itineraire>1 Bd Charles de Gaulle, 92700 Colombes – Hall A - Rez de Jardin</a></p>
             <p class="pmaps__line">${ICONS.clock} 7j/7 · Lun–Ven 11h–22h30 · Sam. 10h–23h · Dim. 10h–20h</p>
             <hr class="pmaps__rule">
             <h3 class="h3">Comment s'y rendre ?</h3>
