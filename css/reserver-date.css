@@ -1,0 +1,38 @@
+/* ============================================================
+   D'LYR — Réserver par date (s'appuie sur catalogue.css)
+   ============================================================ */
+.rdate__switch{ font-family:var(--f-btn); font-weight:700; font-size:16px; color:var(--ink); text-decoration:underline; text-underline-offset:4px; }
+.rdate__switch:hover{ color:#0e1a13; }
+.rdate__steps{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:clamp(26px,3vw,40px); }
+.rdate__h{ display:flex; align-items:center; gap:12px; font-family:var(--f-display); font-weight:800; font-size:clamp(22px,2vw,30px); color:var(--ink); margin:0 0 14px; }
+.rdate__n{ display:inline-grid; place-items:center; width:36px; height:36px; border-radius:50%; background:var(--ink); color:var(--lime); font-size:18px; flex:none; }
+
+.rdate__days{ display:flex; gap:10px; overflow-x:auto; padding:4px 2px 10px; scroll-snap-type:x proximity; transition:transform .2s; }
+.rdate__days.is-nudged{ animation:rdate-nudge .5s ease 2; }
+@keyframes rdate-nudge{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
+.rdate__day{ flex:none; scroll-snap-align:start; width:74px; padding:10px 0 9px; border-radius:14px; border:2px solid rgba(28,48,36,.25); background:rgba(232,238,221,.35); color:var(--ink); display:flex; flex-direction:column; align-items:center; gap:2px; font-family:var(--f-btn); cursor:pointer; transition:.2s; }
+.rdate__day:hover:not(:disabled){ border-color:var(--ink); }
+.rdate__day.on{ background:var(--ink); border-color:var(--ink); color:var(--lime); }
+.rdate__day:disabled{ opacity:.4; cursor:not-allowed; background:transparent; }
+.rdate__wd{ font-size:13px; font-weight:700; text-transform:capitalize; }
+.rdate__dn{ font-family:var(--f-display); font-size:26px; font-weight:800; line-height:1; }
+.rdate__mo{ font-size:12px; font-weight:600; text-transform:capitalize; }
+.rdate__info{ margin:8px 0 0; font-size:16px; font-weight:600; color:var(--ink); min-height:1.4em; }
+
+.rdate__count{ display:flex; align-items:center; gap:14px; }
+.rdate__btn{ width:46px; height:46px; border-radius:50%; border:2px solid var(--ink); color:var(--ink); font-size:24px; font-weight:700; line-height:1; background:rgba(232,238,221,.35); cursor:pointer; }
+.rdate__btn:hover:not(:disabled){ background:var(--ink); color:var(--lime); }
+.rdate__btn:disabled{ opacity:.35; cursor:not-allowed; }
+.rdate__val{ min-width:40px; text-align:center; font-family:var(--f-display); font-weight:800; font-size:34px; color:var(--ink); }
+.rdate__unit{ font-family:var(--f-btn); font-weight:700; font-size:16px; color:var(--ink); }
+.rdate__big{ margin:14px 0 0; padding:14px 18px; border-radius:14px; background:var(--ink); color:var(--paper); font-size:16px; max-width:640px; }
+.rdate__big a{ color:var(--lime); font-weight:700; text-decoration:underline; }
+.rdate__hint{ margin:-4px 0 16px; font-size:16px; color:var(--ink); }
+.rdate .cat__grid.is-waiting .xcard{ opacity:.45; filter:grayscale(.6); }
+.rdate .cat__grid.is-waiting .xcard:hover{ transform:none; box-shadow:none; }
+
+/* Bandeau du catalogue vers cette page */
+.cat__bydate{ display:flex; align-items:center; justify-content:space-between; gap:12px 20px; flex-wrap:wrap; margin:0 0 clamp(16px,2vw,22px); padding:14px 18px; border-radius:16px; background:var(--ink); color:var(--paper); }
+.cat__bydate p{ margin:0; font-size:16px; }
+.cat__bydate strong{ color:var(--lime); }
+@media (max-width:640px){ .rdate__day{ width:64px; } .rdate__dn{ font-size:22px; } }
