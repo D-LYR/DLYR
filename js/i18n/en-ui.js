@@ -360,6 +360,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Nous écrire": "Contact us",
   "Réservations de groupe, anniversaires, privatisation, objets oubliés ou simple curiosité : tout arrive dans la même boîte, et rien ne reste sans réponse.": "Group bookings, birthdays, private hire, lost property or simple curiosity: everything lands in the same inbox, and nothing goes unanswered.",
   "92700 Colombes – Hall A - Rez de Jardin": "92700 Colombes – Hall A - Garden Level",
+  "1 Bd Charles de Gaulle, 92700 Colombes – Hall A - Rez de Jardin": "1 Bd Charles de Gaulle, 92700 Colombes – Hall A - Garden Level",
   "Prénom": "First name",
   "Votre prénom": "Your first name",
   "Réservation": "Booking",
