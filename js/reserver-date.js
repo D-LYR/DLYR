@@ -130,13 +130,13 @@
       return `<div class="rdate__card"><a class="xcard" href="${href.replace(/&/g, '&amp;')}" data-book="${g.slug}"${state.date ? '' : ' aria-disabled="true"'}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : ''}</div>
         <span class="xcard__scrim"></span>
-        <div class="xcard__header">
+        <div class="xcard__header"${g.cardTop ? ` style="top:${g.cardTop}"` : ''}>
           <div class="xcard__tags">
             ${g.genre ? `<span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>` : ''}
             ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
           </div>
         </div>
-        <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>
+        <div class="xcard__footer${g.cardNoName ? ' xcard__footer--noname' : ''}"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>
           <h3 class="xcard__name">${g.name}</h3>
           <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}<span>${ppl} ${g.pl}</span></div>
         </div>

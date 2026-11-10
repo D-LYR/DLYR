@@ -12,7 +12,7 @@
   const BOOK = window.DLYR_BOOK || { base: '', exp: {} };
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     slug: g.slug, story: g.story, name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos
+    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos, cardNoName: g.cardNoName, cardTop: g.cardTop
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
   const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
@@ -55,13 +55,13 @@
       <div class="rdate__card reveal" data-d="${i % 4}"><a class="xcard" href="${g.href.replace(/&/g, '&amp;')}"${g.book ? ` data-book="${g.slug}"` : ''}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
         <span class="xcard__scrim"></span>
-        <div class="xcard__header">
+        <div class="xcard__header"${g.cardTop ? ` style="top:${g.cardTop}"` : ''}>
           <div class="xcard__tags">
             <span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>
             ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
           </div>
         </div>
-        <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
+        <div class="xcard__footer${g.cardNoName ? ' xcard__footer--noname' : ''}"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
       </a>${window.DLYR_SYN ? DLYR_SYN.button(g) : ''}</div>`).join('');
 
     if (window.DLYR_reveal) window.DLYR_reveal();

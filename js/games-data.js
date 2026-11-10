@@ -132,7 +132,7 @@ window.DLYR_GAMES = [
     cardBottom: '4%', /* catalogue : hauteur du titre sur l'affiche (pas de slogan : titre tout en bas) */
     tags: ['Culturel', 'Histoire', 'Exploration'],
     type: 'Exploration historique immersive', pl: '1 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/titanic/titanic-affiche-logo.jpg', cardPos: '50% 100%', /* affiche cadrée en bas : navire + logo D'LYR visibles */
+    img: 'uploads/experiences/titanic/titanic-affiche-logo.jpg', cardPos: '50% 0%', cardBottom: '25.5%', cardTop: '19%', cardNoName: true, /* affiche cadrée en haut : titre TITANIC visible (étiquettes sous le titre), nom du jeu déjà sur l'affiche, durée/joueurs sur la ligne de flottaison, logo D'LYR dégagé */
     objective: 'Explorer le Titanic, percer ses mystères et revivre son voyage inaugural.',
     tagline: 'Redécouvrez le Titanic.<br>Remontez le temps.',
     story: [

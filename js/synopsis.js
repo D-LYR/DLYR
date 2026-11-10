@@ -59,7 +59,7 @@
 
   function button(g) {
     return g && g.story && g.story.length
-      ? `<button type="button" class="rdate__synbtn" data-syn="${g.slug}" aria-label="${T.syn} : ${g.name}" title="${T.syn}">${book}</button>` : '';
+      ? `<button type="button" class="rdate__synbtn" data-syn="${g.slug}"${g.cardTop ? ` style="top:calc(${g.cardTop} + 10px)"` : ''} aria-label="${T.syn} : ${g.name}" title="${T.syn}">${book}</button>` : '';
   }
   window.DLYR_SYN = { open, close, button };
 })();
