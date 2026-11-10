@@ -328,14 +328,17 @@
       entries.forEach(e => {
         if (!e.isIntersecting) return;
         const el = e.target; io.unobserve(el);
-        const target = parseFloat(el.dataset.count);
+        // Relu à chaque image : la note Google peut arriver pendant l'animation
+        const target = () => parseFloat(el.dataset.count);
         const dec = parseInt(el.dataset.dec || '0', 10);
         const dur = 1400; const start = performance.now();
+        // Virgule décimale en français (5,0), point en anglais (5.0)
+        const fmt = v => { const t = v.toFixed(dec); return document.documentElement.lang === 'en' ? t : t.replace('.', ','); };
         function step(now) {
           const p = Math.min((now - start) / dur, 1);
           const ease = 1 - Math.pow(1 - p, 3);
-          el.textContent = (target * ease).toFixed(dec);
-          if (p < 1) requestAnimationFrame(step); else el.textContent = target.toFixed(dec);
+          el.textContent = fmt(target() * ease);
+          if (p < 1) requestAnimationFrame(step); else { el.textContent = fmt(target()); el.dataset.done = '1'; }
         }
         requestAnimationFrame(step);
       });
@@ -343,7 +346,38 @@
     els.forEach(el => io.observe(el));
   }
 
+  /* ---------- Note Google en direct ----------
+     Dernier relevé quotidien de la fiche Google (fonction google-reviews-sync
+     de l'admin, base Supabase « D'LYR PROD »). Seules la note moyenne et le
+     nombre d'avis sont exposés. En cas d'échec, les valeurs écrites dans la
+     page (data-g-note / data-g-count) restent affichées. */
+  const GRATING_URL = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/rest/v1/rpc/public_google_rating';
+  const GRATING_KEY = 'sb_publishable_oKOLGd461XVPULJR0jB5xg_O2EA1uLj'; // clé publique (lecture seule)
+  function googleRating() {
+    if (!document.querySelector('[data-g-note], [data-g-count]')) return;
+    const en = document.documentElement.lang === 'en';
+    fetch(GRATING_URL, { method: 'POST', headers: { apikey: GRATING_KEY, 'Content-Type': 'application/json' }, body: '{}' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const g = Array.isArray(d) ? d[0] : null;
+        const note = g ? Number(g.note) : NaN, n = g ? Number(g.nombre) : NaN;
+        if (!(note > 0 && note <= 5) || !(n > 0)) return;
+        const noteTxt = en ? note.toFixed(1) : note.toFixed(1).replace('.', ',');
+        const set = (sel, val, txt) => document.querySelectorAll(sel).forEach(el => {
+          if (el.hasAttribute('data-count')) { el.dataset.count = String(val); if (el.dataset.done) el.textContent = txt; }
+          else el.textContent = txt;
+        });
+        set('[data-g-note]', note, noteTxt);
+        set('[data-g-count]', n, String(n));
+        document.querySelectorAll('[data-g-label="hero"]').forEach(a => a.setAttribute('aria-label',
+          en ? 'Google rating: ' + noteTxt + ' out of 5, ' + n + ' reviews' : 'Note Google : ' + noteTxt + ' sur 5, ' + n + ' avis'));
+        document.querySelectorAll('[data-g-label="stat"]').forEach(a => a.setAttribute('aria-label',
+          en ? 'See the ' + n + " D'LYR reviews on Google" : 'Voir les ' + n + " avis D'LYR sur Google"));
+      })
+      .catch(() => {});
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters();
+    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters(); googleRating();
   });
 })();
