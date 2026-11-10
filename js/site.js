@@ -48,6 +48,8 @@
   };
   /* Pass VR (page Expériences) et bon cadeau (page Offrir) : liens directs vers l'application D'LYR.
      Pass : repère du bouton « Sélectionner » (data-smeetz-cat) → code du pack (paramètre « pack »). */
+  /* Partagé avec la page « Réserver par date » (js/reserver-date.js) */
+  window.DLYR_BOOK = { base: BOOK_BASE, exp: BOOK_EXP };
   var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
   var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
   var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
