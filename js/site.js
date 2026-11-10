@@ -32,6 +32,7 @@
     flechettes: 'Dès 12 € la demi-heure, pour tout le groupe'
   };
   var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
+  var BOOK_CRENEAU = 'https://admin.dlyr-vr.com/?client=1&parcours=creneau'; /* réservation hors fiche jeu : nouveau parcours par créneau */
   var BOOK_EXP = {
     'jeu-brain-arena': 'brain',
     'jeu-desert-village': 'custom-desert-village-rhrg',
@@ -78,7 +79,7 @@
     if (b && b.dataset.bookUrl) return b.dataset.bookUrl.replace(/&/g, '&amp;');
     var direct = directBookUrl();
     if (direct) return direct.replace(/&/g, '&amp;');
-    return isGamePage() ? '#reserver' : 'catalogue.html';
+    return isGamePage() ? '#reserver' : BOOK_CRENEAU.replace(/&/g, '&amp;');
   }
   const BOOK_HREF = getBookHref();
 
@@ -560,7 +561,7 @@
         return;
       }
       e.preventDefault();
-      location.href = 'catalogue.html';
+      location.href = BOOK_CRENEAU;
     });
   }
 
