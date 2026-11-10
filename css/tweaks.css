@@ -577,3 +577,13 @@ html[lang="en"] .soiree-card--soldout::after {
 /* Page Expériences : titre plus près du menu */
 .section.cat--top{ padding-top:calc(104px + clamp(12px,1.6vw,24px)); }
 @media (max-width:900px){ .section.cat--top{ padding-top:calc(100px + 16px); } }
+
+/* ---- Page Expériences : bandeau du haut sur fond vert clair ---- */
+.cat.bg-paper .cat__title{ color:var(--ink); }
+.cat.bg-paper .cat__count,
+.cat.bg-paper .cat__head .cat__count{ color:rgba(28,48,36,.7); }
+.cat.bg-paper .cat__chip{ color:var(--ink); border-color:rgba(28,48,36,.3); }
+.cat.bg-paper .cat__chip:hover{ border-color:var(--ink); }
+.cat.bg-paper .cat__chip.on{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.cat.bg-paper .cat__empty{ color:rgba(28,48,36,.7); }
+.cat--top.bg-paper .cat__bar.is-stuck{ background:rgba(141,169,131,.94); }
