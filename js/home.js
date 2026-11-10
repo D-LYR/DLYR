@@ -331,11 +331,13 @@
         const target = parseFloat(el.dataset.count);
         const dec = parseInt(el.dataset.dec || '0', 10);
         const dur = 1400; const start = performance.now();
+        // Virgule décimale en français (5,0), point en anglais (5.0)
+        const fmt = v => { const t = v.toFixed(dec); return document.documentElement.lang === 'en' ? t : t.replace('.', ','); };
         function step(now) {
           const p = Math.min((now - start) / dur, 1);
           const ease = 1 - Math.pow(1 - p, 3);
-          el.textContent = (target * ease).toFixed(dec);
-          if (p < 1) requestAnimationFrame(step); else el.textContent = target.toFixed(dec);
+          el.textContent = fmt(target * ease);
+          if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target);
         }
         requestAnimationFrame(step);
       });
