@@ -587,3 +587,15 @@ html[lang="en"] .soiree-card--soldout::after {
 .cat.bg-paper .cat__chip.on{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
 .cat.bg-paper .cat__empty{ color:rgba(28,48,36,.7); }
 .cat--top.bg-paper .cat__bar.is-stuck{ background:rgba(141,169,131,.94); }
+
+/* ===== Prix d'appel (point 1 : prix visibles avant la réservation) ===== */
+.jhero__cta{ flex-direction:column; align-items:center; gap:10px; }
+.jhero__price{ margin:0; font-family:var(--f-btn); font-weight:700; font-size:15px; letter-spacing:.02em; color:var(--lime,#d4bc72); }
+.xcard__meta .xcard__price{ color:var(--lime,#d4bc72); }
+.cat__price{ margin:-6px 0 clamp(16px,2vw,24px); font-size:15px; color:var(--ink,#1c3024); }
+.cat__price strong{ display:inline-block; background:var(--ink,#1c3024); color:var(--lime,#d4bc72); font-family:var(--f-btn); padding:4px 12px; border-radius:999px; margin-right:8px; }
+.phero__price{ display:inline-block; margin:14px 0 18px; padding:6px 16px; border-radius:999px; background:var(--ink,#1c3024); font-family:var(--f-btn); font-weight:700; font-size:clamp(15px,1.3vw,18px); color:var(--lime,#d4bc72); }
+
+/* ===== Offrir : montants suggérés (point 11) ===== */
+.combo__lead{ color:rgba(194,208,179,.8); max-width:720px; margin-bottom:clamp(24px,3vw,40px); }
+.combo__note{ margin-top:18px; font-size:14px; color:rgba(194,208,179,.6); text-align:center; }
