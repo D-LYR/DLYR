@@ -12,12 +12,14 @@
     closed: 'Closed', open: 'Open', from: 'to', perP: 'per participant',
     hint: n => `Experiences that can be played with ${n} participant${n > 1 ? 's' : ''}. Available time slots appear on the next step.`,
     pickDay: 'Pick a day to continue.',
-    exc: 'Special opening hours'
+    exc: 'Special opening hours',
+    noneGenre: 'No experience of this type can be played with this number of participants.'
   } : {
     closed: 'Fermé', open: 'Ouvert', from: 'à', perP: 'par participant',
     hint: n => `Les expériences jouables à ${n} participant${n > 1 ? 's' : ''}. Les créneaux libres s'affichent à l'étape suivante.`,
     pickDay: 'Choisissez un jour pour continuer.',
-    exc: 'Horaires exceptionnels'
+    exc: 'Horaires exceptionnels',
+    noneGenre: 'Aucune expérience de ce type ne se joue à ce nombre de participants.'
   };
 
   const SB_URL = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/rest/v1/';
@@ -39,12 +41,26 @@
   const gridEl = document.querySelector('[data-grid]');
   const emptyEl = document.querySelector('[data-empty]');
   if (!daysEl || !gridEl) return;
+  const emptyDefault = emptyEl ? emptyEl.innerHTML : '';
+
+  /* ---- Sélecteur de type d'expérience (mêmes catégories et couleurs que le catalogue) ---- */
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
+    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
+  const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
+  const filtersEl = document.createElement('div');
+  filtersEl.className = 'cat__filters rdate__filters';
+  filtersEl.setAttribute('role', 'group');
+  filtersEl.setAttribute('aria-label', EN ? 'Experience type' : "Type d'expérience");
+  filtersEl.innerHTML = GENRES.map(g =>
+    `<button type="button" class="cat__chip${g === 'Tous' ? ' on' : ''}" data-genre="${g}" aria-pressed="${g === 'Tous'}">${g}</button>`).join('');
+  gridEl.insertAdjacentElement('beforebegin', filtersEl);
 
   /* ---- État (repris de l'adresse, pour que « retour » retrouve le choix) ---- */
   const qs = new URLSearchParams(location.search);
   const state = {
     date: /^\d{4}-\d{2}-\d{2}$/.test(qs.get('date') || '') ? qs.get('date') : null,
-    n: Math.min(24, Math.max(1, parseInt(qs.get('n'), 10) || 2))
+    n: Math.min(24, Math.max(1, parseInt(qs.get('n'), 10) || 2)),
+    genre: 'Tous'
   };
   let HOURS = null, EXC = {}, PRICES = null;
 
@@ -102,7 +118,10 @@
     document.querySelector('[data-plus]').disabled = n >= 24;
     const big = n > MAX_ONLINE;
     bigEl.hidden = !big;
-    const list = big ? [] : GAMES.filter(g => n >= g.min && n <= g.max);
+    const byN = big ? [] : GAMES.filter(g => n >= g.min && n <= g.max);
+    const list = byN.filter(g => state.genre === 'Tous' || g.genre === state.genre);
+    filtersEl.hidden = big;
+    if (emptyEl) emptyEl.innerHTML = byN.length ? T.noneGenre : emptyDefault;
     hintEl.textContent = big ? '' : (state.date ? T.hint(n) : T.pickDay);
     gridEl.classList.toggle('is-waiting', !state.date);
     emptyEl.hidden = big || list.length > 0;
@@ -110,6 +129,13 @@
       const href = state.date ? `${BOOK.base}${encodeURIComponent(g.code)}&date=${state.date}&n=${n}` : '#reserver-par-date';
       return `<a class="xcard" href="${href.replace(/&/g, '&amp;')}" data-book="${g.slug}"${state.date ? '' : ' aria-disabled="true"'}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : ''}</div>
+        <span class="xcard__scrim"></span>
+        <div class="xcard__header">
+          <div class="xcard__tags">
+            ${g.genre ? `<span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>` : ''}
+            ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
+          </div>
+        </div>
         <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>
           <h3 class="xcard__name">${g.name}</h3>
           <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}<span>${ppl} ${g.pl}</span></div>
@@ -130,6 +156,11 @@
     const b = e.target.closest('[data-date]'); if (!b || b.disabled) return;
     state.date = b.dataset.date; render();
     if (window.DLYR_track) window.DLYR_track('ReserverParDate_Jour', { content_name: state.date });
+  });
+  filtersEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-genre]'); if (!b) return;
+    filtersEl.querySelectorAll('[data-genre]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    state.genre = b.dataset.genre; renderGames();
   });
   document.querySelector('[data-minus]').addEventListener('click', () => { state.n = Math.max(1, state.n - 1); renderGames(); syncUrl(); });
   document.querySelector('[data-plus]').addEventListener('click', () => { state.n = Math.min(24, state.n + 1); renderGames(); syncUrl(); });
