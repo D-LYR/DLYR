@@ -504,3 +504,14 @@ html[lang="en"] .soiree-card--soldout::after {
 .hero__rating-g{ flex:none; background:#fff; border-radius:50%; padding:2px; }
 .hero__rating-stars{ display:inline-flex; gap:2px; color:#fbbc04; }
 .hero__rating-txt strong{ font-family:var(--f-display); font-weight:800; font-size:1.15em; }
+
+/* ---- Note Google : étoiles + nombre d'avis (lien vers la fiche) ---- */
+.stat__google{
+  display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
+  margin-top:6px; color:var(--paper); text-decoration:none;
+  font-family:var(--f-body); font-size:clamp(16px,1.3vw,19px);
+}
+.stat__google-stars{ display:inline-flex; gap:3px; color:#fbbc04; }
+.stat__google-txt{ border-bottom:1px solid rgba(232,238,221,.35); padding-bottom:1px; transition:border-color .2s ease, color .2s ease; }
+.stat__google-txt strong{ font-family:var(--f-display); font-weight:800; }
+.stat__google:hover .stat__google-txt,.stat__google:focus-visible .stat__google-txt{ color:var(--lime); border-color:var(--lime); }
