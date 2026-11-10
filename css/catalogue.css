@@ -64,3 +64,6 @@
   .cat__filters{ display:flex; overflow-x:auto; flex-wrap:nowrap; width:100%; -webkit-overflow-scrolling:touch; padding-bottom:6px; gap:8px; }
   .cat__chip{ flex:none; font-size:15px; padding:7px 16px; }
 }
+
+/* Affiche qui porte déjà le nom du jeu : nom masqué à l'écran (toujours lu par les lecteurs d'écran) */
+.xcard__footer--noname .xcard__name{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
