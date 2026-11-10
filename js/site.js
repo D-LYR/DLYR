@@ -737,7 +737,7 @@
       <div class="wrap">
         <h2 class="h1 eyebrow-bar" style="margin-bottom:clamp(36px,4vw,56px)"><span>Bar&amp;Snack</span></h2>
         <div class="steaser__grid reveal">
-          <div class="ph steaser__media steaser__media--tall"><img class="ph__img" loading="lazy" src="${prefix}uploads/lieu/accueil-bar.jpg" alt="Le bar de D'LYR"></div>
+          <div class="ph steaser__media steaser__media--tall"><img class="ph__img" loading="lazy" src="${prefix}uploads/lieu/lounge-ecran.jpg" alt="Le bar de D'LYR"></div>
           <div class="ph steaser__media"><img class="ph__img" src="${prefix}uploads/lieu/lounge-arbre-2.jpg" alt="L'espace lounge avec arbre central chez D'LYR"></div>
           <div class="ph steaser__media"><img class="ph__img" loading="lazy" src="${prefix}uploads/lieu/bar-snack.jpg" alt="L'espace bar & snack"></div>
         </div>
