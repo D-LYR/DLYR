@@ -458,6 +458,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Au-delà de 12 participants, nous organisons votre venue sur mesure (plusieurs arènes, privatisation).": "For more than 12 participants, we organise a tailor-made visit (several arenas, private booking).",
   "Demander un devis": "Request a quote",
   "Aucune expérience ne se joue à ce nombre de participants.": "No experience can be played with this number of participants.",
+  "Aucune expérience de ce type ne se joue à ce nombre de participants.": "No experience of this type can be played with this number of participants.",
   "Choisir une date": "Choose a date",
   "Un participant de moins": "One participant fewer",
   "Un participant de plus": "One more participant",
