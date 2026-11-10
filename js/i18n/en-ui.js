@@ -421,5 +421,30 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   /* ---------- Bar&Snack / accès ---------- */
   "Boissons au bar de D'LYR": "Drinks at the D'LYR bar",
   "L'espace snack de D'LYR": "The D'LYR snack area",
-  "Parking Q-Park à 300m — tarif négocié.": "Q-Park car park 300 m away — negotiated rate."
+  "Parking Q-Park à 300m — tarif négocié.": "Q-Park car park 300 m away — negotiated rate.",
+
+  /* ---------- Prix d'appel et montants cadeaux (nov. 2026) ---------- */
+  "Dès 24,90 € / participant": "From €24.90 per participant",
+  "dès 24,90 €": "from €24.90",
+  "De 24,90 € à 32 € par participant selon le jour et l'heure.": "€24.90 to €32 per participant depending on the day and time.",
+  "Tarif": "Price",
+  "Idées cadeaux pour Noël": "Christmas gift ideas",
+  "Trois montants pensés pour couvrir nos sessions VR, quel que soit le jour. Le bon cadeau est valable 12 mois sur la VR et les fléchettes : c'est l'heureux(se) élu(e) qui choisit son jeu et son créneau.": "Three amounts designed to cover our VR sessions on any day. The gift card is valid for 12 months on VR and darts: the lucky recipient picks their game and time slot.",
+  "La découverte": "The discovery",
+  "1 session VR": "1 VR session",
+  "De quoi offrir une session de réalité virtuelle de 30 minutes, n'importe quel jour de la semaine.": "Enough for a 30-minute virtual reality session, any day of the week.",
+  "Duo VR": "VR for two",
+  "Deux sessions VR à partager à deux : entre amis, en couple ou en famille.": "Two VR sessions to share: with a friend, a partner or family.",
+  "Entre amis": "With friends",
+  "La bande au complet": "The whole crew",
+  "Jusqu'à 4 sessions VR en semaine, ou de la VR et des fléchettes pour toute la bande.": "Up to 4 VR sessions on weekdays, or VR and darts for the whole crew.",
+  "Offrir 40 €": "Gift €40",
+  "Offrir 80 €": "Gift €80",
+  "Offrir 120 €": "Gift €120",
+  "Vous choisirez le montant à l'étape suivante, avec les boutons + / −.": "You'll pick the amount on the next step, using the + / − buttons.",
+  "son immersion VR ou ses fléchettes.": "their VR immersion or darts.",
+  "Faites plaisir à coup sûr : offrez une carte cadeau D'LYR et laissez l'heureux(se) élu(e) choisir son immersion VR ou ses fléchettes.": "A gift that always hits the mark: give a D'LYR gift card and let the lucky recipient choose their VR immersion or darts.",
+  "Sélectionnez le montant de votre choix parmi nos différentes propositions, ajoutez un petit mot personnalisé, et la carte est envoyée par email instantanément. Valable sur nos expériences VR et nos fléchettes.": "Choose your amount, add a personal note, and the card is emailed instantly. Valid on our VR experiences and darts.",
+  "Un montant suggéré ou le montant de votre choix, par tranches de 20 €.": "A suggested amount or any amount you like, in €20 steps.",
+  "Ajoutez un petit mot : il figurera sur la carte.": "Add a short note: it will appear on the card."
 });
