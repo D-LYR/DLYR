@@ -32,7 +32,7 @@
     flechettes: 'Dès 12 € la demi-heure, pour tout le groupe'
   };
   var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
-  var BOOK_CRENEAU = 'https://admin.dlyr-vr.com/?client=1&parcours=creneau'; /* réservation hors fiche jeu : nouveau parcours par créneau */
+  var BOOK_CRENEAU = 'https://admin.dlyr-vr.com/?client=1&parcours=creneau'; /* nouveau parcours par créneau : utilisé par la page « Réserver par date » */
   var BOOK_EXP = {
     'jeu-brain-arena': 'brain',
     'jeu-desert-village': 'custom-desert-village-rhrg',
@@ -50,7 +50,7 @@
   /* Pass VR (page Expériences) et bon cadeau (page Offrir) : liens directs vers l'application D'LYR.
      Pass : repère du bouton « Sélectionner » (data-smeetz-cat) → code du pack (paramètre « pack »). */
   /* Partagé avec la page « Réserver par date » (js/reserver-date.js) */
-  window.DLYR_BOOK = { base: BOOK_BASE, exp: BOOK_EXP };
+  window.DLYR_BOOK = { base: BOOK_BASE, exp: BOOK_EXP, creneau: BOOK_CRENEAU };
   var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
   var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
   var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
@@ -79,7 +79,7 @@
     if (b && b.dataset.bookUrl) return b.dataset.bookUrl.replace(/&/g, '&amp;');
     var direct = directBookUrl();
     if (direct) return direct.replace(/&/g, '&amp;');
-    return isGamePage() ? '#reserver' : BOOK_CRENEAU.replace(/&/g, '&amp;');
+    return isGamePage() ? '#reserver' : 'catalogue.html';
   }
   const BOOK_HREF = getBookHref();
 
@@ -561,7 +561,7 @@
         return;
       }
       e.preventDefault();
-      location.href = BOOK_CRENEAU;
+      location.href = 'catalogue.html';
     });
   }
 

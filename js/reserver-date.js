@@ -4,7 +4,7 @@
    Les horaires et les tarifs sont lus en direct dans la base
    « D'LYR PROD » (tables en lecture publique). Les créneaux libres
    restent calculés par l'outil de réservation, à l'étape suivante :
-   le lien lui transmet &date=AAAA-MM-JJ&n=<participants>.
+   le lien ouvre le parcours par créneau avec &date=AAAA-MM-JJ&n=<participants>.
    ============================================================ */
 (function () {
   const EN = document.documentElement.lang === 'en';
@@ -126,7 +126,9 @@
     gridEl.classList.toggle('is-waiting', !state.date);
     emptyEl.hidden = big || list.length > 0;
     gridEl.innerHTML = list.map(g => {
-      const href = state.date ? `${BOOK.base}${encodeURIComponent(g.code)}&date=${state.date}&n=${n}` : '#reserver-par-date';
+      /* Parcours par créneau de l'outil : jour et participants pré-remplis, le client y choisit l'heure puis l'expérience.
+         (Le jeu n'est pas transmis : l'outil ne sait pas encore combiner « exp » avec ce parcours.) */
+      const href = state.date ? (BOOK.creneau ? `${BOOK.creneau}&date=${state.date}&n=${n}` : `${BOOK.base}${encodeURIComponent(g.code)}&date=${state.date}&n=${n}`) : '#reserver-par-date';
       return `<div class="rdate__card"><a class="xcard" href="${href.replace(/&/g, '&amp;')}" data-book="${g.slug}"${state.date ? '' : ' aria-disabled="true"'}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : ''}</div>
         <span class="xcard__scrim"></span>
