@@ -47,6 +47,7 @@
 .pmaps__card .h3{ color:var(--ink); }
 .pmaps__line{ display:flex; align-items:center; gap:10px; font-size:16px; }
 .pmaps__line svg{ width:22px; height:22px; color:var(--blue); flex:none; }
+.pmaps__line a{ color:inherit; text-decoration:underline; text-underline-offset:3px; }
 .pmaps__rule{ border:none; border-top:2px solid var(--lime); margin:8px 0; }
 .pmaps__how{ display:flex; flex-direction:column; gap:10px; }
 .pmaps__how p{ font-size:15px; line-height:1.45; }
