@@ -37,3 +37,22 @@
 .cat__bydate p{ margin:0; font-size:16px; }
 .cat__bydate strong{ color:var(--lime); }
 @media (max-width:640px){ .rdate__day{ width:64px; } .rdate__dn{ font-size:22px; } }
+
+/* Bouton « Synopsis » sur chaque affiche + fenêtre de lecture */
+.rdate__card{ position:relative; }
+.rdate__card .xcard__header{ padding-right:56px; }
+.rdate__card .xcard__tags{ overflow:hidden; }
+.rdate__synbtn{ position:absolute; top:10px; right:10px; z-index:6; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(16,31,21,.82); color:#fff; border:2px solid rgba(255,255,255,.55); box-shadow:0 3px 10px rgba(0,0,0,.45); cursor:pointer; transition:.2s; }
+.rdate__synbtn svg{ width:18px; height:18px; }
+.rdate__synbtn:hover, .rdate__synbtn:focus-visible{ background:var(--lime,#d4bc72); color:var(--ink); border-color:var(--lime,#d4bc72); }
+.rdate__syn{ position:fixed; inset:0; z-index:1000; background:rgba(10,20,14,.82); display:flex; align-items:center; justify-content:center; padding:24px 16px; cursor:pointer; overflow-y:auto; }
+.rdate__syn[hidden]{ display:none; }
+.rdate__synbox{ position:relative; max-width:640px; width:100%; margin:auto; background:var(--ink,#1c3024); color:var(--paper,#e8eedd); border:1px solid rgba(194,208,179,.25); border-radius:var(--r-sm,16px); padding:clamp(22px,4vw,40px); box-shadow:0 24px 60px rgba(0,0,0,.55); }
+.rdate__synbox .xcard__tags{ margin-bottom:12px; flex-wrap:wrap; }
+.rdate__synx{ position:absolute; top:10px; right:14px; font-size:30px; line-height:1; color:var(--paper,#e8eedd); background:none; border:0; cursor:pointer; }
+.rdate__syntitle{ font-family:var(--f-display); font-weight:800; font-size:clamp(26px,3vw,36px); line-height:1.05; margin:0 0 8px; color:#fff; }
+.rdate__synmeta{ justify-content:flex-start; margin-bottom:16px; text-shadow:none; }
+.rdate__synbox p{ font-size:16px; line-height:1.6; margin:0 0 12px; }
+.rdate__syngoal{ margin-top:16px !important; padding-top:14px; border-top:1px solid rgba(194,208,179,.2); }
+.rdate__syngoal strong{ color:var(--lime,#d4bc72); margin-right:6px; }
+html.rdate-syn-open, html.rdate-syn-open body{ overflow:hidden; }
