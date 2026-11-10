@@ -3,6 +3,7 @@
    ============================================================ */
 (function () {
   const I = window.DLYR_ICONS || {};
+  const P = window.DLYR_PRIX || {};
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';
 
@@ -32,7 +33,7 @@
      (hauteur réglable par expérience avec cardBottom, ex. '14%') */
   function titleMeta(g) {
     return `<h3 class="xcard__name">${g.name}</h3>
-          <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}${g.pl ? `<span>${ppl} ${g.pl}</span>` : ''}</div>`;
+          <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}${g.pl ? `<span>${ppl} ${g.pl}</span>` : ''}${P.vrCourt ? `<span class="xcard__price">${P.vrCourt}</span>` : ''}</div>`;
   }
 
   function playersBucket(p) { return p <= 1 ? 'solo' : p <= 4 ? 'small' : 'large'; }
@@ -89,6 +90,15 @@
     const y = gridEl.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - parseFloat(getComputedStyle(bar).top) - 16;
     window.scrollTo({ top: y, behavior: 'smooth' });
   });
+
+  /* Prix d'appel sous le titre du catalogue */
+  const head = document.querySelector('.cat__head');
+  if (head && P.vr && !document.querySelector('.cat__price')) {
+    const p = document.createElement('p');
+    p.className = 'cat__price';
+    p.innerHTML = `<strong>${P.vr}</strong> <span>${P.vrDetail || ''}</span>`;
+    head.insertAdjacentElement('afterend', p);
+  }
 
   apply();
 })();

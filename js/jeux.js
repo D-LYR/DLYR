@@ -9,6 +9,21 @@
   const slug = document.body.dataset.game || 'outbreak-lab';
   const TK = 'dlyr-trailer-t-' + slug;
 
+  /* ---- Prix d'appel ---- */
+  const P = window.DLYR_PRIX || {};
+  if (P.vr) {
+    const cta = document.querySelector('.jhero__cta');
+    if (cta && !cta.querySelector('.jhero__price')) {
+      cta.insertAdjacentHTML('beforeend', `<p class="jhero__price">${P.vr}</p>`);
+    }
+    const meta = document.querySelector('.jhero__meta');
+    if (meta && !meta.querySelector('[data-tarif]')) {
+      const dur = [...meta.querySelectorAll('.jmeta')].find(m => /Durée|Duration/.test(m.textContent));
+      const html = `<div class="jmeta" data-tarif><span class="jmeta__k">Tarif</span><span class="jmeta__v">${P.vr}</span></div>`;
+      dur ? dur.insertAdjacentHTML('afterend', html) : meta.insertAdjacentHTML('beforeend', html);
+    }
+  }
+
   // flèche
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';

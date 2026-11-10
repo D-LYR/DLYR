@@ -23,6 +23,14 @@
   /* Réservation directe dans l'application D'LYR (remplace le widget Smeetz).
      Une ligne par page : nom de la page → code de l'expérience (paramètre « exp »).
      Sur ces pages, tous les boutons « Réserver » mènent à BOOK_BASE + code. */
+  /* Prix d'appel affichés sur le site (accueil, catalogue, fiches jeux, fléchettes).
+     À tenir à jour avec la grille tarifaire de l'application D'LYR. */
+  window.DLYR_PRIX = {
+    vr: 'Dès 24,90 € / participant',
+    vrCourt: 'dès 24,90 €',
+    vrDetail: 'De 24,90 € à 32 € par participant selon le jour et l\'heure.',
+    flechettes: 'Dès 12 € la demi-heure, pour tout le groupe'
+  };
   var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
   var BOOK_EXP = {
     'jeu-brain-arena': 'brain',
