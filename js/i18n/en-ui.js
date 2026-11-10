@@ -12,6 +12,8 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Fléchettes dans le mille — cible en feu": "Darts hitting the bullseye — flaming target",
   "Cible de fléchettes électronique": "Electronic dartboard",
   "Fléchettes": "Darts",
+  "Arcade": "Arcade",
+  "Karaoké": "Karaoke",
   "Évènements": "Events",
   "Entreprises": "Corporate",
   "Réserver": "Book Now",

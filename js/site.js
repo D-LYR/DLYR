@@ -5,7 +5,7 @@
   document.documentElement.classList.add('js-anim');
   const PAGES = [
     { href: 'catalogue.html',   label: 'Expériences', key: 'catalogue' },
-    { href: 'flechettes.html',  label: 'Fléchettes',  key: 'flechettes' },
+    { href: 'activites.html',   label: 'Activités',   key: 'activites', also: ['flechettes', 'arcade', 'karaoke'] },
     { href: 'evenements.html',  label: 'Évènements',  key: 'evenements' },
     { href: 'entreprises.html', label: 'Entreprises', key: 'entreprises' },
     { href: 'snack-bar.html',   label: 'Bar&Snack',   key: 'snack' },
@@ -105,7 +105,7 @@
     const onPaper = body.dataset.nav === 'paper';
     const bookHref = getBookHref();
     const links = PAGES.map(p =>
-      `<a href="${p.href}"${p.key === current ? ' aria-current="page"' : ''}>${p.label}</a>`
+      `<a href="${p.href}"${(p.key === current || (p.also || []).indexOf(current) > -1) ? ' aria-current="page"' : ''}>${p.label}</a>`
     ).join('');
 
     const nav = document.createElement('header');
@@ -141,7 +141,7 @@
     drawer.className = 'drawer';
     drawer.innerHTML = `
       <button class="drawer__close" aria-label="Fermer">&times;</button>
-      ${PAGES.map(p => `<a href="${p.href}"${p.key === current ? ' aria-current="page"' : ''}>${p.label}</a>`).join('')}
+      ${PAGES.map(p => `<a href="${p.href}"${(p.key === current || (p.also || []).indexOf(current) > -1) ? ' aria-current="page"' : ''}>${p.label}</a>`).join('')}
       <div class="drawer__cta">
         <button class="lang-btn" data-lang-toggle type="button" aria-label="Switch site to English" title="English version"><svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"></rect><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"></path><path d="M0 0 60 40M60 0 0 40" stroke="#C8102E" stroke-width="4"></path><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"></path><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="8"></path></svg></button>
         <a class="btn btn--sm btn--cta" href="${bookHref}">Réserver</a>
@@ -187,9 +187,9 @@
               <a href="${SOCIAL.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">${ICONS.linkedin}</a>
             </div>
           </div>
-          ${col('Activités', [['Expériences','catalogue.html'],['Fléchettes','flechettes.html']])}
+          ${col('Activités', [['Expériences','catalogue.html'],['Fléchettes','flechettes.html'],['Arcade','arcade.html'],['Karaoké','karaoke.html']])}
           ${col('Mentions légales', [['Politique de confidentialité','politique-confidentialite.html'],['Mentions légales','mentions-legales.html'],['CGV','cgv.html'],['Gérer les cookies','#gerer-cookies']])}
-          ${col('Plan du site', [['Accueil','index.html'],['Expériences','catalogue.html'],['Fléchettes','flechettes.html'],['Évènements','evenements.html'],['Entreprises','entreprises.html'],['Offrir','offrir.html'],['Bar&Snack','snack-bar.html'],['FAQ','faq.html'],['Contact','contact.html']])}
+          ${col('Plan du site', [['Accueil','index.html'],['Expériences','catalogue.html'],['Activités','activites.html'],['Évènements','evenements.html'],['Entreprises','entreprises.html'],['Offrir','offrir.html'],['Bar&Snack','snack-bar.html'],['FAQ','faq.html'],['Contact','contact.html']])}
         </div>
       </div>
       <div class="footer__word" aria-hidden="true"><img src="${prefix}uploads/brand/logo-noir.png" alt=""></div>
