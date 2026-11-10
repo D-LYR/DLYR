@@ -7,9 +7,12 @@
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';
 
+  /* Clic sur l'affiche = bouton « Réserver » de la fiche du jeu (application D'LYR) ;
+     sans code de réservation, l'affiche mène à la fiche du jeu. */
+  const BOOK = window.DLYR_BOOK || { base: '', exp: {} };
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
-    name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom, cardPos: g.cardPos
+    slug: g.slug, story: g.story, name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
+    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
   const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
@@ -49,7 +52,7 @@
     emptyEl.hidden = list.length > 0;
 
     gridEl.innerHTML = list.map((g, i) => `
-      <a class="xcard reveal" data-d="${i % 4}" href="${g.href}">
+      <div class="rdate__card reveal" data-d="${i % 4}"><a class="xcard" href="${g.href.replace(/&/g, '&amp;')}"${g.book ? ` data-book="${g.slug}"` : ''}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
         <span class="xcard__scrim"></span>
         <div class="xcard__header">
@@ -59,11 +62,15 @@
           </div>
         </div>
         <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
-      </a>`).join('');
+      </a>${window.DLYR_SYN ? DLYR_SYN.button(g) : ''}</div>`).join('');
 
     if (window.DLYR_reveal) window.DLYR_reveal();
   }
 
+  gridEl.addEventListener('click', e => {
+    const a = e.target.closest('[data-book]');
+    if (a && window.DLYR_track) window.DLYR_track('InitiateCheckout', { content_name: a.dataset.book });
+  });
   filtersEl.querySelectorAll('.cat__chip').forEach(b => b.addEventListener('click', () => {
     filtersEl.querySelectorAll('.cat__chip').forEach(x => x.classList.remove('on'));
     b.classList.add('on'); state.genre = b.dataset.genre; apply();

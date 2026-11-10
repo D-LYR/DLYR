@@ -13,15 +13,13 @@
     hint: n => `Experiences that can be played with ${n} participant${n > 1 ? 's' : ''}. Available time slots appear on the next step.`,
     pickDay: 'Pick a day to continue.',
     exc: 'Special opening hours',
-    noneGenre: 'No experience of this type can be played with this number of participants.',
-    syn: 'Read the synopsis', goal: 'Objective', close: 'Close'
+    noneGenre: 'No experience of this type can be played with this number of participants.'
   } : {
     closed: 'Fermé', open: 'Ouvert', from: 'à', perP: 'par participant',
     hint: n => `Les expériences jouables à ${n} participant${n > 1 ? 's' : ''}. Les créneaux libres s'affichent à l'étape suivante.`,
     pickDay: 'Choisissez un jour pour continuer.',
     exc: 'Horaires exceptionnels',
-    noneGenre: 'Aucune expérience de ce type ne se joue à ce nombre de participants.',
-    syn: 'Lire le synopsis', goal: 'Objectif', close: 'Fermer'
+    noneGenre: 'Aucune expérience de ce type ne se joue à ce nombre de participants.'
   };
 
   const SB_URL = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/rest/v1/';
@@ -113,45 +111,6 @@
   const clock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   const ppl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"/></svg>';
 
-  const book = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5V5.5M8 7h8M8 11h6"/></svg>';
-
-  /* ---- Fenêtre « Synopsis » : texte seul (sans l'affiche) ; un clic n'importe où la referme ---- */
-  const syn = document.createElement('div');
-  syn.className = 'rdate__syn';
-  syn.hidden = true;
-  syn.setAttribute('role', 'dialog');
-  syn.setAttribute('aria-modal', 'true');
-  syn.setAttribute('aria-labelledby', 'rdate-syn-title');
-  document.body.appendChild(syn);
-  let synFrom = null;
-  function openSyn(slug, from) {
-    const g = GAMES.find(x => x.slug === slug); if (!g) return;
-    syn.innerHTML = `<div class="rdate__synbox">
-        <button type="button" class="rdate__synx" aria-label="${T.close}">×</button>
-        <div class="xcard__tags">
-          ${g.genre ? `<span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>` : ''}
-          ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
-        </div>
-        <h2 class="rdate__syntitle" id="rdate-syn-title">${g.name}</h2>
-        <div class="xcard__meta rdate__synmeta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}<span>${ppl} ${g.pl}</span></div>
-        ${(g.story || []).map(t => `<p>${t}</p>`).join('')}
-        ${g.objective ? `<p class="rdate__syngoal"><strong>${T.goal}</strong> ${g.objective}</p>` : ''}
-      </div>`;
-    synFrom = from || null;
-    syn.hidden = false;
-    document.documentElement.classList.add('rdate-syn-open');
-    const x = syn.querySelector('.rdate__synx'); if (x) x.focus();
-    if (window.DLYR_track) window.DLYR_track('ReserverParDate_Synopsis', { content_name: slug });
-  }
-  function closeSyn() {
-    if (syn.hidden) return;
-    syn.hidden = true; syn.innerHTML = '';
-    document.documentElement.classList.remove('rdate-syn-open');
-    if (synFrom) synFrom.focus();
-  }
-  syn.addEventListener('click', closeSyn);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSyn(); });
-
   function renderGames() {
     const n = state.n;
     nEl.textContent = n;
@@ -181,7 +140,7 @@
           <h3 class="xcard__name">${g.name}</h3>
           <div class="xcard__meta">${g.dur ? `<span>${clock} ${g.dur} min</span>` : ''}<span>${ppl} ${g.pl}</span></div>
         </div>
-      </a>${g.story && g.story.length ? `<button type="button" class="rdate__synbtn" data-syn="${g.slug}" aria-label="${T.syn} : ${g.name}" title="${T.syn}">${book}</button>` : ''}</div>`;
+      </a>${window.DLYR_SYN ? DLYR_SYN.button(g) : ''}</div>`;
     }).join('');
   }
 
@@ -206,8 +165,6 @@
   document.querySelector('[data-minus]').addEventListener('click', () => { state.n = Math.max(1, state.n - 1); renderGames(); syncUrl(); });
   document.querySelector('[data-plus]').addEventListener('click', () => { state.n = Math.min(24, state.n + 1); renderGames(); syncUrl(); });
   gridEl.addEventListener('click', e => {
-    const s = e.target.closest('[data-syn]');
-    if (s) { e.preventDefault(); openSyn(s.dataset.syn, s); return; }
     const a = e.target.closest('[data-book]'); if (!a) return;
     if (!state.date) { e.preventDefault(); daysEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); daysEl.classList.add('is-nudged'); setTimeout(() => daysEl.classList.remove('is-nudged'), 900); return; }
     if (window.DLYR_track) window.DLYR_track('InitiateCheckout', { content_name: a.dataset.book });
