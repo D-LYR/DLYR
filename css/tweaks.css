@@ -488,3 +488,38 @@ html[lang="en"] .soiree-card--soldout::after {
 @media (prefers-reduced-motion: reduce) {
   .evcar__track { transition: none; }
 }
+
+/* ---------- Accueil : note Google sous les boutons Réserver / Offrir ---------- */
+.hero__rating{
+  display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap;
+  margin-top:clamp(16px,2.4vh,22px); padding:9px 16px;
+  border-radius:999px; background:rgba(16,31,21,.55);
+  border:1px solid rgba(232,238,221,.18);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  color:var(--paper); text-decoration:none;
+  font-family:var(--f-body); font-size:clamp(14px,1.05vw,16px); line-height:1.2;
+  transition:transform .2s ease, border-color .2s ease;
+}
+.hero__rating:hover,.hero__rating:focus-visible{ transform:translateY(-2px); border-color:var(--lime); }
+.hero__rating-g{ flex:none; background:#fff; border-radius:50%; padding:2px; }
+.hero__rating-stars{ display:inline-flex; gap:2px; color:#fbbc04; }
+.hero__rating-txt strong{ font-family:var(--f-display); font-weight:800; font-size:1.15em; }
+
+/* ---- Note Google : étoiles + nombre d'avis (lien vers la fiche) ---- */
+.stat__google{
+  display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
+  margin-top:6px; color:var(--paper); text-decoration:none;
+  font-family:var(--f-body); font-size:clamp(16px,1.3vw,19px);
+}
+.stat__google-stars{ display:inline-flex; gap:3px; color:#fbbc04; }
+.stat__google-txt{ border-bottom:1px solid rgba(232,238,221,.35); padding-bottom:1px; transition:border-color .2s ease, color .2s ease; }
+.stat__google-txt strong{ font-family:var(--f-display); font-weight:800; }
+.stat__google:hover .stat__google-txt,.stat__google:focus-visible .stat__google-txt{ color:var(--lime); border-color:var(--lime); }
+
+/* ---- Accueil, section Lounge : 3 photos de même taille ---- */
+.snack__grid{ grid-template-columns:repeat(3, 1fr); }
+.snack__grid .snack__media,
+.snack__grid .snack__media--tall{ grid-column:auto; grid-row:auto; aspect-ratio:4/3; min-height:0; }
+@media (max-width:980px){
+  .snack__grid{ grid-template-columns:1fr; }
+}
