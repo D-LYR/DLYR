@@ -167,6 +167,17 @@
     close.addEventListener('click', shut);
     drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', shut));
 
+    // Boutons toujours dans la barre : si liens + boutons ne tiennent pas, on passe au menu burger
+    const inner = nav.querySelector('.nav__inner');
+    const fit = () => {
+      nav.classList.remove('nav--compact');
+      if (inner.scrollWidth > inner.clientWidth + 1) nav.classList.add('nav--compact');
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    document.addEventListener('click', e => { if (e.target.closest('[data-lang-toggle]')) setTimeout(fit, 60); });
+
     // état "solide" au scroll
     const onScroll = () => nav.classList.toggle('nav--solid', window.scrollY > 40);
     onScroll();
