@@ -574,3 +574,6 @@ html[lang="en"] .soiree-card--soldout::after {
 .section{ padding-block:clamp(32px, 4vw, 64px); }
 .section.snack{ padding-bottom:clamp(32px, 4vw, 64px); }
 .section.stats{ padding-top:clamp(32px, 4vw, 64px); }
+/* Page Expériences : titre plus près du menu */
+.section.cat--top{ padding-top:calc(104px + clamp(12px,1.6vw,24px)); }
+@media (max-width:900px){ .section.cat--top{ padding-top:calc(100px + 16px); } }
