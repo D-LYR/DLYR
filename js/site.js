@@ -880,7 +880,9 @@
        · la durée et l'effectif affichés viennent de l'application ;
        · le synopsis et le résumé Google aussi, dès qu'ils y sont saisis ;
        · une expérience nouvelle apparaît dans le catalogue, avec son
-         affiche, sans que personne n'ait à toucher au site.
+         affiche, sans que personne n'ait à toucher au site ;
+       · et son petit livre, comme les autres cartes, qui ouvre le
+         synopsis saisi dans l'application.
 
    ⚠ CE QU'IL NE FAIT PAS, ET C'EST VOLONTAIRE
      Il ne fabrique pas de page de présentation. Un synopsis, des photos
@@ -1273,6 +1275,168 @@
   var JOUEURS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
     + '<circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.4"></circle>'
     + '<path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"></path></svg>';
+  //  Le petit livre, repris trait pour trait de js/synopsis.js : c'est le
+  //  même geste pour le visiteur, ce doit être le même dessin.
+  var LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+    + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"></path>'
+    + '<path d="M4 21.5V5.5M8 7h8M8 11h6"></path></svg>';
+
+  /*  ⚠ LES DEUX ÉTIQUETTES VIENNENT TOUTES LES DEUX DU GENRE.
+      Les cartes du site en portent deux : la catégorie (« Culturel ») et
+      la précision (« Exploration historique »). Dans l'application il n'y
+      a qu'un champ Genre, renseigné avec les deux, séparés par une
+      virgule. On le coupe donc à la virgule.
+
+      La première version mettait l'ACCROCHE dans la seconde étiquette.
+      Mauvaise idée pour deux raisons : à la création d'une expérience,
+      l'application recopie le nom dans l'accroche quand on la laisse vide
+      — la carte de Napoleon affichait donc « Napoleon » deux fois — et une
+      accroche est souvent une phrase entière, qui ne tient pas dans une
+      pastille. Sans virgule, une seule étiquette : mieux vaut une
+      étiquette de moins qu'une étiquette qui répète. */
+  function couperLeGenre(e) {
+    var parts = String(e && e.genre || '').split(',');
+    var categorie = (parts.shift() || '').trim();
+    return { categorie: categorie, precision: parts.join(',').trim() };
+  }
+
+  /*  ⚠ LA HAUTEUR DES ÉTIQUETTES SE LIT SUR LE SITE, ELLE NE S'INVENTE PAS.
+      Chaque carte du catalogue descend ses étiquettes sous le logo de son
+      affiche, à une hauteur propre à chaque jeu (« top:29% » pour Desert
+      Village). Notre carte fabriquée les laissait tout en haut — et le
+      petit livre, posé à 10 px du bord, venait se coucher dessus. On
+      emprunte donc la hauteur aux cartes voisines : les étiquettes et le
+      livre descendent ensemble, ils ne peuvent plus se chevaucher. */
+  function hauteurDesEtiquettes() {
+    var entetes = document.querySelectorAll(
+      '.cat__grid a.xcard:not([data-dlyr-carte]) .xcard__header');
+    for (var i = 0; i < entetes.length; i++) {
+      var t = entetes[i].style && entetes[i].style.top;
+      if (t) return t;
+    }
+    return '';
+  }
+
+  // =====================================================================
+  //  LE PETIT LIVRE : LE SYNOPSIS SANS QUITTER LE CATALOGUE
+  //
+  //  Chaque carte du site porte un bouton en forme de livre qui ouvre une
+  //  fenêtre avec le texte du jeu. Tout est déjà écrit dans
+  //  js/synopsis.js : le bouton, la fenêtre, sa fermeture, le suivi.
+  //
+  //  ⚠ ON NE REFAIT PAS CETTE FENÊTRE, ON S'Y BRANCHE.
+  //    En écrire une seconde, c'était deux fenêtres à maintenir et, le
+  //    jour où le site change la sienne, une carte qui ne ressemble plus
+  //    aux autres. La fenêtre du site cherche le jeu dans
+  //    window.DLYR_GAMES ; on y dépose la fiche le temps de l'ouverture,
+  //    et on la retire aussitôt — la liste du site n'est jamais modifiée
+  //    durablement, et le catalogue, qui en garde une copie, ne voit
+  //    rien passer.
+  // =====================================================================
+  var fichesSynopsis = {};
+  var synBranche = false;
+
+  function paragraphes(texte) {
+    var sortie = [], lignes = String(texte || '').split(/\r?\n/);
+    for (var i = 0; i < lignes.length; i++) {
+      var l = lignes[i].trim();
+      if (l) sortie.push(l);
+    }
+    return sortie;
+  }
+
+  function inscrireLeSynopsis(e) {
+    if (!e || !e.id || !e.synopsis) return false;
+    var g = couperLeGenre(e);
+    var fiche = {
+      slug: e.id,
+      name: e.nom,
+      genre: g.categorie,
+      type: g.precision,
+      dur: e.duree,
+      pl: (e.mini && e.maxi) ? (e.mini + ' à ' + e.maxi + ' joueurs') : '',
+      story: paragraphes(e.synopsis),
+      couleur: e.couleur || ''
+    };
+    if (!fiche.story.length) return false;
+    fichesSynopsis[e.id] = fiche;
+    return true;
+  }
+
+  function brancherLeSynopsis() {
+    if (synBranche) return;
+    var S = window.DLYR_SYN;
+    if (!S || typeof S.open !== 'function') return;   //  site sans fenêtre : pas de livre
+    synBranche = true;
+
+    /*  ⚠ ON N'ENVELOPPE PAS window.DLYR_SYN.open, ET C'EST UNE LEÇON DU
+        BANC. js/synopsis.js écoute les clics et appelle SA fonction
+        interne, pas la copie publiée sous window.DLYR_SYN : l'enveloppe
+        que j'avais posée sur l'objet public n'était jamais traversée par
+        un clic. Le banc a cliqué, et rien ne s'est ouvert.
+
+        On se place donc un cran AVANT. Le site écoute sur « document » ;
+        un écouteur de capture sur « window » passe avant lui. On y
+        dépose la fiche dans la liste du site juste le temps que sa
+        fenêtre la trouve, et on la retire au tour suivant. */
+    window.addEventListener('click', function (ev) {
+      var cible = ev.target;
+      var b = (cible && cible.closest) ? cible.closest('[data-syn]') : null;
+      if (!b) return;
+      var fiche = fichesSynopsis[b.getAttribute('data-syn')];
+      if (!fiche) return;                     //  un jeu du site : il se débrouille
+
+      var liste = window.DLYR_GAMES;
+      if (!liste || typeof liste.push !== 'function') liste = window.DLYR_GAMES = [];
+      if (liste.indexOf(fiche) < 0) liste.push(fiche);
+
+      /*  ⚠ ET ON LA RETIRE, DANS TOUS LES CAS. La fenêtre du site s'ouvre
+          pendant ce clic, donc avant le tour suivant : elle a eu ce
+          qu'il lui fallait. Une fiche oubliée dans la liste du site
+          finirait par être prise pour un jeu, et une carte en double
+          apparaîtrait un jour sans qu'on sache d'où. */
+      setTimeout(function () {
+        var i = liste.indexOf(fiche);
+        if (i >= 0) liste.splice(i, 1);
+
+        /*  La fenêtre colore l'étiquette avec le vocabulaire du site :
+            pour elle, « Culturel » est rouge. Sur la carte, la couleur
+            vient de l'application. Deux couleurs pour le même mot à une
+            seconde d'intervalle — c'est la carte qui a raison, c'est
+            elle qu'on vient de regarder. */
+        try {
+          var pastille = document.querySelector('.rdate__syn .tag-genre');
+          if (pastille && fiche.couleur) pastille.style.background = fiche.couleur;
+        } catch (err) { /* la couleur du site fera l'affaire */ }
+      }, 0);
+    }, true);
+  }
+
+  /*  Le bouton est un VOISIN de la carte, posé sur son emballage — c'est
+      ainsi que le site le place, et il faut qu'il reste cliquable alors
+      que toute la carte est un lien. Sans emballage (le catalogue de
+      production pose les liens directement dans la grille), on le met
+      dans la carte : les deux sont « position:relative », il tombe au
+      même endroit. L'écouteur du site arrête le clic avant qu'il ne suive
+      le lien, c'est ce qui rend les deux montages équivalents. */
+  function poserLeLivre(grille, carte, e) {
+    if (!synBranche || !e || !fichesSynopsis[e.id]) return;
+    var bloc = carte.parentNode;
+    if (!bloc || bloc === grille) bloc = carte;
+    if (bloc.querySelector('.rdate__synbtn')) return;
+
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'rdate__synbtn';
+    b.setAttribute('data-syn', e.id);
+    b.setAttribute('aria-label', 'Lire le synopsis : ' + e.nom);
+    b.setAttribute('title', 'Lire le synopsis');
+    var haut = hauteurDesEtiquettes();
+    if (haut) b.style.top = 'calc(' + haut + ' + 10px)';
+    b.innerHTML = LIVRE;
+    bloc.appendChild(b);
+  }
 
   function cartesExistantes() {
     var pages = {}, codes = {}, noms = {};
@@ -1308,29 +1472,15 @@
       //  image est moins belle, une image cassée fait amateur.
       : '<div class="ph ph--dark" style="background:' + esc(e.couleur || '#1C3024') + '"></div>';
 
-    /*  ⚠ LES DEUX ÉTIQUETTES VIENNENT TOUTES LES DEUX DU GENRE.
-        Les cartes du site en portent deux : la catégorie (« Culturel »)
-        et la précision (« Exploration historique »). Dans
-        l'application, il n'y a qu'un champ Genre — et il est renseigné
-        avec les deux, séparés par une virgule : « Culturel, Exploration
-        historique ». On le coupe donc à la virgule.
-
-        La première version mettait l'ACCROCHE dans la seconde étiquette.
-        Mauvaise idée pour deux raisons : à la création d'une expérience,
-        l'application recopie le nom dans l'accroche quand on la laisse
-        vide — la carte de Napoleon affichait donc « Napoleon » deux
-        fois — et une accroche est souvent une phrase entière, qui ne
-        tient pas dans une pastille.
-
-        Sans virgule, une seule étiquette : mieux vaut une étiquette de
-        moins qu'une étiquette qui répète. */
-    var parts = String(e.genre || '').split(',');
-    var categorie = (parts.shift() || '').trim();
-    var precision = parts.join(',').trim();
+    var g = couperLeGenre(e);
+    var categorie = g.categorie;
+    var precision = g.precision;
+    var haut = hauteurDesEtiquettes();
 
     a.innerHTML = visuel
       + '<span class="xcard__scrim"></span>'
-      + '<div class="xcard__header"><div class="xcard__tags">'
+      + '<div class="xcard__header"' + (haut ? ' style="top:' + esc(haut) + '"' : '')
+      + '><div class="xcard__tags">'
       +   (categorie ? '<span class="xcard__tag tag-genre" style="background:'
                      + esc(e.couleur || '#0e7490') + '">' + esc(categorie) + '</span>' : '')
       +   (precision ? '<span class="xcard__tag tag-type">' + esc(precision) + '</span>' : '')
@@ -1346,6 +1496,11 @@
   }
 
   function completerLeCatalogue(experiences) {
+    //  Avant toute chose : la fenêtre « synopsis » du site est-elle là ?
+    //  Elle est chargée après ce fichier, elle n'existait donc pas encore
+    //  au moment où ce bloc s'est exécuté.
+    brancherLeSynopsis();
+
     var grille = document.querySelector('.cat__grid');
     if (!grille) return;                      //  on n'est pas sur le catalogue
 
@@ -1378,7 +1533,13 @@
       if (e.id && deja.codes[propre(e.id)]) continue;
       if (deja.noms[propre(e.nom)]) continue;
       if (!passeLeFiltre(e)) continue;
-      insererDansLOrdre(grille, fabriquerCarte(e), e.nom);
+
+      inscrireLeSynopsis(e);                  //  avant la carte : le livre la suit
+      var carte = fabriquerCarte(e);
+      insererDansLOrdre(grille, carte, e.nom);
+      //  Après l'insertion, et pas avant : le bouton se pose sur
+      //  l'emballage, qui n'existe qu'une fois la carte dans la grille.
+      poserLeLivre(grille, carte, e);
     }
 
     recompterLesCartes();
@@ -1645,6 +1806,8 @@
     pageFiche: function () { return pageFiche; },
     appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
+    paragraphes: paragraphes, couperLeGenre: couperLeGenre,
+    fiches: function () { return fichesSynopsis; },
     SOURCE: SOURCE
   };
 })();
