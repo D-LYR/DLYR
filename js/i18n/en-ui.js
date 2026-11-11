@@ -355,6 +355,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "3 sessions VR au choix.": "3 VR sessions of your choice.",
   "4 sessions VR au choix.": "4 VR sessions of your choice.",
   "Adapté aux enfants": "Kid-friendly",
+  "En famille": "Family",
 
   /* ---------- Contact ---------- */
   "Une question, une date à bloquer, un groupe à accueillir ? Écrivez-nous : notre équipe vous répond sous 24/48h.": "A question, a date to hold, a group to host? Write to us: our team replies within 24–48 hours.",
