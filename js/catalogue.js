@@ -12,11 +12,13 @@
   const BOOK = window.DLYR_BOOK || { base: '', exp: {} };
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
     slug: g.slug, story: g.story, name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos, cardNoName: g.cardNoName, cardTop: g.cardTop
+    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos, cardNoName: g.cardNoName, cardTop: g.cardTop, famille: g.famille
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
-  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
-    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
+  /* « En famille » n'est pas un genre : il regroupe les expériences marquées famille: true (games-data.js) */
+  const isGenre = (x, g) => g === 'Tous' || (g === 'En famille' ? !!x.famille : x.genre === g);
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants', 'En famille']
+    .filter(g => g === 'Tous' || GAMES.some(x => isGenre(x, g)));
   const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
 
   const state = { genre: 'Tous', players: 'all', sort: 'az' };
@@ -43,7 +45,7 @@
 
   function apply() {
     let list = GAMES.filter(g =>
-      (state.genre === 'Tous' || g.genre === state.genre) &&
+      isGenre(g, state.genre) &&
       (state.players === 'all' || (g.players && playersBucket(g.players) === state.players))
     );
     list.sort((a, b) => state.sort === 'dur' ? (a.dur || 99) - (b.dur || 99) : a.name.localeCompare(b.name));

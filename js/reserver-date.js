@@ -44,8 +44,10 @@
   const emptyDefault = emptyEl ? emptyEl.innerHTML : '';
 
   /* ---- Sélecteur de type d'expérience (mêmes catégories et couleurs que le catalogue) ---- */
-  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
-    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
+  /* « En famille » n'est pas un genre : il regroupe les expériences marquées famille: true (games-data.js) */
+  const isGenre = (x, g) => g === 'Tous' || (g === 'En famille' ? !!x.famille : x.genre === g);
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants', 'En famille']
+    .filter(g => g === 'Tous' || GAMES.some(x => isGenre(x, g)));
   const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
   const filtersEl = document.createElement('div');
   filtersEl.className = 'cat__filters rdate__filters';
@@ -119,7 +121,7 @@
     const big = n > MAX_ONLINE;
     bigEl.hidden = !big;
     const byN = big ? [] : GAMES.filter(g => n >= g.min && n <= g.max);
-    const list = byN.filter(g => state.genre === 'Tous' || g.genre === state.genre);
+    const list = byN.filter(g => isGenre(g, state.genre));
     filtersEl.hidden = big;
     if (emptyEl) emptyEl.innerHTML = byN.length ? T.noneGenre : emptyDefault;
     hintEl.textContent = big ? '' : (state.date ? T.hint(n) : T.pickDay);

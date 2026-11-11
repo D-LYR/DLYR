@@ -71,7 +71,7 @@ window.DLYR_GAMES = [
   {
     slug: 'snow-village', name: 'Snow Village', genre: 'Adapté aux enfants',
     tags: ['Famille', 'Coopératif', 'Magie de Noël'],
-    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'Family Adventure', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/snow-village/snow-village-affiche.jpg',
     objective: 'Défendre le village du Père Noël, sauver les habitants et vaincre les armées du sorcier maléfique.',
     tagline: 'La magie de Noël est en danger.<br>Devenez les héros de Snow Village.',
@@ -86,7 +86,7 @@ window.DLYR_GAMES = [
     slug: 'desert-village', name: 'Desert Village', genre: 'Adapté aux enfants',
     cardBottom: '15%', /* catalogue : hauteur du titre sur l'affiche (slogan en gros caractères) */
     tags: ['Famille', 'Coopératif', 'Cartoon'],
-    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'Family Adventure', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/desert-village/desert-village-affiche.jpg',
     objective: 'Repousser les petits monstres du constructeur, protéger les habitants et sauver le village.',
     tagline: 'La menace du désert.<br>Unissez-vous pour sauver le village.',
@@ -116,7 +116,7 @@ window.DLYR_GAMES = [
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
     cardBottom: '14%', cardTop: '24%', cardNoName: true, /* affiche titrée : nom déjà sur l'affiche, étiquettes sous « STATION », durée/joueurs au-dessus du slogan */
     tags: ['Escape Game', 'Coopératif', 'Science-fiction'],
-    type: 'Escape Game VR coopératif', pl: '2 à 6 joueurs', players: 6, dur: 45,
+    type: 'En famille', famille: true, pl: '2 à 6 joueurs', players: 6, dur: 45,
     img: 'uploads/experiences/icarus-station/icarus-station-affiche-titre.jpg',
     objective: "Réparer les systèmes de la station, traverser les secteurs sinistrés et rejoindre la plateforme d'extraction avant l'effondrement d'Icarus-7.",
     tagline: "Échappez-vous avant que la station<br>ne sombre dans le vide spatial",
