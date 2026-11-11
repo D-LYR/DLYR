@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- =====================================================================
+     D'LYR — experience.html                                  11/11/2026
+
+     LA PAGE DE PRÉSENTATION DES EXPÉRIENCES QUI N'EN ONT PAS.
+
+     Les onze expériences historiques ont chacune leur page écrite à la
+     main (jeu-harbor-siege.html et compagnie). Celles que vous créez
+     dans l'application n'en ont aucune : leur carte menait droit au
+     paiement, et le synopsis que vous aviez pris le temps d'écrire
+     n'avait nulle part où s'afficher.
+
+     Cette page-ci les affiche toutes, à partir de l'application :
+
+         experience.html?exp=custom-napoleon-swpt
+
+     ⚠ ELLE NE REMPLACE PAS LES PAGES ÉCRITES À LA MAIN.
+       Celles-là ont leurs photos, leurs textes travaillés et leur
+       référencement. Le bloc de js/site.js n'envoie ici que les
+       expériences SANS page — dès qu'une expérience a la sienne, c'est
+       elle qui gagne.
+
+     ⚠ ET SON RÉFÉRENCEMENT EST FAIBLE, PAR CONSTRUCTION.
+       Le contenu arrive en JavaScript : Google le voit, mais plus tard
+       et moins bien qu'un texte écrit dans le fichier. Pour une
+       expérience qui compte vraiment, écrire sa vraie page reste mieux.
+       Celle-ci est là pour qu'une nouveauté ne reste jamais sans page.
+
+     RETOUR ARRIÈRE : supprimer ce fichier. Les cartes fabriquées
+     retomberont d'elles-mêmes sur le lien de réservation direct — le
+     bloc vérifie que cette page existe avant d'y envoyer qui que ce soit.
+     ===================================================================== -->
+
+<title>Expérience VR — D'LYR</title>
+<meta name="description" content="Une expérience de réalité virtuelle chez D'LYR, à Colombes.">
+<meta name="robots" content="index, follow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Cuprum:ital,wght@0,400;0,700;1,700&family=Sora:wght@400;600;700;800&family=Inter:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@500;700&family=Iceland&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/activites.css">
+<link rel="stylesheet" href="css/tweaks.css">
+</head>
+
+<body data-page="catalogue">
+
+<script>
+/*  Le bouton « Réserver » du menu est construit par js/site.js au
+    chargement. On lui donne l'adresse de CETTE expérience avant qu'il ne
+    s'exécute : d'où ce script posé ici, et non plus bas. */
+(function () {
+  try {
+    var code = new URLSearchParams(location.search).get('exp');
+    if (code) {
+      document.body.setAttribute('data-book-url',
+        'https://reservation.dlyr-vr.com/?exp=' + encodeURIComponent(code));
+    }
+  } catch (e) { /* le menu retombera sur le catalogue, ce n'est pas grave */ }
+})();
+</script>
+
+<section class="section bg-paper tex" id="contenu" tabindex="-1">
+  <div class="wrap">
+    <div data-exp-page>
+      <p class="lead" data-exp-attente>Chargement de l'expérience…</p>
+    </div>
+  </div>
+</section>
+
+<div data-footer></div>
+
+<script src="js/site.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var SOURCE = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/functions/v1/experiences-publiques';
+  var RESERVER = (function () {
+    try { return (window.DLYR_BOOK && window.DLYR_BOOK.base) || ''; } catch (e) { return ''; }
+  })() || 'https://reservation.dlyr-vr.com/?exp=';
+
+  var hote = document.querySelector('[data-exp-page]');
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function message(titre, detail) {
+    hote.innerHTML = '<h1 class="h1">' + esc(titre) + '</h1>'
+      + '<p class="lead">' + esc(detail) + '</p>'
+      + '<p style="margin-top:22px;"><a class="btn btn--ink" href="catalogue.html">'
+      + 'Voir toutes les expériences</a></p>';
+  }
+
+  /*  Le genre porte les deux étiquettes, séparées par une virgule :
+      « Culturel, Exploration historique ». Même découpage que sur les
+      cartes du catalogue — il n'y a qu'une règle à retenir. */
+  function etiquettes(e) {
+    var parts = String(e.genre || '').split(',');
+    var cat = (parts.shift() || '').trim();
+    var pre = parts.join(',').trim();
+    var out = '';
+    if (cat) out += '<span class="xcard__tag tag-genre" style="background:'
+                 + esc(e.couleur || '#0e7490') + '">' + esc(cat) + '</span> ';
+    if (pre) out += '<span class="xcard__tag tag-type">' + esc(pre) + '</span>';
+    return out;
+  }
+
+  function afficher(e) {
+    //  Le titre de l'onglet et la phrase de Google, avant tout le reste.
+    document.title = e.nom + ' — Expérience VR | D\'LYR';
+    var meta = document.querySelector('meta[name="description"]');
+    var phrase = e.resume_seo || e.accroche
+      || (e.nom + ' — une expérience de réalité virtuelle chez D\'LYR, à Colombes.');
+    if (meta) meta.setAttribute('content', phrase);
+
+    var affiche = e.affiche
+      ? '<div class="ph ph--dark" style="border-radius:16px;overflow:hidden;">'
+        + '<img class="ph__img" alt="' + esc(e.nom) + '" src="'
+        + esc(SOURCE + '?affiche=' + encodeURIComponent(e.id))
+        + '" onerror="this.closest(\'.ph\').remove()"></div>'
+      : '';
+
+    var synopsis = e.synopsis
+      ? '<h2 class="eyebrow-bar" style="margin:26px 0 14px;"><span>Synopsis</span></h2>'
+        + '<p class="lead">' + esc(e.synopsis).replace(/\n+/g, '</p><p class="lead">') + '</p>'
+      : (e.accroche ? '<p class="lead">' + esc(e.accroche) + '</p>' : '');
+
+    /*  ⚠ UNE EXPÉRIENCE DÉSACTIVÉE GARDE SA PAGE, SANS RÉSERVATION.
+        Même règle que pour les pages écrites à la main : l'adresse reste
+        valable, le contenu aussi, et seul le bouton disparaît. */
+    var action = e.actif
+      ? '<a class="btn btn--lime" href="' + esc(RESERVER + encodeURIComponent(e.id)) + '">Réserver</a>'
+      : '<span class="btn btn--lime" aria-disabled="true" style="opacity:.55;cursor:not-allowed;">'
+        + 'Momentanément indisponible</span>'
+        + '<p class="lead" style="margin-top:12px;">' + esc(e.nom)
+        + ' n’est pas proposée en ce moment. Retrouvez toutes les expériences '
+        + 'disponibles au catalogue.</p>';
+
+    hote.innerHTML =
+        '<div style="display:flex;gap:clamp(20px,4vw,48px);flex-wrap:wrap;align-items:flex-start;">'
+      +   '<div style="flex:1 1 300px;min-width:min(300px,100%);">' + affiche + '</div>'
+      +   '<div style="flex:2 1 420px;min-width:min(300px,100%);">'
+      +     '<div style="margin-bottom:12px;">' + etiquettes(e) + '</div>'
+      +     '<h1 class="h1" style="margin:0 0 10px;">' + esc(e.nom) + '</h1>'
+      +     '<p class="lead" style="opacity:.85;">' + esc(e.duree) + ' minutes · '
+      +       esc(e.mini) + ' à ' + esc(e.maxi) + ' joueurs</p>'
+      +     synopsis
+      +     '<p style="margin-top:26px;">' + action + '</p>'
+      +   '</div>'
+      + '</div>';
+
+    //  Les animations d'apparition du site ne connaissent que ce qui
+    //  existait au chargement : on les relance sur ce qu'on vient d'écrire.
+    try { if (window.DLYR_reveal) window.DLYR_reveal(); } catch (err) { /* rien */ }
+  }
+
+  var code = null;
+  try { code = new URLSearchParams(location.search).get('exp'); } catch (e) { code = null; }
+
+  if (!code) {
+    message('Quelle expérience ?', 'Cette page affiche une expérience précise. '
+      + 'Choisissez la vôtre dans le catalogue.');
+    return;
+  }
+
+  fetch(SOURCE, { credentials: 'omit' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.ok || !Array.isArray(d.experiences)) throw new Error('réponse inattendue');
+      var e = d.experiences.filter(function (x) { return x.id === code; })[0];
+      if (!e) {
+        message('Expérience introuvable',
+          'Elle a peut-être été retirée du catalogue depuis que ce lien a été partagé.');
+        return;
+      }
+      afficher(e);
+    })
+    .catch(function () {
+      /*  ⚠ ON NE LAISSE JAMAIS « Chargement… » À L'ÉCRAN.
+          Une page qui charge indéfiniment est pire qu'une page qui dit
+          qu'elle n'a pas pu : le visiteur attend, puis s'en va. */
+      message('Page momentanément indisponible',
+        'Nous n’avons pas pu charger cette expérience. '
+        + 'Le catalogue, lui, fonctionne.');
+    });
+})();
+</script>
+
+</body>
+</html>
