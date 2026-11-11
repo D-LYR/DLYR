@@ -4,6 +4,7 @@
 window.DLYR_GAMES = [
   {
     slug: 'harbor-siege', name: 'Harbor Siege', genre: 'Action',
+    cardTop: '23%', /* étiquettes sous le titre de l'affiche */
     tags: ['Conquête', 'Stratégie', "Esprit d'équipe"],
     type: 'Domination', pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/harbor-siege/harbor-siege-affiche.jpg',
@@ -16,6 +17,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab', name: 'Outbreak Lab', genre: 'Aventure',
+    cardTop: '24%', /* étiquettes sous le titre de l'affiche */
     cardBottom: '17%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
@@ -31,6 +33,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab-2', name: 'Outbreak Lab II', genre: 'Aventure',
+    cardTop: '23%', /* étiquettes sous le titre de l'affiche */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
     objective: "S'évader d'Apocalypse Stadium et survivre aux hordes de zombies de Nécropolia.",
@@ -44,6 +47,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'paradise-expedition', name: 'Paradise Expedition', genre: 'Action',
+    cardTop: '21%', /* étiquettes sous le titre de l'affiche */
     tags: ['Free For All', 'Compétition', 'Survie'],
     type: 'Free For All', pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/paradise-expedition/paradise-expedition-affiche.jpg',
@@ -57,6 +61,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'volcanic-warfare', name: 'Volcanic Warfare', genre: 'Action',
+    cardTop: '24%', /* étiquettes sous le titre de l'affiche */
     tags: ['Team Deathmatch', 'Coopération', 'Tactique'],
     type: 'Team Deathmatch', pl: '4 à 8 joueurs', players: 8, dur: 30,
     img: 'uploads/experiences/volcanic-warfare/volcanic-warfare-affiche.jpg',
