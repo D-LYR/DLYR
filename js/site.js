@@ -1008,10 +1008,36 @@
   // =====================================================================
   var MARQUE = 'data-dlyr-masque';
 
+  /*  ⚠ UNE CARTE N'EST PAS TOUJOURS L'ENFANT DIRECT DE SA GRILLE.
+      En production, la grille contient les liens eux-mêmes. En préprod,
+      chacun est emballé dans un « div.rdate__card ». Masquer le lien
+      laisserait alors l'emballage occuper sa case, et insérer devant lui
+      échouait carrément — « the node before which the new node is to be
+      inserted is not a child of this node ». Vu sur la préprod ; mon
+      banc ne l'avait pas vu parce que son décor n'emballait rien.
+
+      On remonte donc jusqu'à l'enfant direct de la grille, quelle que
+      soit la profondeur, plutôt que de supposer une structure. */
+  function conteneurDans(grille, el) {
+    var n = el;
+    while (n && n.parentNode !== grille) n = n.parentNode;
+    return n || null;
+  }
+
   function carteDe(lien) {
-    //  Les deux formes de cartes du site, puis les conteneurs ordinaires.
+    var grille = lien.closest ? lien.closest('.cat__grid, .jmore__grid') : null;
+    if (grille) {
+      var n = conteneurDans(grille, lien);
+      if (n) return n;
+    }
     if (lien.classList.contains('xcard') || lien.classList.contains('jcard')) return lien;
     return lien.closest('.xcard, .jcard, article, li') || lien;
+  }
+
+  /*  Visible pour de bon : getClientRects() tient compte des parents
+      masqués, ce que getComputedStyle sur l'élément lui-même ignore. */
+  function visible(el) {
+    try { return el.getClientRects().length > 0; } catch (e) { return true; }
   }
 
   function masquer(el) {
@@ -1252,7 +1278,11 @@
         nouveauté dès que la réponse fraîche arriverait. Attrapé par le
         banc, qui applique la liste deux fois de suite exprès. */
     var vieilles = grille.querySelectorAll('[data-dlyr-carte]');
-    for (var v = 0; v < vieilles.length; v++) vieilles[v].parentNode.removeChild(vieilles[v]);
+    for (var v = 0; v < vieilles.length; v++) {
+      //  Avec son emballage, sinon la grille garde des cases vides.
+      var bloc = conteneurDans(grille, vieilles[v]) || vieilles[v];
+      if (bloc.parentNode) bloc.parentNode.removeChild(bloc);
+    }
 
     var deja = cartesExistantes();
 
@@ -1298,21 +1328,52 @@
     catch (e) { return a < b ? -1 : (a > b ? 1 : 0); }
   }
 
+  /*  La carte fabriquée prend l'emballage des autres, s'il y en a un :
+      sans lui, elle hériterait d'une autre mise en page dans la grille.
+      On force « in » quand la classe « reveal » est là, sinon la carte
+      resterait transparente — l'animation d'apparition ne la connaît
+      pas, elle est arrivée après. */
+  function emballer(grille, carte) {
+    var modele = grille.querySelector('a.xcard');
+    if (!modele) return carte;
+    var conteneur = conteneurDans(grille, modele);
+    if (!conteneur || conteneur === modele) return carte;
+    var enveloppe = document.createElement(conteneur.tagName);
+    enveloppe.className = conteneur.className;
+    if (/\breveal\b/.test(enveloppe.className) && !/\bin\b/.test(enveloppe.className)) {
+      enveloppe.className += ' in';
+    }
+    enveloppe.appendChild(carte);
+    return enveloppe;
+  }
+
   function insererDansLOrdre(grille, carte, nom) {
+    var bloc = emballer(grille, carte);
     var cartes = grille.querySelectorAll('a.xcard');
-    var noms = [];
-    for (var i = 0; i < cartes.length; i++) noms.push(nomDeCarte(cartes[i]));
+    var noms = [], places = [];
+    for (var i = 0; i < cartes.length; i++) {
+      var place = conteneurDans(grille, cartes[i]);
+      if (!place) continue;
+      /*  ⚠ ON IGNORE LES CARTES QU'ON A MASQUÉES. Elles restent dans le
+          document pour pouvoir réapparaître, mais elles ne sont plus à
+          l'écran : les compter dans le classement faisait conclure « ce
+          n'est pas alphabétique » — Brain, Volcanic, puis Gaudi masquée
+          — et la nouveauté repartait à la fin. */
+      if (place.hasAttribute && place.hasAttribute(MARQUE)) continue;
+      noms.push(nomDeCarte(cartes[i]));
+      places.push(place);
+    }
 
     var alphabetique = true;
     for (var j = 1; j < noms.length; j++) {
       if (avant(noms[j - 1], noms[j]) > 0) { alphabetique = false; break; }
     }
-    if (!alphabetique) { grille.appendChild(carte); return; }
+    if (!alphabetique) { grille.appendChild(bloc); return; }
 
     for (var k = 0; k < noms.length; k++) {
-      if (avant(noms[k], nom) > 0) { grille.insertBefore(carte, cartes[k]); return; }
+      if (avant(noms[k], nom) > 0) { grille.insertBefore(bloc, places[k]); return; }
     }
-    grille.appendChild(carte);
+    grille.appendChild(bloc);
   }
 
   /*  ⚠ LE FILTRE PAR GENRE S'APPLIQUE AUSSI À NOS CARTES.
@@ -1341,9 +1402,7 @@
     if (!grille) return;
     var n = 0;
     var cartes = grille.querySelectorAll('a.xcard');
-    for (var i = 0; i < cartes.length; i++) {
-      if (getComputedStyle(cartes[i]).display !== 'none') n++;
-    }
+    for (var i = 0; i < cartes.length; i++) { if (visible(cartes[i])) n++; }
 
     var compteur = document.querySelector('[data-count]');
     if (compteur) {
