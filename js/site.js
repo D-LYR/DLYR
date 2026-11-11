@@ -31,8 +31,18 @@
     vrDetail: 'De 24,90 € à 32 € par participant selon le jour et l\'heure.',
     flechettes: 'Dès 12 € la demi-heure, pour tout le groupe'
   };
-  var BOOK_BASE = 'https://admin.dlyr-vr.com/?client=1&exp=';
-  var BOOK_CRENEAU = 'https://admin.dlyr-vr.com/?client=1&parcours=creneau'; /* nouveau parcours par créneau : utilisé par la page « Réserver par date » */
+  /*  ⚠ POURQUOI « client=1 » RESTE SUR UNE SEULE DES QUATRE ADRESSES.
+      reservation.dlyr-vr.com sert l'outil — en mode client, thème clair —
+      dès que l'adresse porte « exp= » ou « view= ». Le « client=1 » y est
+      donc inutile, et il faisait justement « outil interne » dans la barre
+      d'adresse du client.
+      En revanche « parcours=creneau » seul n'est pas reconnu : l'adresse
+      redirige vers le catalogue. Vérifié le 11/11. Tant que Tristan n'a
+      pas ajouté « parcours » à la liste des paramètres qui servent
+      l'outil, cette ligne-là garde son « client=1 » — mieux vaut une
+      adresse un peu longue qu'un bouton qui ne mène pas où il dit. */
+  var BOOK_BASE = 'https://reservation.dlyr-vr.com/?exp=';
+  var BOOK_CRENEAU = 'https://reservation.dlyr-vr.com/?client=1&parcours=creneau'; /* nouveau parcours par créneau : utilisé par la page « Réserver par date » */
   var BOOK_EXP = {
     'jeu-brain-arena': 'brain',
     'jeu-desert-village': 'custom-desert-village-rhrg',
@@ -51,9 +61,9 @@
      Pass : repère du bouton « Sélectionner » (data-smeetz-cat) → code du pack (paramètre « pack »). */
   /* Partagé avec la page « Réserver par date » (js/reserver-date.js) */
   window.DLYR_BOOK = { base: BOOK_BASE, exp: BOOK_EXP, creneau: BOOK_CRENEAU };
-  var PACK_BASE = 'https://admin.dlyr-vr.com/?client=1&view=vrpack&pack=';
+  var PACK_BASE = 'https://reservation.dlyr-vr.com/?view=vrpack&pack=';
   var PACK_BY_CAT = { '162309': 'duo', '162310': 'dlyr', '162311': 'ultimate' };
-  var GIFT_URL = 'https://admin.dlyr-vr.com/?client=1&view=giftcard';
+  var GIFT_URL = 'https://reservation.dlyr-vr.com/?view=giftcard';
   var GIFT_HREF = GIFT_URL.replace(/&/g, '&amp;'); /* même adresse, prête à être écrite dans le HTML du menu */
   /* Adresse directe d'un bouton (pass VR ou bon cadeau), sinon '' */
   function buttonBookUrl(a) {
@@ -835,6 +845,7 @@
   else init();
   window.addEventListener('load', () => { try { reveal(); } catch (e) {} });
 })();
+
 /* ==========================================================================
    D'LYR — LE SITE SUIT L'APPLICATION
                                                             (11/11/2026)
@@ -1138,10 +1149,23 @@
   function neutraliserLaPage(exp) {
     if (document.querySelector('[data-dlyr-indispo]')) return;
 
-    var boutons = document.querySelectorAll('a[href^="' + RESERVER + '"], a[href*="admin.dlyr-vr.com"]');
+    /*  ⚠ ON RECONNAÎT UN LIEN DE RÉSERVATION PAR CE QU'IL PORTE, PAS PAR
+        LE SERVEUR QU'IL NOMME. L'outil a reçu une seconde adresse,
+        « reservation.dlyr-vr.com », en plus de « admin.dlyr-vr.com » —
+        et il en recevra peut-être une troisième. Un sélecteur qui citait
+        un nom de domaine aurait laissé passer les boutons de la
+        nouvelle adresse, sans rien dire : sur une page désactivée, ils
+        seraient restés cliquables. */
+    var boutons = document.querySelectorAll('a[href*="exp="]');
     for (var i = 0; i < boutons.length; i++) {
       var a = boutons[i];
-      if (!/exp=/.test(a.getAttribute('href') || '')) continue;
+      var href = a.getAttribute('href') || '';
+      if (!/[?&]exp=/.test(href)) continue;
+      //  Un lien interne du site peut porter « exp= » sans mener à la
+      //  réservation : on exige une adresse complète vers l'outil.
+      if (!/^https?:\/\//i.test(href)) continue;
+      if (RESERVER && href.indexOf(RESERVER) === 0) { /* c'est bien lui */ }
+      else if (!/\/\/(reservation|admin)\.dlyr-vr\.com\//i.test(href)) continue;
 
       var dansLeMenu = !!a.closest('.nav__cta, .drawer__cta');
       /*  ⚠ ON REMPLACE L'ÉLÉMENT, ON NE RÉÉCRIT PAS SON ADRESSE.
