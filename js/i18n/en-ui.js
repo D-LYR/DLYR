@@ -106,6 +106,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Vivez l'immersion VR": "Experience VR immersion",
   "D'LYR — Vivez l'immersion VR": "D'LYR — Experience VR immersion",
   "Cible connectée": "Connected dartboard",
+  "Aventures en VR": "VR adventures",
   "Visité en septembre 2026": "Visited in September 2026",
   "EVG/EVJF & Anniversaires": "Stag & hen dos · Birthdays",
   "Vivez une expérience unique": "Live a one-of-a-kind experience",
