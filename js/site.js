@@ -1251,12 +1251,32 @@
       //  image est moins belle, une image cassée fait amateur.
       : '<div class="ph ph--dark" style="background:' + esc(e.couleur || '#1C3024') + '"></div>';
 
+    /*  ⚠ LES DEUX ÉTIQUETTES VIENNENT TOUTES LES DEUX DU GENRE.
+        Les cartes du site en portent deux : la catégorie (« Culturel »)
+        et la précision (« Exploration historique »). Dans
+        l'application, il n'y a qu'un champ Genre — et il est renseigné
+        avec les deux, séparés par une virgule : « Culturel, Exploration
+        historique ». On le coupe donc à la virgule.
+
+        La première version mettait l'ACCROCHE dans la seconde étiquette.
+        Mauvaise idée pour deux raisons : à la création d'une expérience,
+        l'application recopie le nom dans l'accroche quand on la laisse
+        vide — la carte de Napoleon affichait donc « Napoleon » deux
+        fois — et une accroche est souvent une phrase entière, qui ne
+        tient pas dans une pastille.
+
+        Sans virgule, une seule étiquette : mieux vaut une étiquette de
+        moins qu'une étiquette qui répète. */
+    var parts = String(e.genre || '').split(',');
+    var categorie = (parts.shift() || '').trim();
+    var precision = parts.join(',').trim();
+
     a.innerHTML = visuel
       + '<span class="xcard__scrim"></span>'
       + '<div class="xcard__header"><div class="xcard__tags">'
-      +   (e.genre ? '<span class="xcard__tag tag-genre" style="background:'
-                     + esc(e.couleur || '#0e7490') + '">' + esc(e.genre) + '</span>' : '')
-      +   (e.accroche ? '<span class="xcard__tag tag-type">' + esc(e.accroche) + '</span>' : '')
+      +   (categorie ? '<span class="xcard__tag tag-genre" style="background:'
+                     + esc(e.couleur || '#0e7490') + '">' + esc(categorie) + '</span>' : '')
+      +   (precision ? '<span class="xcard__tag tag-type">' + esc(precision) + '</span>' : '')
       + '</div></div>'
       + '<div class="xcard__footer" style="bottom:15%">'
       +   '<h3 class="xcard__name">' + esc(e.nom) + '</h3>'
