@@ -835,3 +835,548 @@
   else init();
   window.addEventListener('load', () => { try { reveal(); } catch (e) {} });
 })();
+/* ==========================================================================
+   D'LYR — LE SITE SUIT L'APPLICATION
+                                                            (11/11/2026)
+
+   À COLLER À LA FIN DE js/site.js, dans le dépôt du SITE (dlyr-vr.com).
+
+   ⚠ APRÈS LA TOUTE DERNIÈRE LIGNE DU FICHIER, qui est exactement :
+
+         })();
+
+   Tout le fichier existant est enfermé dans cette parenthèse. Collé à
+   l'intérieur, ce bloc verrait des choses qui ne le regardent pas ;
+   collé après, il est indépendant — et il suffit de le retirer pour
+   revenir en arrière. Rien d'autre n'est à modifier au-dessus.
+
+   ────────────────────────────────────────────────────────────────────
+   LE PROBLÈME
+     Le site tenait sa propre liste d'expériences, écrite en dur plus
+     haut dans ce fichier (la table BOOK_EXP). L'application en tenait
+     une autre. Deux listes veut dire deux vérités, et la deuxième finit
+     toujours par mentir : « Gaudi L'atelier du Divin » était désactivée
+     dans l'application depuis des semaines alors que le site la
+     proposait encore à la réservation.
+
+   CE QUE FAIT CE BLOC
+     Il demande à l'application la liste des expériences, et il ajuste la
+     page en conséquence :
+
+       · une expérience désactivée disparaît des cartes et des listes ;
+       · sa page de présentation RESTE EN LIGNE, avec son adresse et son
+         contenu — mais sans bouton « Réserver » ;
+       · la durée et l'effectif affichés viennent de l'application ;
+       · le synopsis et le résumé Google aussi, dès qu'ils y sont saisis ;
+       · une expérience nouvelle apparaît dans le catalogue, avec son
+         affiche, sans que personne n'ait à toucher au site.
+
+   ⚠ CE QU'IL NE FAIT PAS, ET C'EST VOLONTAIRE
+     Il ne fabrique pas de page de présentation. Un synopsis, des photos
+     et un texte de référencement s'écrivent ; ils ne se déduisent pas
+     d'une fiche de base de données. Une expérience nouvelle a donc sa
+     carte dans le catalogue, et cette carte mène directement à la
+     réservation tant que sa page n'est pas écrite.
+
+   ⚠ SI L'APPLICATION NE RÉPOND PAS, LE SITE NE CHANGE PAS.
+     Pas de page blanche, pas de catalogue vide : on s'abstient, et le
+     visiteur voit le site tel qu'il est écrit dans les fichiers. Une
+     panne de lecture ne doit jamais devenir une panne de vitrine.
+
+   RETOUR ARRIÈRE : supprimer ce bloc. Le site redevient exactement ce
+   qu'il était, puisque rien d'autre n'a été modifié.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var SOURCE = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/functions/v1/experiences-publiques';
+
+  /*  L'adresse de réservation n'est PAS recopiée ici : site.js l'expose
+      déjà sous window.DLYR_BOOK (c'est par là que la page « Réserver par
+      date » la récupère). On la lui emprunte, pour que le jour où elle
+      change, elle ne change qu'à un endroit. La valeur de repli ne sert
+      que si ce bloc se retrouvait seul, sans le fichier qui le précède. */
+  var RESERVER = (function () {
+    try { return (window.DLYR_BOOK && window.DLYR_BOOK.base) || ''; } catch (e) { return ''; }
+  })() || 'https://admin.dlyr-vr.com/?client=1&exp=';
+
+  var CATALOGUE = 'catalogue.html';
+  var DELAI    = 4000;                  //  au-delà, on renonce sans rien casser
+  var MEMOIRE  = 'dlyr-experiences';    //  la dernière réponse, pour éviter le clignotement
+
+  // =====================================================================
+  //  OUTILS
+  // =====================================================================
+  /*  Le nom de page, c'est le nom du fichier sans .html :
+        « jeu-harbor-siege.html?x#y »  → « jeu-harbor-siege »
+        « /flechettes »                → « flechettes »
+      C'est la clé qui relie une carte du site à une ligne de
+      l'application (colonne slug_site). On ne se fie pas au préfixe
+      « jeu- » : les fléchettes ont une page qui ne le porte pas. */
+  function nomDePage(adresse) {
+    if (!adresse) return '';
+    var a = String(adresse).split('#')[0].split('?')[0];
+    if (/^https?:/i.test(a)) {
+      try { a = new URL(a).pathname; } catch (e) { /* on garde a tel quel */ }
+    }
+    a = a.substring(a.lastIndexOf('/') + 1);
+    return a.replace(/\.html?$/i, '').toLowerCase();
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function propre(s) { return String(s == null ? '' : s).trim().toLowerCase(); }
+
+  // =====================================================================
+  //  LA LECTURE
+  //
+  //  Deux temps : ce qu'on a retenu de la visite précédente, appliqué
+  //  tout de suite, puis la réponse fraîche. Sans cela, le visiteur
+  //  verrait les cartes s'afficher puis l'une d'elles disparaître — un
+  //  clignotement qui donne l'impression d'un site qui bafouille.
+  // =====================================================================
+  function enMemoire() {
+    try {
+      var brut = sessionStorage.getItem(MEMOIRE);
+      return brut ? JSON.parse(brut) : null;
+    } catch (e) { return null; }
+  }
+
+  function retenir(liste) {
+    try { sessionStorage.setItem(MEMOIRE, JSON.stringify(liste)); } catch (e) { /* rien */ }
+  }
+
+  function demander(suite) {
+    var fini = false;
+    var minuteur = setTimeout(function () {
+      if (!fini) { fini = true; suite(null); }
+    }, DELAI);
+
+    try {
+      fetch(SOURCE, { credentials: 'omit' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (fini) return;
+          fini = true; clearTimeout(minuteur);
+          suite(d && d.ok && Array.isArray(d.experiences) ? d.experiences : null);
+        })
+        .catch(function () {
+          if (fini) return;
+          fini = true; clearTimeout(minuteur);
+          suite(null);
+        });
+    } catch (e) {
+      if (!fini) { fini = true; clearTimeout(minuteur); suite(null); }
+    }
+  }
+
+  // =====================================================================
+  //  MASQUER CE QUI N'EST PLUS PROPOSÉ
+  //
+  //  ⚠ ON MASQUE, ON NE SUPPRIME PAS.
+  //    La mémoire d'onglet peut être en retard d'une minute sur
+  //    l'application : si elle annonce une expérience désactivée qui
+  //    vient d'être réactivée, il faut pouvoir la faire RÉAPPARAÎTRE
+  //    quand la réponse fraîche arrive. Une carte supprimée du document
+  //    ne reviendrait pas.
+  // =====================================================================
+  var MARQUE = 'data-dlyr-masque';
+
+  function carteDe(lien) {
+    //  Les deux formes de cartes du site, puis les conteneurs ordinaires.
+    if (lien.classList.contains('xcard') || lien.classList.contains('jcard')) return lien;
+    return lien.closest('.xcard, .jcard, article, li') || lien;
+  }
+
+  function masquer(el) {
+    if (el.getAttribute(MARQUE)) return;
+    //  On note l'affichage d'origine : certaines cartes sont en flex ou
+    //  en grid, et leur rendre « block » les déformerait au retour.
+    el.setAttribute(MARQUE, el.style.display || '');
+    el.style.display = 'none';
+  }
+
+  function demasquer(el) {
+    if (!el.hasAttribute(MARQUE)) return;
+    el.style.display = el.getAttribute(MARQUE);
+    el.removeAttribute(MARQUE);
+  }
+
+  function ajusterLiens(connues) {
+    var liens = document.querySelectorAll('a[href]');
+    for (var i = 0; i < liens.length; i++) {
+      var e = connues[nomDePage(liens[i].getAttribute('href'))];
+      if (!e) continue;                       //  page inconnue : on n'y touche pas
+      var carte = carteDe(liens[i]);
+      if (e.actif) demasquer(carte); else masquer(carte);
+    }
+  }
+
+  // =====================================================================
+  //  LA DURÉE ET L'EFFECTIF, PRIS DANS L'APPLICATION
+  //
+  //  Ce sont des FAITS, et ils changent : une séance qui passe de 30 à
+  //  45 minutes, une expérience qui accepte deux joueurs de plus. Une
+  //  durée fausse sur le site, c'est un client qui organise sa soirée
+  //  de travers.
+  //
+  //  ⚠ LE GENRE ET L'AFFICHE, EUX, RESTENT CEUX DU SITE. Ce n'est pas un
+  //    oubli, c'est une mesure :
+  //
+  //      · le genre du site appartient à un vocabulaire fermé de six
+  //        catégories — Action, Aventure, Escape Game, Quiz, Culturel,
+  //        Adapté aux enfants. Ce sont les boutons de filtre du
+  //        catalogue, et la couleur de chaque étiquette. L'application,
+  //        elle, écrit « Action tactique » ou « Enfants & Familles
+  //        (Mode Family) » : du texte libre. Le recopier casserait les
+  //        filtres et décolorerait les cartes ;
+  //
+  //      · les affiches de l'application sont réduites à 380 px de large
+  //        au moment où vous les déposez (c'est fait pour le tunnel de
+  //        réservation). Celles du site mesurent 768 à 1086 px. Mêmes
+  //        images, deux usages — prendre les petites dégraderait le
+  //        catalogue sur un grand écran.
+  // =====================================================================
+  function texteFinal(span, valeur) {
+    //  Chaque case contient un pictogramme puis du texte : on ne remplace
+    //  que le texte, sinon le pictogramme disparaît.
+    for (var i = span.childNodes.length - 1; i >= 0; i--) {
+      if (span.childNodes[i].nodeType === 3) {       //  nœud de texte
+        span.childNodes[i].nodeValue = ' ' + valeur;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function rafraichirCartes(connues) {
+    var cartes = document.querySelectorAll('a.xcard, a.jcard');
+    for (var i = 0; i < cartes.length; i++) {
+      var e = connues[nomDePage(cartes[i].getAttribute('href'))];
+      if (!e || !e.actif) continue;
+      var cases = cartes[i].querySelectorAll('.xcard__meta span');
+      if (cases.length >= 1 && e.duree) texteFinal(cases[0], e.duree + ' min');
+      if (cases.length >= 2 && e.mini && e.maxi) {
+        texteFinal(cases[1], e.mini + ' à ' + e.maxi + ' joueurs');
+      }
+    }
+  }
+
+  // =====================================================================
+  //  LA PAGE D'UNE EXPÉRIENCE DÉSACTIVÉE
+  //
+  //  Elle reste en ligne, avec son adresse, son synopsis et ses images.
+  //  C'est un choix de fond : Google a mis des mois à référencer cette
+  //  page, et une expérience désactivée en novembre peut revenir en
+  //  mars. Une page supprimée, elle, recommence de zéro.
+  //
+  //  Ce qui disparaît, c'est la possibilité de réserver quelque chose
+  //  qui n'existe plus — et elle doit disparaître partout, y compris
+  //  dans le bouton du menu, qui pointe lui aussi sur cette expérience.
+  // =====================================================================
+  function neutraliserLaPage(exp) {
+    if (document.querySelector('[data-dlyr-indispo]')) return;
+
+    var boutons = document.querySelectorAll('a[href^="' + RESERVER + '"], a[href*="admin.dlyr-vr.com"]');
+    for (var i = 0; i < boutons.length; i++) {
+      var a = boutons[i];
+      if (!/exp=/.test(a.getAttribute('href') || '')) continue;
+
+      var dansLeMenu = !!a.closest('.nav__cta, .drawer__cta');
+      /*  ⚠ ON REMPLACE L'ÉLÉMENT, ON NE RÉÉCRIT PAS SON ADRESSE.
+          Plus haut dans ce fichier, un écouteur de clic rattrape les
+          liens de réservation et force la destination « directe » même
+          si l'adresse a changé. Changer le href ne suffirait donc pas :
+          le clic partirait quand même vers la réservation. En
+          remplaçant le lien par un autre élément, il n'y a plus rien à
+          rattraper. */
+      var neuf;
+      if (dansLeMenu) {
+        //  Dans le menu, « Réserver » doit rester utile : il mène au
+        //  catalogue, où le visiteur trouvera ce qui est jouable.
+        neuf = document.createElement('a');
+        neuf.className = a.className;
+        neuf.href = CATALOGUE;
+        neuf.textContent = 'Voir le catalogue';
+      } else {
+        //  Sur la page elle-même, un bouton qui ne mène nulle part est
+        //  pire qu'un bouton absent : on le remplace par une mention.
+        neuf = document.createElement('span');
+        neuf.className = a.className;
+        neuf.setAttribute('aria-disabled', 'true');
+        neuf.style.opacity = '.55';
+        neuf.style.cursor = 'not-allowed';
+        neuf.textContent = 'Momentanément indisponible';
+      }
+      neuf.setAttribute('data-dlyr-indispo', '1');
+      a.parentNode.replaceChild(neuf, a);
+    }
+
+    /*  ⚠ ET LES BOUTONS QUI N'ONT PAS D'ADRESSE.
+        site.js rattrape aussi les éléments marqués « data-smeetz-open »
+        et les envoie vers la réservation par un écouteur de clic — il
+        n'y a donc rien à voir dans leur adresse, et les retirer de la
+        liste ci-dessus ne suffirait pas. On enlève la marque : sans
+        elle, l'écouteur ne les reconnaît plus. */
+    var marques = document.querySelectorAll('[data-smeetz-open]');
+    for (var m = 0; m < marques.length; m++) {
+      marques[m].removeAttribute('data-smeetz-open');
+      marques[m].setAttribute('data-dlyr-indispo', '1');
+      marques[m].setAttribute('aria-disabled', 'true');
+      marques[m].style.opacity = '.55';
+      marques[m].style.cursor = 'not-allowed';
+    }
+
+    //  Et on le dit en toutes lettres, sous le titre : un bouton grisé
+    //  sans explication laisse croire à une panne du site.
+    var titre = document.querySelector('h1');
+    if (titre && !document.querySelector('[data-dlyr-mot]')) {
+      var mot = document.createElement('p');
+      mot.setAttribute('data-dlyr-mot', '1');
+      mot.setAttribute('style', 'margin:10px 0 0;font-size:15px;opacity:.9;');
+      mot.textContent = esc(exp.nom) + ' n’est pas proposée en ce moment. '
+        + 'Retrouvez toutes les expériences disponibles au catalogue.';
+      titre.parentNode.insertBefore(mot, titre.nextSibling);
+    }
+  }
+
+  // =====================================================================
+  //  LES EXPÉRIENCES QUE LE SITE NE CONNAÎT PAS ENCORE
+  //
+  //  Une carte est fabriquée sur le modèle exact de celles du catalogue
+  //  — mêmes classes, mêmes pictogrammes — pour qu'elle soit
+  //  indiscernable des autres.
+  //
+  //  ⚠ ON NE DOUBLE JAMAIS UNE CARTE EXISTANTE.
+  //    Reconnaissance par la page d'abord, par le nom ensuite. Le jour
+  //    où vous écrirez la page d'une expérience et ajouterez sa carte à
+  //    la main, la carte fabriquée s'effacera d'elle-même : elle aura
+  //    reconnu son nom dans le catalogue.
+  // =====================================================================
+  var HORLOGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+    + '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>';
+  var JOUEURS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+    + '<circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.4"></circle>'
+    + '<path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"></path></svg>';
+
+  function cartesExistantes() {
+    var pages = {}, noms = {};
+    var cartes = document.querySelectorAll('.cat__grid a.xcard');
+    for (var i = 0; i < cartes.length; i++) {
+      pages[nomDePage(cartes[i].getAttribute('href'))] = true;
+      var n = cartes[i].querySelector('.xcard__name');
+      if (n) noms[propre(n.textContent)] = true;
+    }
+    return { pages: pages, noms: noms };
+  }
+
+  function fabriquerCarte(e) {
+    var a = document.createElement('a');
+    a.className = 'xcard reveal in';
+    a.setAttribute('data-dlyr-carte', '1');
+    //  Si la page de présentation existe, on y mène ; sinon, droit à la
+    //  réservation. Un lien vers une page qui n'existe pas serait pire
+    //  que pas de lien du tout.
+    a.href = e.page ? (e.page + '.html') : (RESERVER + encodeURIComponent(e.id));
+
+    var visuel = e.affiche
+      ? '<div class="ph ph--dark"><img class="ph__img" loading="lazy" src="'
+        + esc(SOURCE + '?affiche=' + encodeURIComponent(e.id)) + '" alt="' + esc(e.nom)
+        + '" onerror="this.remove()"></div>'
+      //  Sans affiche, un aplat de la couleur du jeu : une carte sans
+      //  image est moins belle, une image cassée fait amateur.
+      : '<div class="ph ph--dark" style="background:' + esc(e.couleur || '#1C3024') + '"></div>';
+
+    a.innerHTML = visuel
+      + '<span class="xcard__scrim"></span>'
+      + '<div class="xcard__header"><div class="xcard__tags">'
+      +   (e.genre ? '<span class="xcard__tag tag-genre" style="background:'
+                     + esc(e.couleur || '#0e7490') + '">' + esc(e.genre) + '</span>' : '')
+      +   (e.accroche ? '<span class="xcard__tag tag-type">' + esc(e.accroche) + '</span>' : '')
+      + '</div></div>'
+      + '<div class="xcard__footer" style="bottom:15%">'
+      +   '<h3 class="xcard__name">' + esc(e.nom) + '</h3>'
+      +   '<div class="xcard__meta">'
+      +     '<span>' + HORLOGE + ' ' + esc(e.duree) + ' min</span>'
+      +     '<span>' + JOUEURS + ' ' + esc(e.mini) + ' à ' + esc(e.maxi) + ' joueurs</span>'
+      +   '</div>'
+      + '</div>';
+    return a;
+  }
+
+  function completerLeCatalogue(experiences) {
+    var grille = document.querySelector('.cat__grid');
+    if (!grille) return;                      //  on n'est pas sur le catalogue
+
+    /*  ⚠ ON EFFACE NOS PROPRES CARTES AVANT DE REGARDER CE QUI EXISTE.
+        Dans l'autre ordre, la carte fabriquée au premier passage se
+        reconnaîtrait elle-même au second — et le catalogue perdrait la
+        nouveauté dès que la réponse fraîche arriverait. Attrapé par le
+        banc, qui applique la liste deux fois de suite exprès. */
+    var vieilles = grille.querySelectorAll('[data-dlyr-carte]');
+    for (var v = 0; v < vieilles.length; v++) vieilles[v].parentNode.removeChild(vieilles[v]);
+
+    var deja = cartesExistantes();
+
+    for (var i = 0; i < experiences.length; i++) {
+      var e = experiences[i];
+      if (!e.actif) continue;
+      /*  ⚠ ON NE FABRIQUE DE CARTE QUE POUR CE QUE LE SITE NE PRÉSENTE
+          NULLE PART. Une expérience qui a déjà une page est, par
+          définition, présentée quelque part : si sa carte ne figure pas
+          au catalogue, c'est une décision éditoriale — les fléchettes
+          ont leur page et ne sont pas dans la grille des jeux, et ce
+          n'est pas à un script de corriger ce choix. */
+      if (e.page) continue;
+      if (deja.noms[propre(e.nom)]) continue;
+      grille.appendChild(fabriquerCarte(e));
+    }
+  }
+
+  // =====================================================================
+  //  LE SYNOPSIS ET LE RÉSUMÉ GOOGLE, PRIS DANS L'APPLICATION
+  //
+  //  ⚠ UNE CASE VIDE N'EFFACE RIEN. Tant que le synopsis n'est pas saisi
+  //    dans l'application, la page garde le texte de son fichier. C'est
+  //    ce qui permet de remplir l'application à son rythme sans jamais
+  //    appauvrir le site entre-temps.
+  //
+  //  ⚠ ET LE FICHIER DE LA PAGE, LUI, N'EST PAS RÉÉCRIT. Le texte saisi
+  //    dans l'application s'affiche par-dessus celui de la page. Google
+  //    le verra, mais il lit d'abord le fichier : pour un texte qui
+  //    compte vraiment au référencement, le bon geste reste de le
+  //    reporter dans la page au prochain dépôt du site.
+  // =====================================================================
+  function appliquerLesTextes(exp) {
+    if (exp.synopsis) {
+      //  Le synopsis de la page : le premier paragraphe « lead » du
+      //  bandeau de titre. On ne touche pas aux autres.
+      var lead = document.querySelector('.jhero__left p.lead, .jhero p.lead, p.lead');
+      if (lead && propre(lead.textContent) !== propre(exp.synopsis)) {
+        lead.textContent = exp.synopsis;
+      }
+    }
+    if (exp.resume_seo) {
+      var meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'description');
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', exp.resume_seo);
+    }
+  }
+
+  // =====================================================================
+  //  L'APPLICATION DE LA LISTE
+  // =====================================================================
+  var enTrainDAppliquer = false;
+  /*  ⚠ LA DERNIÈRE LISTE CONNUE, ET NON CELLE DU PREMIER PASSAGE.
+      Le guetteur ci-dessous se rappelle tout seul quand le catalogue se
+      redessine. S'il gardait la liste qu'il avait au moment où on l'a
+      posé, il réappliquerait indéfiniment la liste PÉRIMÉE de la mémoire
+      d'onglet — et une expérience qu'on vient de réactiver serait
+      remasquée une demi-seconde après être réapparue. Vu au banc. */
+  var derniereListe = null;
+
+  function appliquer(experiences) {
+    if (!experiences || !experiences.length) return;
+    derniereListe = experiences;
+
+    var connues = {};
+    for (var i = 0; i < experiences.length; i++) {
+      var e = experiences[i];
+      if (e && e.page) connues[propre(e.page)] = e;
+    }
+
+    enTrainDAppliquer = true;
+    try {
+      ajusterLiens(connues);
+      rafraichirCartes(connues);
+
+      var ici = connues[nomDePage(location.pathname)];
+      if (ici) {
+        if (!ici.actif) neutraliserLaPage(ici);
+        appliquerLesTextes(ici);
+      }
+
+      completerLeCatalogue(experiences);
+      surveillerLaGrille();
+    } finally {
+      enTrainDAppliquer = false;
+    }
+  }
+
+  // =====================================================================
+  //  ⚠ LE CATALOGUE SE REDESSINE TOUT SEUL, ET C'EST LE PIÈGE
+  //
+  //  js/catalogue.js garde sa propre copie de la liste des jeux, faite
+  //  au chargement, et réécrit toute la grille à chaque clic sur un
+  //  filtre ou sur un tri. Sans ce guetteur, un visiteur qui clique
+  //  « Action » verrait réapparaître l'expérience qu'on vient de retirer,
+  //  et les durées corrigées redeviendraient celles du fichier.
+  //
+  //  On ne cherche pas à modifier sa copie — elle est enfermée dans sa
+  //  fonction, et aller la chercher serait un bricolage qui casserait au
+  //  premier changement du site. On regarde la grille, et on repasse
+  //  derrière.
+  // =====================================================================
+  var guetteur = null;
+
+  function surveillerLaGrille() {
+    if (guetteur) return;
+    var grille = document.querySelector('.cat__grid');
+    if (!grille || typeof MutationObserver !== 'function') return;
+
+    /*  ⚠ ON SE DÉBRANCHE PENDANT QU'ON RETOUCHE, ET C'EST INDISPENSABLE.
+        Un simple drapeau « je suis en train de travailler » ne suffit
+        pas : le guetteur n'est pas rappelé pendant la retouche mais
+        APRÈS, quand le drapeau est déjà retombé. Il se déclencherait
+        donc sur ses propres modifications, indéfiniment. Attrapé par le
+        banc, qui s'est arrêté au bout de deux minutes sans rien dire —
+        une boucle sans fin ne lève aucune erreur, elle mange la page. */
+    guetteur = new MutationObserver(function () {
+      if (enTrainDAppliquer) return;
+      guetteur.disconnect();
+      try { appliquer(derniereListe); }
+      catch (e) { console.error('expériences pilotées :', e); }
+      var g = document.querySelector('.cat__grid');
+      if (g) guetteur.observe(g, { childList: true });
+    });
+    guetteur.observe(grille, { childList: true });
+  }
+
+  // =====================================================================
+  //  LE DÉMARRAGE
+  // =====================================================================
+  function demarrer() {
+    //  1. Ce qu'on savait en arrivant : appliqué immédiatement.
+    try { appliquer(enMemoire()); } catch (e) { /* une liste périmée n'arrête rien */ }
+
+    //  2. Ce que l'application dit maintenant.
+    demander(function (liste) {
+      if (!liste) return;                     //  pas de réponse : le site reste tel quel
+      retenir(liste);
+      try { appliquer(liste); }
+      catch (e) { console.error('expériences pilotées :', e); }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+
+  //  Pour le banc d'essai.
+  window.__experiencesPilotees = {
+    nomDePage: nomDePage, appliquer: appliquer, fabriquerCarte: fabriquerCarte,
+    rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
+    SOURCE: SOURCE
+  };
+})();
