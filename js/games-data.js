@@ -102,8 +102,8 @@ window.DLYR_GAMES = [
   {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
-    type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
-    img: 'uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg', cardBottom: '15%',
+    pl: '2 à 8 joueurs', players: 8, dur: 30,
+    img: 'uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg', cardBottom: '15%', cardTop: '34%', /* étiquette Quiz seule, sous « QUIZ IMMERSIF » */
     objective: 'Accumuler le maximum de points en répondant correctement et rapidement aux questions pour terminer en tête du classement.',
     tagline: 'La connaissance est<br>votre meilleure arme',
     story: [
