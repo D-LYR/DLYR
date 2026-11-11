@@ -924,6 +924,27 @@
     return a.replace(/\.html?$/i, '').toLowerCase();
   }
 
+  /*  ⚠ DEUX FAÇONS DE RECONNAÎTRE UNE EXPÉRIENCE DANS UN LIEN, ET IL EN
+      FAUT DEUX.
+
+      En production, une carte du catalogue mène à sa page :
+          jeu-harbor-siege.html
+      En préprod, elle mène directement à la réservation :
+          https://admin.dlyr-vr.com/?client=1&exp=harbor
+
+      J'avais écrit ce bloc sur la première forme seulement, et sur la
+      préprod il ne reconnaissait plus une seule carte : rien n'était
+      masqué, rien n'était corrigé, en silence. On lit donc aussi le code
+      de l'expérience dans l'adresse — et celui-là ne dépend d'aucune
+      convention de nommage de page. */
+  function codeDuLien(adresse) {
+    if (!adresse) return '';
+    var m = /[?&]exp=([^&#]+)/.exec(String(adresse));
+    if (!m) return '';
+    try { return decodeURIComponent(m[1]).toLowerCase(); }
+    catch (e) { return m[1].toLowerCase(); }
+  }
+
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -1007,11 +1028,20 @@
     el.removeAttribute(MARQUE);
   }
 
+  /*  L'expérience désignée par un lien, par sa page ou par son code. */
+  function expDuLien(connues, href) {
+    var p = nomDePage(href);
+    if (p && connues.pages[p]) return connues.pages[p];
+    var c = codeDuLien(href);
+    if (c && connues.codes[c]) return connues.codes[c];
+    return null;
+  }
+
   function ajusterLiens(connues) {
     var liens = document.querySelectorAll('a[href]');
     for (var i = 0; i < liens.length; i++) {
-      var e = connues[nomDePage(liens[i].getAttribute('href'))];
-      if (!e) continue;                       //  page inconnue : on n'y touche pas
+      var e = expDuLien(connues, liens[i].getAttribute('href'));
+      if (!e) continue;                       //  lien inconnu : on n'y touche pas
       var carte = carteDe(liens[i]);
       if (e.actif) demasquer(carte); else masquer(carte);
     }
@@ -1057,7 +1087,7 @@
   function rafraichirCartes(connues) {
     var cartes = document.querySelectorAll('a.xcard, a.jcard');
     for (var i = 0; i < cartes.length; i++) {
-      var e = connues[nomDePage(cartes[i].getAttribute('href'))];
+      var e = expDuLien(connues, cartes[i].getAttribute('href'));
       if (!e || !e.actif) continue;
       var cases = cartes[i].querySelectorAll('.xcard__meta span');
       if (cases.length >= 1 && e.duree) texteFinal(cases[0], e.duree + ' min');
@@ -1165,14 +1195,17 @@
     + '<path d="M3.5 19a5.5 5.5 0 0 1 11 0M15 19a4.5 4.5 0 0 1 6 0"></path></svg>';
 
   function cartesExistantes() {
-    var pages = {}, noms = {};
+    var pages = {}, codes = {}, noms = {};
     var cartes = document.querySelectorAll('.cat__grid a.xcard');
     for (var i = 0; i < cartes.length; i++) {
-      pages[nomDePage(cartes[i].getAttribute('href'))] = true;
+      var h = cartes[i].getAttribute('href');
+      var p = nomDePage(h), c = codeDuLien(h);
+      if (p) pages[p] = true;
+      if (c) codes[c] = true;
       var n = cartes[i].querySelector('.xcard__name');
       if (n) noms[propre(n.textContent)] = true;
     }
-    return { pages: pages, noms: noms };
+    return { pages: pages, codes: codes, noms: noms };
   }
 
   function fabriquerCarte(e) {
@@ -1233,6 +1266,9 @@
           ont leur page et ne sont pas dans la grille des jeux, et ce
           n'est pas à un script de corriger ce choix. */
       if (e.page) continue;
+      //  Déjà présente sous une autre forme : par son code dans un lien
+      //  de réservation, ou simplement par son nom.
+      if (e.id && deja.codes[propre(e.id)]) continue;
       if (deja.noms[propre(e.nom)]) continue;
       grille.appendChild(fabriquerCarte(e));
     }
@@ -1288,10 +1324,12 @@
     if (!experiences || !experiences.length) return;
     derniereListe = experiences;
 
-    var connues = {};
+    var connues = { pages: {}, codes: {} };
     for (var i = 0; i < experiences.length; i++) {
       var e = experiences[i];
-      if (e && e.page) connues[propre(e.page)] = e;
+      if (!e) continue;
+      if (e.page) connues.pages[propre(e.page)] = e;
+      if (e.id) connues.codes[propre(e.id)] = e;
     }
 
     enTrainDAppliquer = true;
@@ -1299,7 +1337,7 @@
       ajusterLiens(connues);
       rafraichirCartes(connues);
 
-      var ici = connues[nomDePage(location.pathname)];
+      var ici = connues.pages[nomDePage(location.pathname)];
       if (ici) {
         if (!ici.actif) neutraliserLaPage(ici);
         appliquerLesTextes(ici);
@@ -1375,7 +1413,8 @@
 
   //  Pour le banc d'essai.
   window.__experiencesPilotees = {
-    nomDePage: nomDePage, appliquer: appliquer, fabriquerCarte: fabriquerCarte,
+    nomDePage: nomDePage, codeDuLien: codeDuLien,
+    appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
     SOURCE: SOURCE
   };
