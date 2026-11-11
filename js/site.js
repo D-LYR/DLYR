@@ -916,6 +916,36 @@
   var DELAI    = 4000;                  //  au-delà, on renonce sans rien casser
   var MEMOIRE  = 'dlyr-experiences';    //  la dernière réponse, pour éviter le clignotement
 
+  /*  LA PAGE DE PRÉSENTATION DES EXPÉRIENCES SANS PAGE.
+      experience.html affiche n'importe quelle expérience à partir de
+      l'application. Les cartes fabriquées y mènent — mais SEULEMENT si
+      le fichier est bien déposé : on le vérifie une fois par onglet,
+      plutôt que d'envoyer les visiteurs vers une page introuvable. Sans
+      elle, les cartes retombent sur le lien de réservation direct,
+      c'est-à-dire sur le comportement d'avant. */
+  var PAGE_FICHE   = 'experience.html';
+  var MEMOIRE_PAGE = 'dlyr-page-experience';
+  var pageFiche = (function () {
+    try {
+      var v = sessionStorage.getItem(MEMOIRE_PAGE);
+      return v === null ? null : v === '1';
+    } catch (e) { return null; }
+  })();
+
+  function sonderLaPageFiche(suite) {
+    if (pageFiche !== null) { suite(); return; }
+    var fini = function (ok) {
+      pageFiche = ok;
+      try { sessionStorage.setItem(MEMOIRE_PAGE, ok ? '1' : '0'); } catch (e) { /* rien */ }
+      suite();
+    };
+    try {
+      fetch(PAGE_FICHE, { method: 'HEAD' })
+        .then(function (r) { fini(!!r.ok); })
+        .catch(function () { fini(false); });
+    } catch (e) { fini(false); }
+  }
+
   // =====================================================================
   //  OUTILS
   // =====================================================================
@@ -1262,10 +1292,13 @@
     var a = document.createElement('a');
     a.className = 'xcard reveal in';
     a.setAttribute('data-dlyr-carte', '1');
-    //  Si la page de présentation existe, on y mène ; sinon, droit à la
-    //  réservation. Un lien vers une page qui n'existe pas serait pire
-    //  que pas de lien du tout.
-    a.href = e.page ? (e.page + '.html') : (RESERVER + encodeURIComponent(e.id));
+    /*  Trois destinations, dans cet ordre : sa page écrite à la main si
+        elle en a une, la page de présentation générique si elle est
+        déposée, et à défaut la réservation directe. Un lien vers une
+        page qui n'existe pas serait pire que pas de lien du tout. */
+    a.href = e.page ? (e.page + '.html')
+           : (pageFiche ? (PAGE_FICHE + '?exp=' + encodeURIComponent(e.id))
+                        : (RESERVER + encodeURIComponent(e.id)));
 
     var visuel = e.affiche
       ? '<div class="ph ph--dark"><img class="ph__img" loading="lazy" src="'
@@ -1581,7 +1614,17 @@
     //  1. Ce qu'on savait en arrivant : appliqué immédiatement.
     try { appliquer(enMemoire()); } catch (e) { /* une liste périmée n'arrête rien */ }
 
-    //  2. Ce que l'application dit maintenant.
+    /*  2. La page de présentation est-elle déposée ? On ne retarde pas
+        l'affichage pour l'attendre : si la réponse arrive après coup et
+        change la destination des cartes, on les refait. */
+    var avant = pageFiche;
+    sonderLaPageFiche(function () {
+      if (pageFiche !== avant && derniereListe) {
+        try { appliquer(derniereListe); } catch (e) { /* rien */ }
+      }
+    });
+
+    //  3. Ce que l'application dit maintenant.
     demander(function (liste) {
       if (!liste) return;                     //  pas de réponse : le site reste tel quel
       retenir(liste);
@@ -1599,6 +1642,7 @@
   //  Pour le banc d'essai.
   window.__experiencesPilotees = {
     nomDePage: nomDePage, codeDuLien: codeDuLien,
+    pageFiche: function () { return pageFiche; },
     appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
     SOURCE: SOURCE
