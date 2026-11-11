@@ -1271,10 +1271,48 @@
       if (e.id && deja.codes[propre(e.id)]) continue;
       if (deja.noms[propre(e.nom)]) continue;
       if (!passeLeFiltre(e)) continue;
-      grille.appendChild(fabriquerCarte(e));
+      insererDansLOrdre(grille, fabriquerCarte(e), e.nom);
     }
 
     recompterLesCartes();
+  }
+
+  /*  ⚠ UNE CARTE AJOUTÉE À LA FIN CASSE LE CLASSEMENT.
+      Le catalogue affiche les expériences par ordre alphabétique. Une
+      carte simplement ajoutée à la suite se retrouvait après Volcanic
+      Warfare — « Napoleon » en dernier, ce qui se voit tout de suite et
+      fait désordre.
+
+      On la glisse donc à sa place. Et on ne suppose pas l'ordre : on le
+      LIT sur les cartes déjà affichées. Si elles sont alphabétiques, on
+      insère au bon endroit ; si elles sont rangées autrement — par
+      durée, par exemple —, on ajoute à la fin plutôt que de déranger un
+      classement qu'on ne comprend pas. */
+  function nomDeCarte(el) {
+    var n = el.querySelector('.xcard__name');
+    return n ? n.textContent.trim() : '';
+  }
+
+  function avant(a, b) {
+    try { return a.localeCompare(b, 'fr', { sensitivity: 'base' }); }
+    catch (e) { return a < b ? -1 : (a > b ? 1 : 0); }
+  }
+
+  function insererDansLOrdre(grille, carte, nom) {
+    var cartes = grille.querySelectorAll('a.xcard');
+    var noms = [];
+    for (var i = 0; i < cartes.length; i++) noms.push(nomDeCarte(cartes[i]));
+
+    var alphabetique = true;
+    for (var j = 1; j < noms.length; j++) {
+      if (avant(noms[j - 1], noms[j]) > 0) { alphabetique = false; break; }
+    }
+    if (!alphabetique) { grille.appendChild(carte); return; }
+
+    for (var k = 0; k < noms.length; k++) {
+      if (avant(noms[k], nom) > 0) { grille.insertBefore(carte, cartes[k]); return; }
+    }
+    grille.appendChild(carte);
   }
 
   /*  ⚠ LE FILTRE PAR GENRE S'APPLIQUE AUSSI À NOS CARTES.
