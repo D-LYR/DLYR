@@ -1270,8 +1270,52 @@
       //  de réservation, ou simplement par son nom.
       if (e.id && deja.codes[propre(e.id)]) continue;
       if (deja.noms[propre(e.nom)]) continue;
+      if (!passeLeFiltre(e)) continue;
       grille.appendChild(fabriquerCarte(e));
     }
+
+    recompterLesCartes();
+  }
+
+  /*  ⚠ LE FILTRE PAR GENRE S'APPLIQUE AUSSI À NOS CARTES.
+      Sans ça, une expérience fabriquée restait affichée sous TOUS les
+      filtres — « Napoleon » apparaissait sous « Quiz ». Le catalogue
+      filtre sur un vocabulaire fermé (Action, Aventure, Escape Game…) ;
+      l'application écrit « Culturel, Exploration historique ». On
+      cherche donc le mot du filtre DANS le genre de l'application, ce
+      qui fait très bien fonctionner les genres à plusieurs mots. */
+  function passeLeFiltre(e) {
+    var chip = document.querySelector('.cat__chip.on');
+    if (!chip) return true;
+    var g = chip.getAttribute('data-genre') || chip.textContent || '';
+    if (!g || propre(g) === 'tous') return true;
+    return propre(e.genre || '').indexOf(propre(g)) !== -1;
+  }
+
+  /*  ⚠ ET LE COMPTEUR DOIT SUIVRE, DANS LES DEUX SENS.
+      Il est écrit par le catalogue à partir de SA liste : il annonçait
+      « 10 expériences disponibles » sous onze cartes après un ajout, et
+      il aurait annoncé dix sous neuf cartes après un masquage. On le
+      recalcule sur ce qui est réellement affiché — la seule valeur qui
+      ne puisse pas mentir. */
+  function recompterLesCartes() {
+    var grille = document.querySelector('.cat__grid');
+    if (!grille) return;
+    var n = 0;
+    var cartes = grille.querySelectorAll('a.xcard');
+    for (var i = 0; i < cartes.length; i++) {
+      if (getComputedStyle(cartes[i]).display !== 'none') n++;
+    }
+
+    var compteur = document.querySelector('[data-count]');
+    if (compteur) {
+      compteur.textContent = n + ' expérience' + (n > 1 ? 's' : '')
+        + ' disponible' + (n > 1 ? 's' : '');
+    }
+    //  Le message « rien à afficher » du catalogue ne connaît pas nos
+    //  cartes : une seule carte fabriquée le laisserait affiché.
+    var vide = document.querySelector('[data-empty]');
+    if (vide) vide.hidden = n > 0;
   }
 
   // =====================================================================
