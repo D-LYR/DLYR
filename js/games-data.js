@@ -70,8 +70,9 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'snow-village', name: 'Snow Village', genre: 'Adapté aux enfants',
+    cardTop: '27%', /* étiquettes sous le titre de l'affiche */
     tags: ['Famille', 'Coopératif', 'Magie de Noël'],
-    type: 'Family Adventure', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'En famille', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/snow-village/snow-village-affiche.jpg',
     objective: 'Défendre le village du Père Noël, sauver les habitants et vaincre les armées du sorcier maléfique.',
     tagline: 'La magie de Noël est en danger.<br>Devenez les héros de Snow Village.',
@@ -85,8 +86,9 @@ window.DLYR_GAMES = [
   {
     slug: 'desert-village', name: 'Desert Village', genre: 'Adapté aux enfants',
     cardBottom: '15%', /* catalogue : hauteur du titre sur l'affiche (slogan en gros caractères) */
+    cardTop: '29%', /* étiquettes sous le titre de l'affiche */
     tags: ['Famille', 'Coopératif', 'Cartoon'],
-    type: 'Family Adventure', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'En famille', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/desert-village/desert-village-affiche.jpg',
     objective: 'Repousser les petits monstres du constructeur, protéger les habitants et sauver le village.',
     tagline: 'La menace du désert.<br>Unissez-vous pour sauver le village.',
