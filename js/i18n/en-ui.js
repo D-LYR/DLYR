@@ -447,6 +447,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Entre amis": "With friends",
   "La bande au complet": "The whole crew",
   "Jusqu'à 4 sessions VR en semaine, ou de la VR et des fléchettes pour toute la bande.": "Up to 4 VR sessions on weekdays, or VR and darts for the whole crew.",
+  "4 sessions VR, n'importe quel jour de la semaine, et 30 minutes de fléchettes pour toute la bande.": "4 VR sessions, any day of the week, and 30 minutes of darts for the whole crew.",
   "Offrir 40 €": "Gift €40",
   "Offrir 80 €": "Gift €80",
   "Offrir 120 €": "Gift €120",
