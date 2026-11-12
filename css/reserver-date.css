@@ -29,7 +29,7 @@
 .rdate__big a{ color:var(--lime); font-weight:700; text-decoration:underline; }
 .rdate__hint{ margin:-4px 0 16px; font-size:16px; color:var(--ink); }
 .rdate__filters{ margin:0 0 18px; }
-.rdate .cat__grid.is-waiting .xcard{ opacity:.45; filter:grayscale(.6); }
+.rdate .cat__grid.is-waiting .xcard{ opacity:.45; filter:grayscale(.6); animation:none; }
 .rdate .cat__grid.is-waiting .xcard:hover{ transform:none; box-shadow:none; }
 
 /* Bandeau du catalogue vers cette page */
