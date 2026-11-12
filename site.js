@@ -1549,6 +1549,13 @@
     var a = document.createElement('a');
     a.className = 'xcard reveal in';
     a.setAttribute('data-dlyr-carte', '1');
+    /*  Le code et la jauge de l'expérience, lisibles par la page
+        « Réserver par date » : sans eux, elle ne pouvait ni bloquer la
+        carte tant que le jour n'est pas choisi, ni la faire mener à la
+        réservation du bon jour. */
+    if (e.id) a.setAttribute('data-exp', e.id);
+    if (e.mini) a.setAttribute('data-min', e.mini);
+    if (e.maxi) a.setAttribute('data-max', e.maxi);
     /*  Trois destinations, dans cet ordre : sa page écrite à la main si
         elle en a une, la page de présentation générique si elle est
         déposée, et à défaut la réservation directe. Un lien vers une
@@ -1908,7 +1915,6 @@
     SOURCE: SOURCE
   };
 })();
-
 /* ==========================================================================
    D'LYR — LES FORMULES CADEAU DE LA PAGE OFFRIR
                                                             (12/11/2026)
