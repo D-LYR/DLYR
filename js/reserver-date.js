@@ -153,7 +153,7 @@
     p.set('n', state.n);
     history.replaceState(null, '', location.pathname + '?' + p.toString());
   }
-  function render() { renderDays(); renderInfo(); renderGames(); syncUrl(); }
+  function render() { renderDays(); renderInfo(); renderGames(); syncAutoCards(); syncUrl(); }
 
   daysEl.addEventListener('click', e => {
     const b = e.target.closest('[data-date]'); if (!b || b.disabled) return;
@@ -165,12 +165,32 @@
     filtersEl.querySelectorAll('[data-genre]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
     state.genre = b.dataset.genre; renderGames();
   });
-  document.querySelector('[data-minus]').addEventListener('click', () => { state.n = Math.max(1, state.n - 1); renderGames(); syncUrl(); });
-  document.querySelector('[data-plus]').addEventListener('click', () => { state.n = Math.min(24, state.n + 1); renderGames(); syncUrl(); });
+  document.querySelector('[data-minus]').addEventListener('click', () => { state.n = Math.max(1, state.n - 1); renderGames(); syncAutoCards(); syncUrl(); });
+  document.querySelector('[data-plus]').addEventListener('click', () => { state.n = Math.min(24, state.n + 1); renderGames(); syncAutoCards(); syncUrl(); });
+  /* Cartes ajoutées automatiquement depuis l'application (ex. Napoleon) : site.js les insère
+     après coup dans la grille. Même règle que les autres : grisées et bloquées tant qu'aucun
+     jour n'est choisi, puis lien vers la réservation du jour et du nombre de participants. */
+  function bookHref(code) {
+    const n = state.n;
+    return BOOK.creneau ? `${BOOK.creneau}&exp=${encodeURIComponent(code)}&date=${state.date}&n=${n}` : `${BOOK.base}${encodeURIComponent(code)}&date=${state.date}&n=${n}`;
+  }
+  function syncAutoCards() {
+    gridEl.querySelectorAll('a.xcard[data-exp]').forEach(a => {
+      if (!a.dataset.ficheHref) a.dataset.ficheHref = a.getAttribute('href') || '';
+      if (state.date) { a.removeAttribute('aria-disabled'); a.setAttribute('href', bookHref(a.dataset.exp)); }
+      else { a.setAttribute('aria-disabled', 'true'); a.setAttribute('href', '#reserver-par-date'); }
+      const min = +a.dataset.min || 1, max = +a.dataset.max || 99;
+      const box = a.closest('.rdate__card') || a;
+      box.style.display = (state.n >= min && state.n <= max) ? '' : 'none';
+    });
+  }
+  if (typeof MutationObserver === 'function') new MutationObserver(syncAutoCards).observe(gridEl, { childList: true });
+
   gridEl.addEventListener('click', e => {
-    const a = e.target.closest('[data-book]'); if (!a) return;
+    const a = e.target.closest('a.xcard'); if (!a) return;
+    if (a.dataset.exp) syncAutoCards();
     if (!state.date) { e.preventDefault(); daysEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); daysEl.classList.add('is-nudged'); setTimeout(() => daysEl.classList.remove('is-nudged'), 900); return; }
-    if (window.DLYR_track) window.DLYR_track('InitiateCheckout', { content_name: a.dataset.book });
+    if (window.DLYR_track) window.DLYR_track('InitiateCheckout', { content_name: a.dataset.book || a.dataset.exp });
   });
 
   /* ---- Données en direct ---- */
