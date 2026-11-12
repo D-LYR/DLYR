@@ -2005,7 +2005,7 @@
       réglage introuvable. */
   var NOTE = 'Le montant et le contenu sont déjà fixés : vous passez '
            + 'directement au paiement. Pour choisir librement la somme, '
-           + 'utilisez la e-carte cadeau ci-dessus.';
+           + 'utilisez la carte cadeau ci-dessus.';
 
   function ech(s) {
     return String(s == null ? '' : s)
