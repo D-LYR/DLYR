@@ -1345,26 +1345,69 @@
     return (h === null) ? hauteurDesEtiquettes() : (h + '%');
   }
 
-  /*  Les cartes du site, elles, sont déjà dessinées quand on arrive :
-      on repose leurs étiquettes, et le petit livre avec. Les cartes que
-      ce bloc fabrique reçoivent leur hauteur à la fabrication. */
-  function placerLesEtiquettes(connues) {
+  /*  Les cartes du site sont déjà dessinées quand on arrive : on repose
+      leurs étiquettes — la hauteur, et le second libellé. Les cartes que
+      ce bloc fabrique reçoivent les deux à la fabrication ; repasser
+      dessus ne coûte rien et garde une seule règle.
+
+      ⚠ SEULEMENT LE SECOND LIBELLÉ, ET C'EST MESURÉ.
+
+        Le premier (« Culturel », « Action ») n'est pas décoratif. Il
+        décide sous quel filtre la carte apparaît — isGenre(), dans
+        js/catalogue.js — et la couleur de la pastille, par la table
+        GCOLOR. Il appartient à un vocabulaire fermé de six mots.
+
+        Et le catalogue filtre sur SA COPIE des données, pas sur ce qui
+        est affiché : réécrire le mot sans réécrire la copie afficherait
+        « Quiz » sur une carte qui continuerait d'apparaître sous
+        « Culturel ». Deux des dix genres saisis dans l'application
+        sortent déjà du vocabulaire — « Quiz compétitif » pour Brain
+        Arena, « En famille » en premier pour Snow Village.
+
+        Le second libellé, lui, ne décide de rien : c'est du texte libre
+        des deux côtés. Il peut donc venir de l'application sans risque,
+        et c'est celui qui affichait « Exploration historique immersive »
+        sur Titanic alors que l'application dit « Expérience narrative ».
+
+      ⚠ UN SECOND LIBELLÉ VIDE N'EFFACE PAS CELUI DU SITE. Même règle que
+        pour le synopsis et la hauteur : une case vide laisse le site
+        tranquille. Sans quoi « Quiz compétitif », qui n'a pas de
+        virgule, effacerait une étiquette au lieu d'en poser une.         */
+  function ajusterLesEtiquettes(connues) {
     var cartes = document.querySelectorAll('a.xcard');
     for (var i = 0; i < cartes.length; i++) {
       var carte = cartes[i];
       var e = expDuLien(connues, carte.getAttribute('href'));
+      if (!e) continue;
+
+      //  ── la hauteur ──
       var h = hauteurDeLExp(e);
-      if (h === null) continue;          //  pas réglée : on ne touche à rien
+      if (h !== null) {
+        var entete = carte.querySelector('.xcard__header');
+        if (entete) entete.style.top = h + '%';
 
-      var entete = carte.querySelector('.xcard__header');
-      if (entete) entete.style.top = h + '%';
+        //  Le bouton du synopsis est posé sur l'emballage de la carte, à
+        //  côté du lien — ou dans la carte quand il n'y a pas d'emballage.
+        var autour = carte.parentNode;
+        var livre = (autour && autour.querySelector) ? autour.querySelector('.rdate__synbtn') : null;
+        if (!livre) livre = carte.querySelector('.rdate__synbtn');
+        if (livre) livre.style.top = 'calc(' + h + '% + 10px)';
+      }
 
-      //  Le bouton du synopsis est posé sur l'emballage de la carte, à
-      //  côté du lien — ou dans la carte quand il n'y a pas d'emballage.
-      var autour = carte.parentNode;
-      var livre = (autour && autour.querySelector) ? autour.querySelector('.rdate__synbtn') : null;
-      if (!livre) livre = carte.querySelector('.rdate__synbtn');
-      if (livre) livre.style.top = 'calc(' + h + '% + 10px)';
+      //  ── le second libellé ──
+      var precision = couperLeGenre(e).precision;
+      if (!precision) continue;
+      var tags = carte.querySelector('.xcard__tags');
+      if (!tags) continue;
+      var second = tags.querySelector('.xcard__tag.tag-type');
+      if (second) {
+        if (second.textContent !== precision) second.textContent = precision;
+      } else {
+        var neuf = document.createElement('span');
+        neuf.className = 'xcard__tag tag-type';
+        neuf.textContent = precision;
+        tags.appendChild(neuf);
+      }
     }
   }
 
@@ -1774,8 +1817,8 @@
 
       completerLeCatalogue(experiences);
       //  Après la fabrication des cartes manquantes, pour que les onze
-      //  soient replacées du même geste.
-      placerLesEtiquettes(connues);
+      //  soient reprises du même geste : hauteur et second libellé.
+      ajusterLesEtiquettes(connues);
       surveillerLaGrille();
     } finally {
       enTrainDAppliquer = false;
@@ -1860,7 +1903,7 @@
     appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
     paragraphes: paragraphes, couperLeGenre: couperLeGenre,
-    hauteurDeLExp: hauteurDeLExp, placerLesEtiquettes: placerLesEtiquettes,
+    hauteurDeLExp: hauteurDeLExp, ajusterLesEtiquettes: ajusterLesEtiquettes,
     fiches: function () { return fichesSynopsis; },
     SOURCE: SOURCE
   };
