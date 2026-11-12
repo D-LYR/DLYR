@@ -607,3 +607,33 @@ html[lang="en"] .soiree-card--soldout::after {
 .combo.bg-paper .cform{ background:var(--ink); border-color:rgba(194,208,179,.2); box-shadow:0 12px 32px rgba(0,0,0,.15); }
 .combo.bg-paper .cform--feat{ background:#25392b; border-color:var(--lime); }
 .combo.bg-paper .combo__lead{ max-width:none; }
+
+/* ---------- Page Offrir : la carte cadeau réelle (maquette mise en valeur) ---------- */
+.gift__hero{ margin-bottom:0; gap:clamp(28px,4vw,56px); }
+.gcard2{ margin:0; display:flex; flex-direction:column; align-items:center; gap:14px; }
+.gcard2__card{ width:min(100%, 500px); border-radius:18px; overflow:hidden; background:#e6eddb; color:var(--ink);
+  transform:rotate(-2.5deg); box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 0 2px var(--lime), 0 0 80px rgba(212,188,114,.35);
+  transition:transform .4s ease; }
+.gcard2:hover .gcard2__card{ transform:rotate(0) translateY(-4px); }
+.gcard2__top{ background:#1c3024; color:var(--paper); padding:28px 30px 34px; display:flex; flex-direction:column; }
+.gcard2__head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:clamp(28px,4vw,44px); }
+.gcard2__logo{ height:68px; width:auto; }
+.gcard2__kicker{ font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:rgba(194,208,179,.7); margin-top:8px; }
+.gcard2__to{ font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--lime); margin-bottom:12px; }
+.gcard2__msg{ font-family:var(--f-body); font-weight:300; font-size:clamp(19px,1.6vw,22px); line-height:1.45; color:var(--paper); margin:0 0 14px; }
+.gcard2__sign{ font-style:italic; color:rgba(194,208,179,.7); font-size:15px; }
+.gcard2__cut{ position:relative; height:0; border-top:2px dashed var(--lime); }
+.gcard2__cut::before,.gcard2__cut::after{ content:""; position:absolute; top:-13px; width:24px; height:24px; border-radius:50%; background:var(--ink); }
+.gcard2__cut::before{ left:-12px; } .gcard2__cut::after{ right:-12px; }
+.gcard2__bottom{ padding:22px 30px 16px; }
+.gcard2__row{ display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:14px; }
+.gcard2__label{ display:block; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:#6d8a6a; margin-bottom:6px; }
+.gcard2__formule{ font-family:var(--f-display); font-weight:800; font-size:clamp(20px,1.8vw,24px); color:var(--ink); line-height:1.1; white-space:nowrap; }
+.gcard2__code{ text-align:right; }
+.gcard2__code strong{ display:block; font-family:var(--f-display); font-weight:800; font-size:clamp(18px,1.6vw,22px); letter-spacing:.14em; color:#3d6b45; }
+.gcard2__valid{ display:block; font-size:11.5px; white-space:nowrap; color:#3a4a3c; margin-top:4px; }
+.gcard2__list{ list-style:none; padding:0; margin:0 0 12px; font-size:13.5px; line-height:1.65; color:#2f3e31; }
+.gcard2__foot{ border-top:1px solid rgba(28,48,36,.12); padding-top:10px; margin:0; text-align:center; font-size:9px; letter-spacing:.14em; white-space:nowrap; text-transform:uppercase; color:#7f9a7c; }
+.gcard2__cap{ font-size:13px; color:rgba(194,208,179,.65); margin-top:6px; }
+.section:has(.gcard2){ padding-block:clamp(28px,3.5vw,56px); }
+@media (max-width:720px){ .gcard2__card{ transform:none; } .gcard2__valid,.gcard2__foot{ white-space:normal; } .gcard2__top{ padding:22px 22px 26px; } .gcard2__bottom{ padding:18px 22px 14px; } }
