@@ -1915,3 +1915,207 @@
     SOURCE: SOURCE
   };
 })();
+/* ==========================================================================
+   D'LYR — LES FORMULES CADEAU DE LA PAGE OFFRIR
+                                                            (12/11/2026)
+
+   À COLLER À LA FIN DE js/site.js, APRÈS LE BLOC DU 11/11
+   (« LE SITE SUIT L'APPLICATION »), dans le dépôt du SITE.
+
+   C'est donc un SECOND bloc, à la suite du premier. Il n'y touche pas, et
+   il suffit de le retirer pour revenir en arrière.
+
+   ────────────────────────────────────────────────────────────────────
+   LE PROBLÈME, EN DEUX PARTIES
+
+   1 · LES TROIS BOUTONS MÈNENT AU MÊME ENDROIT.
+       Les trois cartes de la page portent « href="#reserver" ». Plus haut
+       dans ce fichier, une règle transforme TOUT « #reserver » de la page
+       Offrir en la même adresse :
+
+           if (document.body.dataset.page === 'offrir'
+               && a.getAttribute('href') === '#reserver') return GIFT_URL;
+
+       « Offrir 40 € », « Offrir 80 € » et « Offrir 120 € » ouvrent donc
+       le même tunnel à montant libre, à 20 €. Le client choisit un pack
+       et se retrouve devant un réglage vide.
+
+   2 · LES PRIX ET LES TEXTES SONT ÉCRITS EN DUR.
+       40 €, 80 €, 120 € et leurs trois descriptions vivent dans le HTML.
+       Ils vivent aussi en base, depuis le script 363. Deux vérités : le
+       jour où un prix change dans l'application, la page continue de
+       promettre l'ancien — et le tunnel, qui lit la base, ferait payer le
+       nouveau.
+
+   ────────────────────────────────────────────────────────────────────
+   CE QUE FAIT CE BLOC
+
+   Il remplace les trois cartes par ce que dit la base :
+
+       …/experiences-publiques?formules=1
+
+   nom, bandeau, accroche, prix, mise en avant — et le lien, qui porte
+   l'identifiant de la formule :
+
+       reservation.dlyr-vr.com/?client=1&view=giftcard&formule=duo
+
+   Ajouter une quatrième formule dans Offres → Packs VR la fait
+   apparaître ici sans toucher au site. En retirer une la fait
+   disparaître.
+
+   ⚠ LE BOUTON DU HAUT N'EST PAS TOUCHÉ.
+     « Offrir une carte cadeau », dans la e-carte, reste le bon cadeau à
+     montant libre. C'est un produit différent, et il garde son chemin.
+
+   ⚠ SI LA FONCTION NE RÉPOND PAS, LA PAGE NE CHANGE PAS.
+     Les trois cartes écrites dans le HTML restent affichées, avec le
+     comportement d'aujourd'hui. Une page vide parce que la base n'a pas
+     répondu serait pire que la page d'avant — c'est la même règle que
+     pour le catalogue.
+
+   ⚠ LES CARTES SONT POSÉES DÉJÀ VISIBLES (« reveal in »).
+     L'animation d'apparition ne tient qu'une liste prise au chargement :
+     une carte ajoutée après coup n'y figure pas et resterait invisible.
+     Le même piège avait été traité pour les cartes du catalogue, et de la
+     même manière.
+
+   ⚠ LE SUIVI DU CLIC EST REFAIT ICI.
+     Le compteur plus haut dans ce fichier reconnaît l'adresse du bon
+     cadeau à l'identique. La nôtre porte « &formule=… » en plus : elle ne
+     serait donc pas comptée. On la compte ici — et avec le nom de la
+     formule, ce qui dit enfin LAQUELLE a été choisie.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  //  Cette page, et elle seule.
+  if (!document.body || document.body.getAttribute('data-page') !== 'offrir') return;
+
+  var SOURCE = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/functions/v1/experiences-publiques'
+             + '?formules=1';
+
+  var SELECTEUR_GRILLE = '#formules .combo__grid';
+  var SELECTEUR_NOTE   = '#formules .combo__note';
+
+  /*  La phrase du bas annonçait « Vous choisirez le montant à l'étape
+      suivante, avec les boutons + / − ». Elle était vraie quand les trois
+      boutons menaient au montant libre. Avec une formule, le montant est
+      fixé et les boutons + / − n'existent plus : la phrase promettrait un
+      réglage introuvable. */
+  var NOTE = 'Le montant et le contenu sont déjà fixés : vous passez '
+           + 'directement au paiement. Pour choisir librement la somme, '
+           + 'utilisez la e-carte cadeau ci-dessus.';
+
+  function ech(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  //  Une espace insécable avant l'euro, comme le fait la page.
+  function insecable(s) {
+    return String(s == null ? '' : s).replace(/ €/g, ' €');
+  }
+
+  /*  ⚠ ON N'ACCEPTE QU'UNE ADRESSE DU TUNNEL.
+      Le lien est fabriqué par la fonction — un préfixe fixe et un
+      identifiant encodé — donc il ne peut pas être autre chose
+      aujourd'hui. Mais une adresse venue du réseau et posée telle quelle
+      dans un « href », c'est la porte par laquelle un « javascript:… »
+      s'exécute au clic. Le jour où la réponse change de forme, cette
+      porte doit déjà être fermée. */
+  var TUNNEL = 'https://reservation.dlyr-vr.com/';
+
+  function lienSur(f) {
+    var u = String((f && f.lien) || '');
+    return u.slice(0, TUNNEL.length) === TUNNEL ? u : '';
+  }
+
+  function carte(f) {
+    var avant = f.mise_en_avant === true;
+    var prix = insecable(ech(f.prix_texte || ''));
+    var lien = lienSur(f);
+    return '<article class="cform reveal in' + (avant ? ' cform--feat' : '') + '"'
+      +     ' data-formule="' + ech(f.id) + '">'
+      +   (f.badge
+            ? '<span class="cform__tag' + (avant ? ' cform__tag--feat' : '') + '">'
+              + ech(f.badge) + '</span>'
+            : '')
+      +   '<h3 class="cform__name">' + ech(f.nom) + '</h3>'
+      +   '<p class="cform__desc">' + insecable(ech(f.accroche)) + '</p>'
+      +   '<div class="cform__price"><span>' + prix + '</span></div>'
+      //  Sans adresse valable : la carte s'affiche, sans bouton. Mieux
+      //  qu'un bouton qui ne mène nulle part, et bien mieux qu'un bouton
+      //  qui mène ailleurs.
+      +   (lien
+            ? '<a class="btn ' + (avant ? 'btn--lime' : 'btn--lime-o') + ' btn--sm" '
+              + 'href="' + ech(lien) + '">Offrir ' + prix + '</a>'
+            : '')
+      + '</article>';
+  }
+
+  function poser(formules) {
+    var grille = document.querySelector(SELECTEUR_GRILLE);
+    if (!grille) return;
+
+    /*  ⚠ AUCUNE FORMULE : ON NE VIDE PAS LA GRILLE.
+        Une réponse valable mais vide — toutes les formules retirées du
+        catalogue — laisserait un trou à la place de la section. On garde
+        ce que le HTML dit, et on n'y touche pas. */
+    if (!formules.length) return;
+
+    grille.innerHTML = formules.map(carte).join('');
+
+    var note = document.querySelector(SELECTEUR_NOTE);
+    if (note) note.textContent = NOTE;
+  }
+
+  //  Le suivi du clic. Voir l'avertissement de l'en-tête.
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest
+          ? ev.target.closest('[data-formule] a[href*="formule="]') : null;
+    if (!a) return;
+    var article = a.closest('[data-formule]');
+    var nom = article ? (article.querySelector('.cform__name') || {}).textContent : '';
+    try {
+      if (typeof window.DLYR_track === 'function') {
+        window.DLYR_track('InitiateCheckout', { content_name: 'formule:' + (nom || '').trim() });
+      }
+    } catch (e) { /* le suivi ne doit jamais empêcher le clic */ }
+    //  On ne touche pas à l'événement : le lien s'ouvre normalement.
+  });
+
+  function demarrer() {
+    if (!window.fetch) return;         //  navigateur trop ancien : la page d'avant
+    fetch(SOURCE, { credentials: 'omit' })
+      .then(function (r) {
+        //  ⚠ 503 : la fonction dit « je n'ai pas pu répondre ». On garde
+        //    le HTML plutôt que de croire qu'il n'y a plus de formule.
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || d.ok !== true || !d.formules || typeof d.formules.length !== 'number') {
+          throw new Error('réponse inattendue');
+        }
+        poser(d.formules);
+      })
+      .catch(function (e) {
+        //  Sans bruit pour le visiteur, lisible pour nous.
+        if (window.console) console.warn('[DLYR] formules cadeau :', e && e.message);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+
+  //  Pour le banc d'essai.
+  window.__formulesDuSite = {
+    SOURCE: SOURCE, NOTE: NOTE,
+    carte: carte, poser: poser, insecable: insecable
+  };
+})();
