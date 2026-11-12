@@ -296,7 +296,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "D'LYR — Offrir une carte cadeau VR": "D'LYR — Give a VR gift card",
   "Faites plaisir à coup sûr : offrez une carte cadeau D'LYR et laissez l'heureux élu choisir son immersion VR, ses fléchettes, son quiz ou sa soirée au bar.": "A guaranteed crowd-pleaser: give a D'LYR gift card and let the lucky one choose their VR immersion, darts, quiz or evening at the bar.",
   "Reçue par email en quelques minutes": "Delivered by email within minutes",
-  "La e-carte cadeau": "The e-gift card",
+  "La carte cadeau": "The gift card",
   "Choisissez le montant que vous voulez, ajoutez un petit mot, et la carte est envoyée par email instantanément. Valable sur toutes nos activités, sans date limite stressante.": "Choose any amount, add a little note, and the card is emailed instantly. Valid on all our activities, with no stressful expiry date.",
   "Montant 100% libre": "Any amount you like",
   "Valable 12 mois": "Valid for 12 months",
