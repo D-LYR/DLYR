@@ -487,3 +487,16 @@
   .hero__cta-sub{ font-size:13px; }
   .hero__cta-icon{ width:24px; height:24px; }
 }
+
+/* ===== Témoignages vidéo (bloc « Un grand merci ») ===== */
+.vtemo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px,1.6vw,20px); max-width:520px; }
+.vtemo__item{ position:relative; aspect-ratio:9/16; border:0; padding:0; border-radius:var(--r-lg); overflow:hidden; background:#0d1a14; cursor:pointer; box-shadow:0 14px 34px rgba(0,0,0,.18); }
+.vtemo__thumb{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+.vtemo__item:hover .vtemo__thumb{ transform:scale(1.04); }
+.vtemo__play{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:var(--lime); color:var(--ink); box-shadow:0 6px 20px rgba(0,0,0,.3); transition:transform .25s; }
+.vtemo__play svg{ margin-left:3px; }
+.vtemo__item:hover .vtemo__play, .vtemo__item:focus-visible .vtemo__play{ transform:translate(-50%,-50%) scale(1.1); }
+.vtemo__item:focus-visible{ outline:3px solid var(--lime); outline-offset:3px; }
+.vtemo__item iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+@media (max-width:900px){ .vtemo{ max-width:none; } }
+@media (max-width:480px){ .vtemo__play{ width:52px; height:52px; } }

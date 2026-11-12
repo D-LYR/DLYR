@@ -158,3 +158,5 @@ video:fullscreen { object-fit:contain !important; background:#000 !important; wi
   .javis__dots{ gap:12px; }
   .javis__head{ justify-content:center; }
 }
+/* Affiche au format 3:4 (au lieu du cadre vidéo 9:16) : l'affiche s'affiche entière, sans être rognée */
+.jhero__video.jhero__video--affiche{ aspect-ratio:3/4; width:min(100%, 440px); max-height:none; }

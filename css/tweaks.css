@@ -543,3 +543,59 @@ html[lang="en"] .soiree-card--soldout::after {
 .stats.bg-paper .greviews__dots button.on{ background:var(--ink); }
 .stats.bg-paper .greviews__nav button{ color:var(--ink); border-color:rgba(28,48,36,.4); }
 .stats.bg-paper .greviews__nav button:hover:not(:disabled){ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+/* ---------- Activités (fléchettes, arcade, karaoké) : cartes + pages « bientôt » ---------- */
+.acards__h{ margin-bottom:clamp(32px,4vw,56px); }
+.acards{ display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(18px,2vw,28px); }
+.acard{ display:flex; flex-direction:column; border-radius:var(--r-lg); overflow:hidden; text-decoration:none; color:var(--paper);
+  background:rgba(232,238,221,.05); border:1px solid rgba(194,208,179,.18); transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.acard:hover,.acard:focus-visible{ transform:translateY(-4px); border-color:var(--lime); box-shadow:0 16px 36px rgba(0,0,0,.3); }
+.acard__media{ position:relative; aspect-ratio:4/3; border-radius:0; }
+.acard__body{ display:flex; flex-direction:column; gap:10px; padding:clamp(18px,2vw,26px); flex:1; }
+.acard__h{ font-family:var(--f-display); font-weight:800; font-size:clamp(22px,2vw,28px); line-height:1.1; color:var(--paper); margin:0; }
+.acard__txt{ font-size:clamp(15px,1.05vw,17px); line-height:1.55; color:rgba(194,208,179,.9); margin:0; flex:1; }
+.acard__more{ font-family:var(--f-btn); font-weight:700; color:var(--lime); margin-top:6px; }
+.acard__badge{ position:absolute; top:14px; left:14px; z-index:2; padding:5px 12px; border-radius:999px;
+  background:var(--lime); color:var(--ink); font-family:var(--f-display); font-weight:800; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+.acard__badge--static{ position:static; display:inline-block; margin-bottom:16px; }
+.act .acards{ margin-bottom:clamp(20px,3vw,40px); }
+.acts-note{ color:rgba(194,208,179,.8); font-size:clamp(15px,1.1vw,17px); line-height:1.6; margin-bottom:24px; }
+.acts-steps__head{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:clamp(32px,4vw,48px); }
+.acts-steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+.acts-step{ background:var(--ink); border:1px solid rgba(194,208,179,.2); border-radius:16px; padding:32px 24px; box-shadow:0 12px 32px rgba(0,0,0,.15); display:flex; flex-direction:column; gap:12px; }
+.acts-step__n{ font-family:var(--f-display); font-size:32px; font-weight:800; color:var(--lime); line-height:1; }
+.acts-step__h{ font-family:var(--f-display); font-size:22px; font-weight:700; color:var(--paper); margin:0; }
+.acts-step__p{ font-size:15px; line-height:1.6; color:rgba(194,208,179,.85); margin:0; }
+@media (max-width:980px){ .acards{ grid-template-columns:1fr 1fr; } }
+@media (max-width:640px){ .acards{ grid-template-columns:1fr; } }
+.phero__deco .ph.ph--dark{ background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 2px, transparent 2px 14px), #34373b; display:grid; place-items:center; }
+
+/* ---- Bandeaux plus compacts : moins d'espace au-dessus et en dessous du contenu ---- */
+.section{ padding-block:clamp(32px, 4vw, 64px); }
+.section.snack{ padding-bottom:clamp(32px, 4vw, 64px); }
+.section.stats{ padding-top:clamp(32px, 4vw, 64px); }
+/* Page Expériences : titre plus près du menu */
+.section.cat--top{ padding-top:calc(104px + clamp(12px,1.6vw,24px)); }
+@media (max-width:900px){ .section.cat--top{ padding-top:calc(100px + 16px); } }
+
+/* ---- Page Expériences : bandeau du haut sur fond vert clair ---- */
+.cat.bg-paper .cat__title{ color:var(--ink); }
+.cat.bg-paper .cat__count,
+.cat.bg-paper .cat__head .cat__count{ color:rgba(28,48,36,.7); }
+.cat.bg-paper .cat__chip{ color:var(--ink); border-color:rgba(28,48,36,.3); }
+.cat.bg-paper .cat__chip:hover{ border-color:var(--ink); }
+.cat.bg-paper .cat__chip.on{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.cat.bg-paper .cat__empty{ color:rgba(28,48,36,.7); }
+.cat--top.bg-paper .cat__bar.is-stuck{ background:rgba(141,169,131,.94); }
+
+/* ===== Prix d'appel (point 1 : prix visibles avant la réservation) ===== */
+.jhero__cta{ flex-direction:column; align-items:center; gap:10px; }
+.jhero__price{ margin:0; font-family:var(--f-btn); font-weight:700; font-size:15px; letter-spacing:.02em; color:var(--lime,#d4bc72); }
+.xcard__meta .xcard__price{ color:var(--lime,#d4bc72); }
+.cat__price{ margin:-6px 0 clamp(16px,2vw,24px); font-size:15px; color:var(--ink,#1c3024); }
+.cat__price strong{ display:inline-block; background:var(--ink,#1c3024); color:var(--lime,#d4bc72); font-family:var(--f-btn); padding:4px 12px; border-radius:999px; margin-right:8px; }
+.phero__price{ display:inline-block; margin:14px 0 18px; padding:6px 16px; border-radius:999px; background:var(--ink,#1c3024); font-family:var(--f-btn); font-weight:700; font-size:clamp(15px,1.3vw,18px); color:var(--lime,#d4bc72); }
+
+/* ===== Offrir : montants suggérés (point 11) ===== */
+.combo__lead{ color:rgba(194,208,179,.8); max-width:720px; margin-bottom:clamp(24px,3vw,40px); }
+.combo__note{ margin-top:18px; font-size:14px; color:rgba(194,208,179,.6); text-align:center; }

@@ -828,6 +828,33 @@ a:focus-visible .ph__img {
   color: var(--paper);
 }
 
+/* La barre s'élargit si besoin pour que « Réserver » et « Offrir » restent toujours dedans */
+.nav__inner {
+  width: auto;
+  min-width: min(80%, calc(100% - 36px));
+  max-width: calc(100% - 36px);
+}
+
+.nav__links {
+  font-size: clamp(16px, 1.3vw, 20px);
+  gap: clamp(10px, 1.3vw, 30px);
+}
+
+.nav__links a {
+  white-space: nowrap;
+}
+
+/* Filet de sécurité : si tout ne tient pas, menu burger (classe posée par js/site.js) */
+.nav--compact .nav__links,
+.nav--compact .nav__cta {
+  display: none;
+}
+
+.nav--compact .nav__burger {
+  display: block;
+  margin-left: auto;
+}
+
 /* Drawer mobile */
 .drawer {
   position: fixed;
