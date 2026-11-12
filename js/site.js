@@ -2050,7 +2050,7 @@
       //  qui mène ailleurs.
       +   (lien
             ? '<a class="btn ' + (avant ? 'btn--lime' : 'btn--lime-o') + ' btn--sm" '
-              + 'href="' + ech(lien) + '">Offrir ' + prix + '</a>'
+              + 'href="' + ech(lien) + '">' + (document.documentElement.lang === 'en' ? 'Give this gift' : 'Offrir') + '</a>'
             : '')
       + '</article>';
   }
