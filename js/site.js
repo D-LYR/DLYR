@@ -882,7 +882,9 @@
        · une expérience nouvelle apparaît dans le catalogue, avec son
          affiche, sans que personne n'ait à toucher au site ;
        · et son petit livre, comme les autres cartes, qui ouvre le
-         synopsis saisi dans l'application.
+         synopsis saisi dans l'application ;
+       · la hauteur des étiquettes sur chaque carte se règle depuis
+         l'application, au lieu d'être écrite dans js/games-data.js.
 
    ⚠ CE QU'IL NE FAIT PAS, ET C'EST VOLONTAIRE
      Il ne fabrique pas de page de présentation. Un synopsis, des photos
@@ -1318,6 +1320,54 @@
     return '';
   }
 
+  /*  ⚠ ET DÉSORMAIS, L'APPLICATION A SON MOT À DIRE (script 358).
+      La hauteur était écrite jeu par jeu dans js/games-data.js — 34 %
+      ici, 12 % là — et changer un chiffre demandait un dépôt du site.
+      Elle se règle maintenant dans la fiche de l'expérience.
+
+      ⚠ ZÉRO N'EST PAS « VIDE ». Zéro veut dire « tout en haut », et c'est
+        un réglage valable. Un « || » aurait transformé ce réglage en
+        absence de réglage, et la carte serait retombée sur la valeur du
+        fichier sans que personne comprenne pourquoi. */
+  function hauteurDeLExp(e) {
+    if (!e) return null;
+    var v = e.hauteur_etiquettes;
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v);
+    if (!isFinite(n)) return null;
+    return Math.min(90, Math.max(0, n));
+  }
+
+  /*  La hauteur à appliquer à une carte : celle de l'application si elle
+      est réglée, l'emprunt aux cartes voisines sinon. */
+  function hauteurPourLaCarte(e) {
+    var h = hauteurDeLExp(e);
+    return (h === null) ? hauteurDesEtiquettes() : (h + '%');
+  }
+
+  /*  Les cartes du site, elles, sont déjà dessinées quand on arrive :
+      on repose leurs étiquettes, et le petit livre avec. Les cartes que
+      ce bloc fabrique reçoivent leur hauteur à la fabrication. */
+  function placerLesEtiquettes(connues) {
+    var cartes = document.querySelectorAll('a.xcard');
+    for (var i = 0; i < cartes.length; i++) {
+      var carte = cartes[i];
+      var e = expDuLien(connues, carte.getAttribute('href'));
+      var h = hauteurDeLExp(e);
+      if (h === null) continue;          //  pas réglée : on ne touche à rien
+
+      var entete = carte.querySelector('.xcard__header');
+      if (entete) entete.style.top = h + '%';
+
+      //  Le bouton du synopsis est posé sur l'emballage de la carte, à
+      //  côté du lien — ou dans la carte quand il n'y a pas d'emballage.
+      var autour = carte.parentNode;
+      var livre = (autour && autour.querySelector) ? autour.querySelector('.rdate__synbtn') : null;
+      if (!livre) livre = carte.querySelector('.rdate__synbtn');
+      if (livre) livre.style.top = 'calc(' + h + '% + 10px)';
+    }
+  }
+
   // =====================================================================
   //  LE PETIT LIVRE : LE SYNOPSIS SANS QUITTER LE CATALOGUE
   //
@@ -1432,7 +1482,7 @@
     b.setAttribute('data-syn', e.id);
     b.setAttribute('aria-label', 'Lire le synopsis : ' + e.nom);
     b.setAttribute('title', 'Lire le synopsis');
-    var haut = hauteurDesEtiquettes();
+    var haut = hauteurPourLaCarte(e);
     if (haut) b.style.top = 'calc(' + haut + ' + 10px)';
     b.innerHTML = LIVRE;
     bloc.appendChild(b);
@@ -1475,7 +1525,7 @@
     var g = couperLeGenre(e);
     var categorie = g.categorie;
     var precision = g.precision;
-    var haut = hauteurDesEtiquettes();
+    var haut = hauteurPourLaCarte(e);
 
     a.innerHTML = visuel
       + '<span class="xcard__scrim"></span>'
@@ -1723,6 +1773,9 @@
       }
 
       completerLeCatalogue(experiences);
+      //  Après la fabrication des cartes manquantes, pour que les onze
+      //  soient replacées du même geste.
+      placerLesEtiquettes(connues);
       surveillerLaGrille();
     } finally {
       enTrainDAppliquer = false;
@@ -1807,6 +1860,7 @@
     appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
     paragraphes: paragraphes, couperLeGenre: couperLeGenre,
+    hauteurDeLExp: hauteurDeLExp, placerLesEtiquettes: placerLesEtiquettes,
     fiches: function () { return fichesSynopsis; },
     SOURCE: SOURCE
   };
