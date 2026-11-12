@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/catalogue.css">
 <link rel="stylesheet" href="css/activites.css">
 <link rel="stylesheet" href="css/tweaks.css">
+<link rel="stylesheet" href="css/reserver-date.css">
 <link rel="canonical" href="https://www.dlyr-vr.com/catalogue.html">
 <link rel="alternate" hreflang="fr" href="https://www.dlyr-vr.com/catalogue.html">
 <link rel="alternate" hreflang="en" href="https://www.dlyr-vr.com/en/catalogue.html">
@@ -30,14 +31,18 @@
 <link rel="apple-touch-icon" sizes="180x180" href="uploads/brand/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 </head>
-<body data-page="catalogue" data-nav="dark">
+<body data-page="catalogue" data-nav="paper">
 
 <!-- ===== CATALOGUE (directement sous la nav) ===== -->
-<section class="section bg-ink cat cat--top" id="catalogue-liste">
+<section class="section bg-paper tex cat cat--top" id="catalogue-liste">
   <div class="wrap">
     <div class="cat__head">
       <h1 class="cat__title">Expériences</h1>
       <p class="cat__count" data-count></p>
+    </div>
+    <div class="cat__bydate">
+      <p><strong>Vous savez déjà quand venir&nbsp;?</strong> Choisissez d'abord votre date, on vous montre les expériences adaptées à votre groupe.</p>
+      <a class="btn btn--lime btn--sm" href="reserver-par-date.html">Choisir ma date</a>
     </div>
     <div class="cat__bar" data-cat-bar>
       <div class="cat__filters" data-genre-filters></div>
@@ -84,6 +89,7 @@
 
 <script src="js/site.js"></script>
 <script src="js/games-data.js"></script>
+<script src="js/synopsis.js"></script>
 <script src="js/catalogue.js"></script>
 <script src="js/tweaks.js"></script>
 
