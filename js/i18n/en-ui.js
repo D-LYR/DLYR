@@ -442,6 +442,8 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
   "Une session de réalité virtuelle de 30 minutes, n'importe quel jour de la semaine, avec une pizza et une boisson.": "A 30-minute virtual reality session, any day of the week, with a pizza and a drink.",
   "Duo VR": "VR for two",
   "Deux sessions VR à partager à deux : entre amis, en couple ou en famille.": "Two VR sessions to share: with a friend, a partner or family.",
+  "Expérience Duo": "Duo experience",
+  "Une soirée à deux : une session VR entre amis, 30 minutes de fléchettes, et pour chacun sa pizza et sa boisson.": "An evening for two: a VR session together, 30 minutes of darts, and a pizza and a drink each.",
   "Entre amis": "With friends",
   "La bande au complet": "The whole crew",
   "Jusqu'à 4 sessions VR en semaine, ou de la VR et des fléchettes pour toute la bande.": "Up to 4 VR sessions on weekdays, or VR and darts for the whole crew.",
