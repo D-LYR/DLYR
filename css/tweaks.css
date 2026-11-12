@@ -599,3 +599,10 @@ html[lang="en"] .soiree-card--soldout::after {
 /* ===== Offrir : montants suggérés (point 11) ===== */
 .combo__lead{ color:rgba(194,208,179,.8); max-width:720px; margin-bottom:clamp(24px,3vw,40px); }
 .combo__note{ margin-top:18px; font-size:14px; color:rgba(194,208,179,.6); text-align:center; }
+
+/* ---- Page Offrir : bandeau « Idées cadeaux » sur fond vert clair ---- */
+.combo.bg-paper .combo__h{ color:var(--ink); }
+.combo.bg-paper .combo__lead{ color:rgba(28,48,36,.85); }
+.combo.bg-paper .combo__note{ color:rgba(28,48,36,.7); }
+.combo.bg-paper .cform{ background:var(--ink); border-color:rgba(194,208,179,.2); box-shadow:0 12px 32px rgba(0,0,0,.15); }
+.combo.bg-paper .cform--feat{ background:#25392b; border-color:var(--lime); }
