@@ -637,3 +637,7 @@ html[lang="en"] .soiree-card--soldout::after {
 .gcard2__cap{ font-size:13px; color:rgba(194,208,179,.65); margin-top:6px; }
 .section:has(.gcard2){ padding-block:clamp(28px,3.5vw,56px); }
 @media (max-width:720px){ .gcard2__card{ transform:none; } .gcard2__valid,.gcard2__foot{ white-space:normal; } .gcard2__top{ padding:22px 22px 26px; } .gcard2__bottom{ padding:18px 22px 14px; } }
+
+/* ---- Accueil : témoignages vidéo hébergés sur le site ---- */
+.vtemo__item--video video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#0d1a14; }
+.vtemo__item--video.is-playing video{ object-fit:contain; }
