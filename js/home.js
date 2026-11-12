@@ -396,7 +396,40 @@
     });
   }
 
+  /* Témoignages vidéo hébergés sur le site (uploads/temoignages/) :
+     aperçu muet en boucle quand la vidéo est à l'écran (sous-titres incrustés),
+     puis lecture depuis le début, avec le son et les commandes, au clic.
+     Pour ajouter une vidéo : un <button class="vtemo__item vtemo__item--video" data-video>
+     contenant <video src="…mp4" poster="…jpg" muted loop playsinline> dans index.html. */
+  function videoFiles() {
+    const items = document.querySelectorAll('[data-vtemo] [data-video]');
+    if (!items.length) return;
+    const calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = ('IntersectionObserver' in window && !calm) ? new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        const v = e.target.querySelector('video');
+        if (!v || !v.muted) return;
+        if (e.isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause();
+      });
+    }, { threshold: 0.4 }) : null;
+    items.forEach(btn => {
+      if (io) io.observe(btn);
+      btn.addEventListener('click', () => {
+        const v = btn.querySelector('video');
+        if (io) io.unobserve(btn);
+        const box = document.createElement('div');
+        box.className = 'vtemo__item vtemo__item--video is-playing';
+        v.removeAttribute('loop');
+        v.muted = false; v.controls = true; v.currentTime = 0;
+        box.append(v);
+        btn.replaceWith(box);
+        const p = v.play(); if (p && p.catch) p.catch(() => {});
+        v.focus();
+      }, { once: true });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters(); googleRating(); videoTestimonials();
+    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters(); googleRating(); videoTestimonials(); videoFiles();
   });
 })();
