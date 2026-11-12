@@ -4,6 +4,7 @@
 window.DLYR_GAMES = [
   {
     slug: 'harbor-siege', name: 'Harbor Siege', genre: 'Action',
+    cardTop: '23%', /* étiquettes sous le titre de l'affiche */
     tags: ['Conquête', 'Stratégie', "Esprit d'équipe"],
     type: 'Domination', pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/harbor-siege/harbor-siege-affiche.jpg',
@@ -16,6 +17,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab', name: 'Outbreak Lab', genre: 'Aventure',
+    cardTop: '24%', /* étiquettes sous le titre de l'affiche */
     cardBottom: '17%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
@@ -31,12 +33,13 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'outbreak-lab-2', name: 'Outbreak Lab II', genre: 'Aventure',
+    cardTop: '19%', /* étiquettes sous le titre de l'affiche */
     tags: ['Survie', 'Action', 'Zombies'],
     type: 'Zombies', pl: '2 à 12 joueurs', players: 12, dur: 30,
     objective: "S'évader d'Apocalypse Stadium et survivre aux hordes de zombies de Nécropolia.",
     tagline: "L'ultime épreuve.<br>Évadez-vous d'Apocalypse Stadium.",
-    img: 'uploads/experiences/outbreak-lab-2/outbreak-lab-2-affiche.jpg',
-    cardPos: '50% 8%', cardBottom: '6%',
+    img: 'uploads/experiences/outbreak-lab-2/outbreak-lab-2-affiche-3x4.jpg',
+    cardBottom: '15%', /* affiche 3:4 entière : titre/durée au-dessus de « L'ULTIME ÉPREUVE » */
     story: [
       "Après la découverte du mythique Temple Solaire, votre escouade d'élite est capturée et plongée en cryogénie. À votre réveil, vos galons ne comptent plus : vous êtes enchaînés au cœur d'Apocalypse Stadium, un Colisée futuriste où vous devez vous battre comme gladiateurs pour survivre sous les yeux d'une foule assoiffée de sang.",
       "En brisant vos chaînes et en forçant le passage hors de l'arène, vous vous emparez d'un véhicule blindé surarmé. Votre évasion vous propulse directement à Nécropolia, une terre dévastée transformée par vos geôliers en un safari apocalyptique haut de gamme. En mouvement perpétuel au milieu des ruines, il ne vous reste qu'un moyen de vous en sortir : faire pleuvoir le plomb sur des hordes de zombies et de créatures monstrueuses !"
@@ -44,6 +47,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'paradise-expedition', name: 'Paradise Expedition', genre: 'Action',
+    cardTop: '21%', /* étiquettes sous le titre de l'affiche */
     tags: ['Free For All', 'Compétition', 'Survie'],
     type: 'Free For All', pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/paradise-expedition/paradise-expedition-affiche.jpg',
@@ -57,6 +61,7 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'volcanic-warfare', name: 'Volcanic Warfare', genre: 'Action',
+    cardTop: '24%', /* étiquettes sous le titre de l'affiche */
     tags: ['Team Deathmatch', 'Coopération', 'Tactique'],
     type: 'Team Deathmatch', pl: '4 à 8 joueurs', players: 8, dur: 30,
     img: 'uploads/experiences/volcanic-warfare/volcanic-warfare-affiche.jpg',
@@ -70,8 +75,9 @@ window.DLYR_GAMES = [
   },
   {
     slug: 'snow-village', name: 'Snow Village', genre: 'Adapté aux enfants',
+    cardTop: '27%', /* étiquettes sous le titre de l'affiche */
     tags: ['Famille', 'Coopératif', 'Magie de Noël'],
-    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'En famille', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/snow-village/snow-village-affiche.jpg',
     objective: 'Défendre le village du Père Noël, sauver les habitants et vaincre les armées du sorcier maléfique.',
     tagline: 'La magie de Noël est en danger.<br>Devenez les héros de Snow Village.',
@@ -85,8 +91,9 @@ window.DLYR_GAMES = [
   {
     slug: 'desert-village', name: 'Desert Village', genre: 'Adapté aux enfants',
     cardBottom: '15%', /* catalogue : hauteur du titre sur l'affiche (slogan en gros caractères) */
+    cardTop: '29%', /* étiquettes sous le titre de l'affiche */
     tags: ['Famille', 'Coopératif', 'Cartoon'],
-    type: 'Family Adventure', pl: '2 à 12 joueurs', players: 12, dur: 30,
+    type: 'En famille', famille: true, pl: '2 à 12 joueurs', players: 12, dur: 30,
     img: 'uploads/experiences/desert-village/desert-village-affiche.jpg',
     objective: 'Repousser les petits monstres du constructeur, protéger les habitants et sauver le village.',
     tagline: 'La menace du désert.<br>Unissez-vous pour sauver le village.',
@@ -100,8 +107,8 @@ window.DLYR_GAMES = [
   {
     slug: 'brain-arena', name: 'Brain Arena', genre: 'Quiz',
     tags: ['Quiz', 'Multijoueur', 'Culture générale'],
-    type: 'Quiz immersif multijoueur', pl: '2 à 8 joueurs', players: 8, dur: 30,
-    img: 'uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg', cardBottom: '15%',
+    pl: '2 à 8 joueurs', players: 8, dur: 30,
+    img: 'uploads/experiences/brain-arena/brain-arena-affiche-titre.jpg', cardBottom: '15%', cardTop: '34%', /* étiquette Quiz seule, sous « QUIZ IMMERSIF » */
     objective: 'Accumuler le maximum de points en répondant correctement et rapidement aux questions pour terminer en tête du classement.',
     tagline: 'La connaissance est<br>votre meilleure arme',
     story: [
@@ -114,10 +121,10 @@ window.DLYR_GAMES = [
 
   {
     slug: 'icarus-station', name: 'Icarus Station', genre: 'Escape Game',
-    cardBottom: '13%', /* catalogue : hauteur du titre sur l'affiche (slogan sur 2 lignes) */
+    cardBottom: '14%', cardTop: '24%', cardNoName: true, /* affiche titrée : nom déjà sur l'affiche, étiquettes sous « STATION », durée/joueurs au-dessus du slogan */
     tags: ['Escape Game', 'Coopératif', 'Science-fiction'],
-    type: 'Escape Game VR coopératif', pl: '2 à 6 joueurs', players: 6, dur: 45,
-    img: 'uploads/experiences/icarus-station/icarus-station-affiche.png',
+    type: 'En famille', famille: true, pl: '2 à 6 joueurs', players: 6, dur: 45,
+    img: 'uploads/experiences/icarus-station/icarus-station-affiche-titre.jpg',
     objective: "Réparer les systèmes de la station, traverser les secteurs sinistrés et rejoindre la plateforme d'extraction avant l'effondrement d'Icarus-7.",
     tagline: "Échappez-vous avant que la station<br>ne sombre dans le vide spatial",
     story: [
@@ -132,7 +139,7 @@ window.DLYR_GAMES = [
     cardBottom: '4%', /* catalogue : hauteur du titre sur l'affiche (pas de slogan : titre tout en bas) */
     tags: ['Culturel', 'Histoire', 'Exploration'],
     type: 'Exploration historique immersive', pl: '1 à 12 joueurs', players: 12, dur: 30,
-    img: 'uploads/experiences/titanic/titanic-affiche-2.jpg',
+    img: 'uploads/experiences/titanic/titanic-affiche-3x4.jpg', cardBottom: '3%', cardTop: '12%', cardNoName: true, /* affiche 3:4 entière : étiquettes sous « PLONGEZ AU CŒUR DE LA LÉGENDE », nom déjà sur l'affiche, durée/joueurs en bas sous le logo D'LYR */
     objective: 'Explorer le Titanic, percer ses mystères et revivre son voyage inaugural.',
     tagline: 'Redécouvrez le Titanic.<br>Remontez le temps.',
     story: [

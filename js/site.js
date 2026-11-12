@@ -1345,26 +1345,69 @@
     return (h === null) ? hauteurDesEtiquettes() : (h + '%');
   }
 
-  /*  Les cartes du site, elles, sont déjà dessinées quand on arrive :
-      on repose leurs étiquettes, et le petit livre avec. Les cartes que
-      ce bloc fabrique reçoivent leur hauteur à la fabrication. */
-  function placerLesEtiquettes(connues) {
+  /*  Les cartes du site sont déjà dessinées quand on arrive : on repose
+      leurs étiquettes — la hauteur, et le second libellé. Les cartes que
+      ce bloc fabrique reçoivent les deux à la fabrication ; repasser
+      dessus ne coûte rien et garde une seule règle.
+
+      ⚠ SEULEMENT LE SECOND LIBELLÉ, ET C'EST MESURÉ.
+
+        Le premier (« Culturel », « Action ») n'est pas décoratif. Il
+        décide sous quel filtre la carte apparaît — isGenre(), dans
+        js/catalogue.js — et la couleur de la pastille, par la table
+        GCOLOR. Il appartient à un vocabulaire fermé de six mots.
+
+        Et le catalogue filtre sur SA COPIE des données, pas sur ce qui
+        est affiché : réécrire le mot sans réécrire la copie afficherait
+        « Quiz » sur une carte qui continuerait d'apparaître sous
+        « Culturel ». Deux des dix genres saisis dans l'application
+        sortent déjà du vocabulaire — « Quiz compétitif » pour Brain
+        Arena, « En famille » en premier pour Snow Village.
+
+        Le second libellé, lui, ne décide de rien : c'est du texte libre
+        des deux côtés. Il peut donc venir de l'application sans risque,
+        et c'est celui qui affichait « Exploration historique immersive »
+        sur Titanic alors que l'application dit « Expérience narrative ».
+
+      ⚠ UN SECOND LIBELLÉ VIDE N'EFFACE PAS CELUI DU SITE. Même règle que
+        pour le synopsis et la hauteur : une case vide laisse le site
+        tranquille. Sans quoi « Quiz compétitif », qui n'a pas de
+        virgule, effacerait une étiquette au lieu d'en poser une.         */
+  function ajusterLesEtiquettes(connues) {
     var cartes = document.querySelectorAll('a.xcard');
     for (var i = 0; i < cartes.length; i++) {
       var carte = cartes[i];
       var e = expDuLien(connues, carte.getAttribute('href'));
+      if (!e) continue;
+
+      //  ── la hauteur ──
       var h = hauteurDeLExp(e);
-      if (h === null) continue;          //  pas réglée : on ne touche à rien
+      if (h !== null) {
+        var entete = carte.querySelector('.xcard__header');
+        if (entete) entete.style.top = h + '%';
 
-      var entete = carte.querySelector('.xcard__header');
-      if (entete) entete.style.top = h + '%';
+        //  Le bouton du synopsis est posé sur l'emballage de la carte, à
+        //  côté du lien — ou dans la carte quand il n'y a pas d'emballage.
+        var autour = carte.parentNode;
+        var livre = (autour && autour.querySelector) ? autour.querySelector('.rdate__synbtn') : null;
+        if (!livre) livre = carte.querySelector('.rdate__synbtn');
+        if (livre) livre.style.top = 'calc(' + h + '% + 10px)';
+      }
 
-      //  Le bouton du synopsis est posé sur l'emballage de la carte, à
-      //  côté du lien — ou dans la carte quand il n'y a pas d'emballage.
-      var autour = carte.parentNode;
-      var livre = (autour && autour.querySelector) ? autour.querySelector('.rdate__synbtn') : null;
-      if (!livre) livre = carte.querySelector('.rdate__synbtn');
-      if (livre) livre.style.top = 'calc(' + h + '% + 10px)';
+      //  ── le second libellé ──
+      var precision = couperLeGenre(e).precision;
+      if (!precision) continue;
+      var tags = carte.querySelector('.xcard__tags');
+      if (!tags) continue;
+      var second = tags.querySelector('.xcard__tag.tag-type');
+      if (second) {
+        if (second.textContent !== precision) second.textContent = precision;
+      } else {
+        var neuf = document.createElement('span');
+        neuf.className = 'xcard__tag tag-type';
+        neuf.textContent = precision;
+        tags.appendChild(neuf);
+      }
     }
   }
 
@@ -1506,6 +1549,13 @@
     var a = document.createElement('a');
     a.className = 'xcard reveal in';
     a.setAttribute('data-dlyr-carte', '1');
+    /*  Le code et la jauge de l'expérience, lisibles par la page
+        « Réserver par date » : sans eux, elle ne pouvait ni bloquer la
+        carte tant que le jour n'est pas choisi, ni la faire mener à la
+        réservation du bon jour. */
+    if (e.id) a.setAttribute('data-exp', e.id);
+    if (e.mini) a.setAttribute('data-min', e.mini);
+    if (e.maxi) a.setAttribute('data-max', e.maxi);
     /*  Trois destinations, dans cet ordre : sa page écrite à la main si
         elle en a une, la page de présentation générique si elle est
         déposée, et à défaut la réservation directe. Un lien vers une
@@ -1774,8 +1824,8 @@
 
       completerLeCatalogue(experiences);
       //  Après la fabrication des cartes manquantes, pour que les onze
-      //  soient replacées du même geste.
-      placerLesEtiquettes(connues);
+      //  soient reprises du même geste : hauteur et second libellé.
+      ajusterLesEtiquettes(connues);
       surveillerLaGrille();
     } finally {
       enTrainDAppliquer = false;
@@ -1860,8 +1910,212 @@
     appliquer: appliquer, fabriquerCarte: fabriquerCarte,
     rafraichirCartes: rafraichirCartes, appliquerLesTextes: appliquerLesTextes,
     paragraphes: paragraphes, couperLeGenre: couperLeGenre,
-    hauteurDeLExp: hauteurDeLExp, placerLesEtiquettes: placerLesEtiquettes,
+    hauteurDeLExp: hauteurDeLExp, ajusterLesEtiquettes: ajusterLesEtiquettes,
     fiches: function () { return fichesSynopsis; },
     SOURCE: SOURCE
+  };
+})();
+/* ==========================================================================
+   D'LYR — LES FORMULES CADEAU DE LA PAGE OFFRIR
+                                                            (12/11/2026)
+
+   À COLLER À LA FIN DE js/site.js, APRÈS LE BLOC DU 11/11
+   (« LE SITE SUIT L'APPLICATION »), dans le dépôt du SITE.
+
+   C'est donc un SECOND bloc, à la suite du premier. Il n'y touche pas, et
+   il suffit de le retirer pour revenir en arrière.
+
+   ────────────────────────────────────────────────────────────────────
+   LE PROBLÈME, EN DEUX PARTIES
+
+   1 · LES TROIS BOUTONS MÈNENT AU MÊME ENDROIT.
+       Les trois cartes de la page portent « href="#reserver" ». Plus haut
+       dans ce fichier, une règle transforme TOUT « #reserver » de la page
+       Offrir en la même adresse :
+
+           if (document.body.dataset.page === 'offrir'
+               && a.getAttribute('href') === '#reserver') return GIFT_URL;
+
+       « Offrir 40 € », « Offrir 80 € » et « Offrir 120 € » ouvrent donc
+       le même tunnel à montant libre, à 20 €. Le client choisit un pack
+       et se retrouve devant un réglage vide.
+
+   2 · LES PRIX ET LES TEXTES SONT ÉCRITS EN DUR.
+       40 €, 80 €, 120 € et leurs trois descriptions vivent dans le HTML.
+       Ils vivent aussi en base, depuis le script 363. Deux vérités : le
+       jour où un prix change dans l'application, la page continue de
+       promettre l'ancien — et le tunnel, qui lit la base, ferait payer le
+       nouveau.
+
+   ────────────────────────────────────────────────────────────────────
+   CE QUE FAIT CE BLOC
+
+   Il remplace les trois cartes par ce que dit la base :
+
+       …/experiences-publiques?formules=1
+
+   nom, bandeau, accroche, prix, mise en avant — et le lien, qui porte
+   l'identifiant de la formule :
+
+       reservation.dlyr-vr.com/?client=1&view=giftcard&formule=duo
+
+   Ajouter une quatrième formule dans Offres → Packs VR la fait
+   apparaître ici sans toucher au site. En retirer une la fait
+   disparaître.
+
+   ⚠ LE BOUTON DU HAUT N'EST PAS TOUCHÉ.
+     « Offrir une carte cadeau », dans la e-carte, reste le bon cadeau à
+     montant libre. C'est un produit différent, et il garde son chemin.
+
+   ⚠ SI LA FONCTION NE RÉPOND PAS, LA PAGE NE CHANGE PAS.
+     Les trois cartes écrites dans le HTML restent affichées, avec le
+     comportement d'aujourd'hui. Une page vide parce que la base n'a pas
+     répondu serait pire que la page d'avant — c'est la même règle que
+     pour le catalogue.
+
+   ⚠ LES CARTES SONT POSÉES DÉJÀ VISIBLES (« reveal in »).
+     L'animation d'apparition ne tient qu'une liste prise au chargement :
+     une carte ajoutée après coup n'y figure pas et resterait invisible.
+     Le même piège avait été traité pour les cartes du catalogue, et de la
+     même manière.
+
+   ⚠ LE SUIVI DU CLIC EST REFAIT ICI.
+     Le compteur plus haut dans ce fichier reconnaît l'adresse du bon
+     cadeau à l'identique. La nôtre porte « &formule=… » en plus : elle ne
+     serait donc pas comptée. On la compte ici — et avec le nom de la
+     formule, ce qui dit enfin LAQUELLE a été choisie.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  //  Cette page, et elle seule.
+  if (!document.body || document.body.getAttribute('data-page') !== 'offrir') return;
+
+  var SOURCE = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/functions/v1/experiences-publiques'
+             + '?formules=1';
+
+  var SELECTEUR_GRILLE = '#formules .combo__grid';
+  var SELECTEUR_NOTE   = '#formules .combo__note';
+
+  /*  La phrase du bas annonçait « Vous choisirez le montant à l'étape
+      suivante, avec les boutons + / − ». Elle était vraie quand les trois
+      boutons menaient au montant libre. Avec une formule, le montant est
+      fixé et les boutons + / − n'existent plus : la phrase promettrait un
+      réglage introuvable. */
+  var NOTE = 'Le montant et le contenu sont déjà fixés : vous passez '
+           + 'directement au paiement. Pour choisir librement la somme, '
+           + 'utilisez la e-carte cadeau ci-dessus.';
+
+  function ech(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  //  Une espace insécable avant l'euro, comme le fait la page.
+  function insecable(s) {
+    return String(s == null ? '' : s).replace(/ €/g, ' €');
+  }
+
+  /*  ⚠ ON N'ACCEPTE QU'UNE ADRESSE DU TUNNEL.
+      Le lien est fabriqué par la fonction — un préfixe fixe et un
+      identifiant encodé — donc il ne peut pas être autre chose
+      aujourd'hui. Mais une adresse venue du réseau et posée telle quelle
+      dans un « href », c'est la porte par laquelle un « javascript:… »
+      s'exécute au clic. Le jour où la réponse change de forme, cette
+      porte doit déjà être fermée. */
+  var TUNNEL = 'https://reservation.dlyr-vr.com/';
+
+  function lienSur(f) {
+    var u = String((f && f.lien) || '');
+    return u.slice(0, TUNNEL.length) === TUNNEL ? u : '';
+  }
+
+  function carte(f) {
+    var avant = f.mise_en_avant === true;
+    var prix = insecable(ech(f.prix_texte || ''));
+    var lien = lienSur(f);
+    return '<article class="cform reveal in' + (avant ? ' cform--feat' : '') + '"'
+      +     ' data-formule="' + ech(f.id) + '">'
+      +   (f.badge
+            ? '<span class="cform__tag' + (avant ? ' cform__tag--feat' : '') + '">'
+              + ech(f.badge) + '</span>'
+            : '')
+      +   '<h3 class="cform__name">' + ech(f.nom) + '</h3>'
+      +   '<p class="cform__desc">' + insecable(ech(f.accroche)) + '</p>'
+      +   '<div class="cform__price"><span>' + prix + '</span></div>'
+      //  Sans adresse valable : la carte s'affiche, sans bouton. Mieux
+      //  qu'un bouton qui ne mène nulle part, et bien mieux qu'un bouton
+      //  qui mène ailleurs.
+      +   (lien
+            ? '<a class="btn ' + (avant ? 'btn--lime' : 'btn--lime-o') + ' btn--sm" '
+              + 'href="' + ech(lien) + '">Offrir ' + prix + '</a>'
+            : '')
+      + '</article>';
+  }
+
+  function poser(formules) {
+    var grille = document.querySelector(SELECTEUR_GRILLE);
+    if (!grille) return;
+
+    /*  ⚠ AUCUNE FORMULE : ON NE VIDE PAS LA GRILLE.
+        Une réponse valable mais vide — toutes les formules retirées du
+        catalogue — laisserait un trou à la place de la section. On garde
+        ce que le HTML dit, et on n'y touche pas. */
+    if (!formules.length) return;
+
+    grille.innerHTML = formules.map(carte).join('');
+
+    var note = document.querySelector(SELECTEUR_NOTE);
+    if (note) note.textContent = NOTE;
+  }
+
+  //  Le suivi du clic. Voir l'avertissement de l'en-tête.
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest
+          ? ev.target.closest('[data-formule] a[href*="formule="]') : null;
+    if (!a) return;
+    var article = a.closest('[data-formule]');
+    var nom = article ? (article.querySelector('.cform__name') || {}).textContent : '';
+    try {
+      if (typeof window.DLYR_track === 'function') {
+        window.DLYR_track('InitiateCheckout', { content_name: 'formule:' + (nom || '').trim() });
+      }
+    } catch (e) { /* le suivi ne doit jamais empêcher le clic */ }
+    //  On ne touche pas à l'événement : le lien s'ouvre normalement.
+  });
+
+  function demarrer() {
+    if (!window.fetch) return;         //  navigateur trop ancien : la page d'avant
+    fetch(SOURCE, { credentials: 'omit' })
+      .then(function (r) {
+        //  ⚠ 503 : la fonction dit « je n'ai pas pu répondre ». On garde
+        //    le HTML plutôt que de croire qu'il n'y a plus de formule.
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || d.ok !== true || !d.formules || typeof d.formules.length !== 'number') {
+          throw new Error('réponse inattendue');
+        }
+        poser(d.formules);
+      })
+      .catch(function (e) {
+        //  Sans bruit pour le visiteur, lisible pour nous.
+        if (window.console) console.warn('[DLYR] formules cadeau :', e && e.message);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+
+  //  Pour le banc d'essai.
+  window.__formulesDuSite = {
+    SOURCE: SOURCE, NOTE: NOTE,
+    carte: carte, poser: poser, insecable: insecable
   };
 })();

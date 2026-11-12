@@ -3,16 +3,22 @@
    ============================================================ */
 (function () {
   const I = window.DLYR_ICONS || {};
+  const P = window.DLYR_PRIX || {};
   const ar = document.querySelector('[data-arrow]');
   if (ar) ar.innerHTML = I.arrow || '';
 
+  /* Clic sur l'affiche = bouton « Réserver » de la fiche du jeu (application D'LYR) ;
+     sans code de réservation, l'affiche mène à la fiche du jeu. */
+  const BOOK = window.DLYR_BOOK || { base: '', exp: {} };
   const GAMES = (window.DLYR_GAMES || []).filter(g => !g.hidden).map(g => ({
-    name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
-    img: g.img, href: 'jeu-' + g.slug + '.html', cardBottom: g.cardBottom, cardPos: g.cardPos
+    slug: g.slug, story: g.story, name: g.name, genre: g.genre, type: g.type, dur: g.dur, players: g.players, pl: g.pl,
+    img: g.img, href: BOOK.exp['jeu-' + g.slug] ? BOOK.base + BOOK.exp['jeu-' + g.slug] : 'jeu-' + g.slug + '.html', book: !!BOOK.exp['jeu-' + g.slug], cardBottom: g.cardBottom, cardPos: g.cardPos, cardNoName: g.cardNoName, cardTop: g.cardTop, famille: g.famille
   }));
   /* Seules les catégories qui ont au moins une expérience affichée ont leur filtre */
-  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants']
-    .filter(g => g === 'Tous' || GAMES.some(x => x.genre === g));
+  /* « En famille » n'est pas un genre : il regroupe les expériences marquées famille: true (games-data.js) */
+  const isGenre = (x, g) => g === 'Tous' || (g === 'En famille' ? !!x.famille : x.genre === g);
+  const GENRES = ['Tous', 'Action', 'Aventure', 'Escape Game', 'Quiz', 'Culturel', 'Adapté aux enfants', 'En famille']
+    .filter(g => g === 'Tous' || GAMES.some(x => isGenre(x, g)));
   const GCOLOR = { Action: '#43744c', Aventure: '#1b8a4b', 'Escape Game': '#7c3aed', Quiz: '#0e7490', 'Adapté aux enfants': '#c2410c', Culturel: '#b91c1c' };
 
   const state = { genre: 'Tous', players: 'all', sort: 'az' };
@@ -39,7 +45,7 @@
 
   function apply() {
     let list = GAMES.filter(g =>
-      (state.genre === 'Tous' || g.genre === state.genre) &&
+      isGenre(g, state.genre) &&
       (state.players === 'all' || (g.players && playersBucket(g.players) === state.players))
     );
     list.sort((a, b) => state.sort === 'dur' ? (a.dur || 99) - (b.dur || 99) : a.name.localeCompare(b.name));
@@ -48,21 +54,25 @@
     emptyEl.hidden = list.length > 0;
 
     gridEl.innerHTML = list.map((g, i) => `
-      <a class="xcard reveal" data-d="${i % 4}" href="${g.href}">
+      <div class="rdate__card reveal" data-d="${i % 4}"><a class="xcard" href="${g.href.replace(/&/g, '&amp;')}"${g.book ? ` data-book="${g.slug}"` : ''}>
         <div class="ph ph--dark">${g.img ? `<img class="ph__img" src="${g.img}" alt="${g.name}"${g.cardPos ? ` style="object-position:${g.cardPos}"` : ''}>` : `<span class="ph__label">Visuel · ${g.name}</span>`}</div>
         <span class="xcard__scrim"></span>
-        <div class="xcard__header">
+        <div class="xcard__header"${g.cardTop ? ` style="top:${g.cardTop}"` : ''}>
           <div class="xcard__tags">
             <span class="xcard__tag tag-genre" style="background:${GCOLOR[g.genre] || 'var(--blue)'}">${g.genre}</span>
             ${g.type ? `<span class="xcard__tag tag-type">${g.type}</span>` : ''}
           </div>
         </div>
-        <div class="xcard__footer"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
-      </a>`).join('');
+        <div class="xcard__footer${g.cardNoName ? ' xcard__footer--noname' : ''}"${g.cardBottom ? ` style="bottom:${g.cardBottom}"` : ''}>${titleMeta(g)}</div>
+      </a>${window.DLYR_SYN ? DLYR_SYN.button(g) : ''}</div>`).join('');
 
     if (window.DLYR_reveal) window.DLYR_reveal();
   }
 
+  gridEl.addEventListener('click', e => {
+    const a = e.target.closest('[data-book]');
+    if (a && window.DLYR_track) window.DLYR_track('InitiateCheckout', { content_name: a.dataset.book });
+  });
   filtersEl.querySelectorAll('.cat__chip').forEach(b => b.addEventListener('click', () => {
     filtersEl.querySelectorAll('.cat__chip').forEach(x => x.classList.remove('on'));
     b.classList.add('on'); state.genre = b.dataset.genre; apply();
@@ -89,6 +99,15 @@
     const y = gridEl.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - parseFloat(getComputedStyle(bar).top) - 16;
     window.scrollTo({ top: y, behavior: 'smooth' });
   });
+
+  /* Prix d'appel sous le titre du catalogue */
+  const head = document.querySelector('.cat__head');
+  if (head && P.vr && !document.querySelector('.cat__price')) {
+    const p = document.createElement('p');
+    p.className = 'cat__price';
+    p.innerHTML = `<strong>${P.vr}</strong> <span>${P.vrDetail || ''}</span>`;
+    head.insertAdjacentElement('afterend', p);
+  }
 
   apply();
 })();
