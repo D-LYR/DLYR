@@ -377,7 +377,26 @@
       .catch(() => {});
   }
 
+  // Témoignages vidéo : le lecteur YouTube n'est chargé qu'au clic (page plus rapide, pas de cookies avant)
+  function videoTestimonials() {
+    document.querySelectorAll('[data-vtemo] [data-yt]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.yt;
+        const f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&playsinline=1&rel=0';
+        f.title = btn.dataset.ytTitle || 'Vidéo';
+        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        f.allowFullscreen = true;
+        const box = document.createElement('div');
+        box.className = 'vtemo__item';
+        box.append(f);
+        btn.replaceWith(box);
+        f.focus();
+      }, { once: true });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters(); googleRating();
+    icons(); posters(); reviews(); googleReviews(); eventsCarousel(); counters(); googleRating(); videoTestimonials();
   });
 })();
