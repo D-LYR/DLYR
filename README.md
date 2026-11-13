@@ -45,3 +45,5 @@ renommer ni déplacer les fichiers `.html`.
 
 Site 100 % statique : aucun build. Servir la racine telle quelle
 (GitHub Pages, Cloudflare Pages, Netlify…).
+
+> Bandeau Noël (au-dessus du menu) : js/site.js et css/tweaks.css — à retirer après les fêtes.
