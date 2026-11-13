@@ -641,3 +641,7 @@ html[lang="en"] .soiree-card--soldout::after {
 /* ---- Accueil : témoignages vidéo hébergés sur le site ---- */
 .vtemo__item--video video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#0d1a14; }
 .vtemo__item--video.is-playing video{ object-fit:contain; }
+/* Témoignages vidéo : bouton lecture en bas de la vidéo */
+.vtemo__item--video .vtemo__play{ top:auto; bottom:clamp(14px,4%,24px); transform:translateX(-50%); }
+.vtemo__item--video:hover .vtemo__play,
+.vtemo__item--video:focus-visible .vtemo__play{ transform:translateX(-50%) scale(1.1); }
