@@ -150,8 +150,8 @@
     xmas.className = 'xmas-bar';
     xmas.href = 'offrir.html#formules';
     xmas.innerHTML = isEN
-      ? '<span aria-hidden="true">🎁</span> <b>CHRISTMAS IS COMING</b><span class="xmas-bar__sep"> — </span><span>This year, give a thrill, give D’LYR</span>'
-      : '<span aria-hidden="true">🎁</span> <b>NOËL APPROCHE</b><span class="xmas-bar__sep"> — </span><span>Cette année, offrez des sensations, offrez du D’LYR</span>';
+      ? '<span aria-hidden="true">🎁</span> <b>CHRISTMAS IS COMING</b><span class="xmas-bar__sep"> — </span><span>This year, give a thrill, give <b>D’LYR</b></span>'
+      : '<span aria-hidden="true">🎁</span> <b>NOËL APPROCHE</b><span class="xmas-bar__sep"> — </span><span>Cette année, offrez des sensations, offrez du <b>D’LYR</b></span>';
     nav.insertBefore(xmas, nav.firstChild);
     nav.classList.add('nav--xmas');
     body.classList.add('has-xmas');
