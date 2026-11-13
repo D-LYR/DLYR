@@ -144,6 +144,17 @@
           <span></span><span></span><span></span>
         </button>
       </div>`;
+
+    // Bandeau Noël (au-dessus du menu) — à retirer après les fêtes
+    const xmas = document.createElement('a');
+    xmas.className = 'xmas-bar';
+    xmas.href = 'offrir.html#formules';
+    xmas.innerHTML = isEN
+      ? '<span aria-hidden="true">🎁</span> <b>CHRISTMAS IS COMING</b><span class="xmas-bar__sep"> — </span><span>This year, give a thrill, give <b>D’LYR</b></span>'
+      : '<span aria-hidden="true">🎁</span> <b>NOËL APPROCHE</b><span class="xmas-bar__sep"> — </span><span>Cette année, offrez des sensations, offrez du <b>D’LYR</b></span>';
+    nav.insertBefore(xmas, nav.firstChild);
+    nav.classList.add('nav--xmas');
+    body.classList.add('has-xmas');
     body.prepend(nav);
 
     // Lien d'évitement (RGAA 12.7) — première cible focusable de la page
@@ -183,9 +194,12 @@
     const fit = () => {
       nav.classList.remove('nav--compact');
       if (inner.scrollWidth > inner.clientWidth + 1) nav.classList.add('nav--compact');
+      // le bandeau Noël prend exactement la largeur du menu
+      xmas.style.width = inner.getBoundingClientRect().width + 'px';
     };
     fit();
     window.addEventListener('resize', fit);
+    if (window.ResizeObserver) new ResizeObserver(() => { xmas.style.width = inner.getBoundingClientRect().width + 'px'; }).observe(inner);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
     document.addEventListener('click', e => { if (e.target.closest('[data-lang-toggle]')) setTimeout(fit, 60); });
 
