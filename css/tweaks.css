@@ -645,3 +645,15 @@ html[lang="en"] .soiree-card--soldout::after {
 .vtemo__item--video .vtemo__play{ top:auto; bottom:clamp(14px,4%,24px); transform:translateX(-50%); }
 .vtemo__item--video:hover .vtemo__play,
 .vtemo__item--video:focus-visible .vtemo__play{ transform:translateX(-50%) scale(1.1); }
+
+/* Bandeau Noël au-dessus du menu */
+.nav--xmas{ flex-direction:column; align-items:center; }
+.xmas-bar{ pointer-events:auto; width:min(80%, calc(100% - 36px)); display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0 6px;
+  padding:7px 16px; background:var(--lime); color:#101f15; font:600 13px/1.3 var(--f-ui); letter-spacing:.02em; text-align:center; text-decoration:none;
+  border-radius:var(--r-sm) var(--r-sm) 0 0; transition:background .2s ease; }
+.xmas-bar b{ font-weight:800; }
+.xmas-bar:hover, .xmas-bar:focus-visible{ background:var(--lime-2); }
+.xmas-bar:hover span:last-child{ text-decoration:underline; }
+.nav--xmas .nav__inner{ border-top-left-radius:0; border-top-right-radius:0; border-top:0; }
+@media (max-width:560px){ .xmas-bar{ font-size:12px; } .xmas-bar__sep{ display:none; } }
+#formules{ scroll-margin-top:110px; }
