@@ -2133,3 +2133,15 @@
     carte: carte, poser: poser, insecable: insecable
   };
 })();
+
+/* ============================================================
+   ASSISTANT « Quelle expérience choisir ? » (js/assistant.js)
+   Chargé sur toutes les pages. Pour le retirer : supprimer ce bloc.
+   ============================================================ */
+(function () {
+  var isEN = document.documentElement.lang === 'en' || /\/en\//i.test(location.pathname);
+  var s = document.createElement('script');
+  s.src = (isEN ? '../' : '') + 'js/assistant.js';
+  s.defer = true;
+  document.head.appendChild(s);
+})();
