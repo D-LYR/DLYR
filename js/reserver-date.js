@@ -24,7 +24,7 @@
 
   const SB_URL = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/rest/v1/';
   const SB_KEY = 'sb_publishable_oKOLGd461XVPULJR0jB5xg_O2EA1uLj'; // clé publique (lecture seule), comme js/home.js
-  const DAYS_AHEAD = 14;   // même horizon que l'outil de réservation
+  const DAYS_AHEAD = 30;   // même horizon que l'outil de réservation
   const MAX_ONLINE = 12;   // au-delà : devis (plusieurs arènes / privatisation)
 
   const BOOK = window.DLYR_BOOK || { base: 'https://admin.dlyr-vr.com/?client=1&exp=', exp: {} };
