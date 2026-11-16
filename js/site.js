@@ -2145,3 +2145,310 @@
   s.defer = true;
   document.head.appendChild(s);
 })();
+/* =========================================================================
+   D'LYR — LE CARROUSEL DES ÉVÉNEMENTS VIENT DE L'APPLICATION (16/11/2026)
+   Étape 3 sur 3.
+
+   ⚠ À COLLER À LA FIN DE js/site.js, APRÈS le « })(); » final — donc
+     HORS de la grande parenthèse du fichier. Ne remplacez pas le fichier :
+     ajoutez ce bloc à la suite.
+
+     Dépôt D-LYR/DLYR, branche main. Même place et même forme que le bloc
+     des expériences posé le 11 novembre.
+
+   ── CE QUE ÇA FAIT ─────────────────────────────────────────────────────
+
+   La carte « Événements à venir » de la page d'accueil est aujourd'hui
+   écrite en dur dans le HTML. Ce bloc la remplace par les événements que
+   l'application publie : un par soirée en vente, dans l'ordre des dates.
+
+   Publier une soirée dans l'application la fait apparaître ici. La
+   journée passée, elle disparaît toute seule le lendemain.
+
+   ── ⚠ IL NE RÉÉCRIT PAS LA CARTE : IL LA CLONE ─────────────────────────
+
+   Le gabarit, c'est la carte qui est déjà dans la page. Le bloc en prend
+   une copie au démarrage, puis remplit les textes d'une copie par
+   événement.
+
+   Conséquence voulue : le jour où vous retouchez la carte — une classe,
+   une icône, un arrondi — le bloc suit sans qu'on y touche. Recopier le
+   gabarit en JavaScript, c'était se donner deux cartes à maintenir et
+   l'assurance qu'elles divergent.
+
+   ── ⚠ SI QUOI QUE CE SOIT MANQUE, IL NE FAIT RIEN ──────────────────────
+
+   Pas de carrousel dans la page, pas de carte à cloner, réponse illisible,
+   fonction injoignable, liste vide : le bloc s'arrête et la page garde ce
+   qu'elle affiche. Un site qui montre une vieille carte vaut mieux qu'un
+   site qui montre un trou.
+
+   ── ⚠ IL PILOTE LE CARROUSEL LUI-MÊME, ET IL LE FAUT ───────────────────
+
+   Le carrousel de js/home.js fige la liste de ses diapositives à son
+   démarrage. Vérifié en vrai : ajouter une carte après coup ne change ni
+   les pastilles ni le défilement. Comme nos cartes arrivent APRÈS (il
+   faut bien interroger la base), le bloc reprend la main sur le
+   défilement — en gardant les repères du site : « data-single », les
+   pastilles dans « [data-evcar-dots] », la classe « on » pour l'active.
+
+   RETOUR ARRIÈRE : retirer ce bloc. La carte écrite en dur réapparaît
+   telle quelle — elle n'est jamais effacée du HTML.
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  var SOURCE = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/functions/v1/evenements-publics';
+
+  var evcar = document.querySelector('[data-evcar]');
+  var rail  = document.querySelector('[data-evcar-track]');
+  if (!evcar || !rail) return;                       // pas de carrousel ici
+
+  var gabarit = rail.querySelector('.soiree-card');
+  if (!gabarit) return;                              // rien à cloner
+  gabarit = gabarit.cloneNode(true);
+
+  // =====================================================================
+  //  REMPLIR UN TEXTE SANS TOUCHER AU RESTE
+  //
+  //  Les éléments de la carte mêlent du texte et des éléments : une
+  //  pastille avant la date, une coche avant l'argument, une icône avant
+  //  la mention. Écraser « textContent » les ferait disparaître. On ne
+  //  remplace donc QUE le nœud de texte voulu.
+  // =====================================================================
+  function texte(el, valeur, premier) {
+    if (!el) return;
+    var noeuds = [];
+    for (var i = 0; i < el.childNodes.length; i++) {
+      if (el.childNodes[i].nodeType === 3) noeuds.push(el.childNodes[i]);
+    }
+    if (!noeuds.length) { el.appendChild(document.createTextNode(valeur)); return; }
+    //  Le libellé d'un bouton est AVANT sa flèche ; une date est APRÈS sa
+    //  pastille. D'où le choix du premier ou du dernier.
+    var cible = premier ? noeuds[0] : noeuds[noeuds.length - 1];
+    cible.nodeValue = valeur;
+  }
+
+  function enlever(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
+
+  // =====================================================================
+  //  UNE CARTE
+  // =====================================================================
+  function carte(e) {
+    var c = gabarit.cloneNode(true);
+
+    //  ── la date ──  « samedi 28 novembre · 20h00 – 23h00 »
+    //  Le CSS la met en capitales tout seul : on écrit en minuscules.
+    texte(c.querySelector('.soiree-card__badge'),
+          e.date_texte + ' · ' + e.horaire_texte);
+
+    //  ── le titre ──  « D'LYR Night : <strong>Tournoi VR</strong> »
+    var titre = c.querySelector('.soiree-card__title');
+    var gras  = titre && titre.querySelector('strong');
+    if (e.sous_titre) {
+      texte(titre, e.titre + ' : ', true);
+      if (gras) gras.textContent = e.sous_titre;
+    } else {
+      //  Pas de deux-points dans le nom : tout le titre, et pas de gras
+      //  vide qui laisserait une espace en trop.
+      texte(titre, e.titre, true);
+      enlever(gras);
+    }
+
+    //  ── le texte ──
+    var desc = c.querySelector('.soiree-card__desc');
+    if (e.description) { texte(desc, e.description); } else { enlever(desc); }
+
+    //  ── les arguments ──
+    var liste = c.querySelector('.soiree-card__features');
+    if (liste) {
+      var ligne = liste.querySelector('.soiree-card__feature');
+      if (!ligne || !e.points_forts || !e.points_forts.length) {
+        enlever(liste);
+      } else {
+        var modele = ligne.cloneNode(true);
+        liste.innerHTML = '';
+        for (var i = 0; i < e.points_forts.length; i++) {
+          var li = modele.cloneNode(true);
+          texte(li, e.points_forts[i]);          // la coche est dans un <span>, elle reste
+          liste.appendChild(li);
+        }
+      }
+    }
+
+    //  ── les boutons ──
+    //
+    //  Le gabarit en porte un seul : « Découvrir le tournoi ». On en fait
+    //  DEUX — « Réserver » en premier, parce que c'est ce qu'on vient
+    //  chercher — et « Découvrir » seulement si une page existe.
+    var actions = c.querySelector('.soiree-card__actions');
+    var bouton  = actions && actions.querySelector('a');
+    if (bouton) {
+      var decouvrir = bouton;
+      var reserver  = bouton.cloneNode(true);
+
+      texte(reserver, e.complet ? 'Billetterie close' : 'Réserver ma place', true);
+      reserver.setAttribute('href', e.lien);
+      //  ⚠ Le site rattrape certains boutons par cette marque : la laisser
+      //    ferait ouvrir autre chose que notre adresse.
+      reserver.removeAttribute('data-smeetz-open');
+      if (e.complet) {
+        enlever(reserver);                        // complet : plus rien à vendre
+      } else {
+        actions.insertBefore(reserver, decouvrir);
+      }
+
+      if (e.page) {
+        texte(decouvrir, 'En savoir plus', true);
+        decouvrir.setAttribute('href', '/' + e.page);
+        decouvrir.removeAttribute('data-smeetz-open');
+        //  Le second bouton n'est plus le principal : on lui retire la
+        //  couleur d'appel, en gardant la classe de base du site.
+        if (!e.complet) decouvrir.classList.remove('btn--lime');
+      } else {
+        enlever(decouvrir);
+      }
+    }
+
+    //  ── la mention sous les boutons ──
+    //
+    //  ⚠ ON N'ANNONCE PAS UN NOMBRE DE PLACES. La jauge est le nombre
+    //    TOTAL, pas le nombre restant : écrire « 32 places » sous un
+    //    bouton laisserait croire qu'il en reste trente-deux.
+    texte(c.querySelector('.soiree-card__subtext'),
+          e.complet ? 'Complet' : 'Billetterie ouverte');
+
+    //  ── l'affiche ──
+    var img = c.querySelector('.soiree-card__media img');
+    if (img) {
+      if (e.affiche) {
+        img.setAttribute('src', SOURCE + '?affiche=' + encodeURIComponent(e.reference));
+        img.setAttribute('alt', 'Affiche ' + e.nom);
+      } else {
+        enlever(img);
+      }
+    }
+
+    //  ── la pastille de prix ──
+    var prix = c.querySelector('.soiree-card__price-tag');
+    var fort = prix && prix.querySelector('strong');
+    if (fort) fort.textContent = e.prix_texte;
+    //  « Gratuit · par personne » n'a pas de sens : on retire la mention.
+    if (prix && e.prix_cents === 0) texte(prix, '');
+
+    return c;
+  }
+
+  // =====================================================================
+  //  LE DÉFILEMENT
+  // =====================================================================
+  function piloter(n) {
+    var pied  = evcar.querySelector('.evcar__foot');
+    var puces = evcar.querySelector('[data-evcar-dots]');
+
+    if (n <= 1) {
+      //  Le repère du site : avec une seule carte, il cache les commandes.
+      evcar.setAttribute('data-single', '');
+      if (puces) puces.innerHTML = '';
+      return;
+    }
+    evcar.removeAttribute('data-single');
+    if (!pied) return;
+
+    var ici = 0;
+
+    function pas() {
+      var premier = rail.children[0];
+      if (!premier) return 0;
+      var espace = parseFloat(getComputedStyle(rail).gap) || 0;
+      return premier.getBoundingClientRect().width + espace;
+    }
+
+    function montrer(i) {
+      ici = Math.max(0, Math.min(n - 1, i));
+      rail.style.transition = 'transform .45s ease';
+      rail.style.transform  = 'translateX(' + (-ici * pas()) + 'px)';
+      if (puces) {
+        for (var k = 0; k < puces.children.length; k++) {
+          puces.children[k].classList.toggle('on', k === ici);
+        }
+      }
+    }
+
+    //  ⚠ ON REMPLACE LES BOUTONS PAR DES COPIES.
+    //    Le carrousel du site leur a déjà posé ses écouteurs, et ceux-ci
+    //    comptent une liste de diapositives qui n'existe plus. Cloner un
+    //    bouton laisse les écouteurs sur l'ancien, qu'on jette.
+    function reprendre(selecteur, sens) {
+      var vieux = evcar.querySelector(selecteur);
+      if (!vieux) return;
+      var neuf = vieux.cloneNode(true);
+      vieux.parentNode.replaceChild(neuf, vieux);
+      neuf.addEventListener('click', function () { montrer(ici + sens); });
+    }
+    reprendre('[data-evcar-prev]', -1);
+    reprendre('[data-evcar-next]',  1);
+
+    if (puces) {
+      puces.innerHTML = '';
+      for (var i = 0; i < n; i++) {
+        (function (rang) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Événement ' + (rang + 1));
+          b.addEventListener('click', function () { montrer(rang); });
+          puces.appendChild(b);
+        })(i);
+      }
+    }
+
+    //  La largeur d'une carte change avec celle de la fenêtre : on
+    //  recalcule, sans animation pour ne pas faire glisser la page.
+    window.addEventListener('resize', function () {
+      var memoire = rail.style.transition;
+      rail.style.transition = 'none';
+      rail.style.transform = 'translateX(' + (-ici * pas()) + 'px)';
+      setTimeout(function () { rail.style.transition = memoire; }, 0);
+    });
+
+    montrer(0);
+  }
+
+  // =====================================================================
+  //  LA LECTURE
+  // =====================================================================
+  function poser(evenements) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < evenements.length; i++) {
+      fragment.appendChild(carte(evenements[i]));
+    }
+    rail.innerHTML = '';
+    rail.appendChild(fragment);
+    piloter(evenements.length);
+  }
+
+  try {
+    fetch(SOURCE, { cache: 'no-store' })
+      .then(function (r) {
+        //  503 : la fonction n'a pas pu répondre. Surtout ne rien changer.
+        if (!r.ok) throw new Error('evenements-publics ' + r.status);
+        return r.json();
+      })
+      .then(function (j) {
+        if (!j || j.ok !== true || !Array.isArray(j.evenements)) return;
+        //  ⚠ UNE LISTE VIDE NE VIDE PAS LA PAGE. Plus aucune soirée à
+        //    venir n'est une bonne raison de laisser la dernière carte
+        //    affichée plutôt que de montrer un blanc. C'est une décision,
+        //    pas un oubli : si vous préférez que la section disparaisse,
+        //    c'est une ligne à changer ici.
+        if (!j.evenements.length) return;
+        poser(j.evenements);
+      })
+      .catch(function (err) {
+        //  Jamais à l'écran du visiteur : la page garde ce qu'elle a.
+        if (window.console) console.warn('événements : ' + err.message);
+      });
+  } catch (e) {
+    if (window.console) console.warn('événements :', e);
+  }
+})();
