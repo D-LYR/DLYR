@@ -220,3 +220,239 @@
 
   render();
 })();
+/* ============================================================
+   D'LYR — RÉSERVER PAR DATE : LES EXPÉRIENCES PAS ENCORE OUVERTES
+                                                      (17/11/2026)
+
+   ⚠ CECI EST POUR LE SITE PUBLIC, PAS POUR L'APPLICATION.
+     Dépôt D-LYR/DLYR, fichier js/reserver-date.js.
+
+   OÙ LE METTRE
+     À COLLER À LA FIN de js/reserver-date.js, après la parenthèse
+     fermante du bloc existant. NE RIEN REMPLACER, ne rien modifier
+     au-dessus. C'est un bloc indépendant.
+
+     Rien à changer dans le HTML : le fichier est déjà chargé par la
+     page qui porte « Réserver par date ».
+
+   LE DÉFAUT QU'IL CORRIGE
+     Dans ce tunnel, le client choisit son JOUR d'abord, puis son
+     expérience. La liste des jeux vient de window.DLYR_GAMES — une
+     liste écrite dans le site, qui ne connaît pas votre base. Napoléon
+     s'y affichait donc pour le 21 novembre alors que ses séances ne
+     commencent que le 2 décembre.
+
+     L'autre tunnel — l'affiche d'abord, le jour ensuite — est traité
+     par le fichier 86, dans l'application. Celui-ci ne le concerne pas.
+
+   CE QU'IL FAIT
+     Il lit en base les dates d'ouverture (une seule requête, avec la
+     clé publique en lecture seule déjà utilisée par ce fichier), puis
+     pour chaque carte dont le jour choisi est antérieur à l'ouverture :
+
+       · une étiquette « Séances à partir du 02/12 » sur la carte ;
+       · la carte grisée, et le clic bloqué ;
+       · une phrase sous la carte qui dit quoi faire.
+
+   ⚠ CE QU'IL NE FAIT PAS
+     Il ne refuse rien : le refus est en base et tient de toute façon.
+     Ceci évite au client de s'y heurter après avoir saisi ses
+     coordonnées.
+
+   ⚠ ET SI LA BASE NE RÉPOND PAS
+     On ne grise rien, et le tunnel redevient exactement celui d'avant.
+     Fermer la vente parce qu'une lecture a échoué coûterait plus cher
+     que le défaut qu'on corrige.
+
+   RETOUR ARRIÈRE : supprimer ce bloc. Rien d'autre n'y touche.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var SB_URL = 'https://yeuvlnlkkonxstkgdrxf.supabase.co/rest/v1/';
+  //  La même clé publique, en lecture seule, que celle déjà écrite plus
+  //  haut dans ce fichier et dans js/home.js. Rien de secret ici.
+  var SB_KEY = 'sb_publishable_oKOLGd461XVPULJR0jB5xg_O2EA1uLj';
+
+  var MARQUE  = 'data-seances-bloquee';   //  posée sur le lien
+  var ETIQ    = 'data-seances-etiquette';
+  var PHRASE  = 'data-seances-phrase';
+
+  var dates = null;        //  { codeExperience: 'AAAA-MM-JJ' }
+  var enCours = false;     //  on modifie le DOM : l'observateur doit se taire
+
+  var EN = document.documentElement.lang === 'en';
+
+  function enFrancais(iso) {
+    if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+    return EN ? iso : iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4);
+  }
+
+  function texteEtiquette(iso) {
+    return (EN ? 'From ' : 'Dès le ') + enFrancais(iso);
+  }
+
+  function textePhrase(iso) {
+    return EN
+      ? 'Sessions start on ' + enFrancais(iso) + '. Pick a later day to book this experience.'
+      : 'Les séances commencent le ' + enFrancais(iso)
+        + '. Choisissez un jour à partir de cette date pour réserver cette expérience.';
+  }
+
+  // ----------------------------------------------------------------
+  //  LA LECTURE — une seule fois, et seulement ce qui sert
+  // ----------------------------------------------------------------
+  function lire() {
+    fetch(SB_URL + 'experiences?select=id,seances_a_partir_du&seances_a_partir_du=not.is.null', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+    })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (rows) {
+        dates = {};
+        (rows || []).forEach(function (r) {
+          if (r && r.id && r.seances_a_partir_du) dates[r.id] = r.seances_a_partir_du;
+        });
+        passer();
+      })
+      .catch(function (e) {
+        //  Pas de date connue = aucune carte grisée. Le tunnel redevient
+        //  celui d'avant ce bloc, ce qui est vendable.
+        dates = {};
+        if (window.console) console.error('séances à partir du :', e);
+      });
+  }
+
+  // ----------------------------------------------------------------
+  //  CE QUE PORTE UNE CARTE
+  //
+  //  ⚠ ON LIT LE JOUR DANS LE LIEN DE LA CARTE, PAS AILLEURS.
+  //  Le bloc d'origine garde son jour dans une variable qui lui est
+  //  privée : on ne peut pas y accéder, et il ne faut pas essayer. Mais
+  //  il écrit ce même jour dans chaque lien, sous la forme
+  //  « &exp=<code>&date=AAAA-MM-JJ&n=<nombre> ». C'est donc la source la
+  //  plus sûre : elle vient de lui, elle est toujours à jour, et elle
+  //  survit à toutes ses reconstructions.
+  // ----------------------------------------------------------------
+  function infos(a) {
+    var href = a.getAttribute('href') || '';
+    var e = /[?&]exp=([^&]+)/.exec(href);
+    var d = /[?&]date=(\d{4}-\d{2}-\d{2})/.exec(href);
+    if (!e || !d) return null;
+    var code;
+    try { code = decodeURIComponent(e[1]); } catch (err) { code = e[1]; }
+    return { exp: code, date: d[1] };
+  }
+
+  function nettoyer(a) {
+    if (!a.getAttribute(MARQUE)) return;
+    a.removeAttribute(MARQUE);
+    a.removeAttribute('aria-disabled');
+    a.style.opacity = '';
+    a.style.filter = '';
+    var carte = a.parentNode;
+    var etiq = a.querySelector('[' + ETIQ + ']');
+    if (etiq && etiq.parentNode) etiq.parentNode.removeChild(etiq);
+    var ph = carte && carte.querySelector ? carte.querySelector('[' + PHRASE + ']') : null;
+    if (ph && ph.parentNode) ph.parentNode.removeChild(ph);
+  }
+
+  function bloquer(a, iso) {
+    if (a.getAttribute(MARQUE) === iso) return;   //  déjà fait, et à jour
+    nettoyer(a);
+    a.setAttribute(MARQUE, iso);
+    a.setAttribute('aria-disabled', 'true');
+    a.style.opacity = '.55';
+    a.style.filter = 'grayscale(.5)';
+
+    var tags = a.querySelector('.xcard__tags');
+    if (tags) {
+      var s = document.createElement('span');
+      s.className = 'xcard__tag';
+      s.setAttribute(ETIQ, '1');
+      s.setAttribute('style', 'background:#6B7A5E;color:#fff;');
+      s.textContent = texteEtiquette(iso);
+      tags.appendChild(s);
+    }
+
+    var carte = a.parentNode;
+    if (carte && carte.querySelector && !carte.querySelector('[' + PHRASE + ']')) {
+      var p = document.createElement('p');
+      p.setAttribute(PHRASE, '1');
+      p.setAttribute('style', 'margin:6px 2px 0;font-size:12px;line-height:1.35;opacity:.85;');
+      p.textContent = textePhrase(iso);
+      carte.appendChild(p);
+    }
+  }
+
+  function passer() {
+    if (!dates || enCours) return;
+    enCours = true;
+    try {
+      var liens = document.querySelectorAll('a.xcard[href]');
+      for (var i = 0; i < liens.length; i++) {
+        var a = liens[i];
+        var i2 = infos(a);
+        if (!i2) { nettoyer(a); continue; }
+        var iso = dates[i2.exp];
+        if (!iso || i2.date >= iso) { nettoyer(a); continue; }
+        bloquer(a, iso);
+      }
+    } finally {
+      //  ⚠ Rendre la main APRÈS le prochain tour de boucle du navigateur :
+      //  les modifications qu'on vient de faire vont réveiller
+      //  l'observateur, et on ne veut pas repartir pour un tour. Sans ce
+      //  délai, c'est la boucle sans fin.
+      setTimeout(function () { enCours = false; }, 0);
+    }
+  }
+
+  // ----------------------------------------------------------------
+  //  LE CLIC, BLOQUÉ AVANT TOUT LE MONDE
+  //  En phase de capture, pour passer avant les gestionnaires du bloc
+  //  d'origine et avant la navigation.
+  // ----------------------------------------------------------------
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest('a.xcard[' + MARQUE + ']') : null;
+    if (!a) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+
+  // ----------------------------------------------------------------
+  //  LA SURVEILLANCE
+  //  Le bloc d'origine reconstruit la grille à chaque changement de jour
+  //  ou de nombre de participants. On repasse derrière lui.
+  // ----------------------------------------------------------------
+  function surveiller() {
+    var grille = document.querySelector('[data-games], .rdate__grid') || document.body;
+    try {
+      new MutationObserver(function () { passer(); })
+        .observe(grille, { childList: true, subtree: true, attributes: true,
+                           attributeFilter: ['href'] });
+    } catch (e) {
+      //  Pas d'observateur : on repasse au moins sur les clics de jour.
+      document.addEventListener('click', function () { setTimeout(passer, 60); }, false);
+    }
+    passer();
+  }
+
+  function demarrer() {
+    //  Rien à faire sur une page qui ne porte pas ce tunnel.
+    if (!document.querySelector('a.xcard')) return;
+    lire();
+    surveiller();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+
+  //  Pour le banc d'essai.
+  window.__seancesSite = {
+    passer: passer, infos: infos, enFrancais: enFrancais,
+    poserDates: function (d) { dates = d; },
+    dates: function () { return dates; }
+  };
+})();
