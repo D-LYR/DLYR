@@ -279,7 +279,7 @@
   var PHRASE  = 'data-seances-phrase';
 
   var dates = null;        //  { codeExperience: 'AAAA-MM-JJ' }
-  var enCours = false;     //  on modifie le DOM : l'observateur doit se taire
+  var prevu = false;       //  un passage est déjà programmé
 
   var EN = document.documentElement.lang === 'en';
 
@@ -385,25 +385,51 @@
   }
 
   function passer() {
-    if (!dates || enCours) return;
-    enCours = true;
-    try {
-      var liens = document.querySelectorAll('a.xcard[href]');
-      for (var i = 0; i < liens.length; i++) {
-        var a = liens[i];
-        var i2 = infos(a);
-        if (!i2) { nettoyer(a); continue; }
-        var iso = dates[i2.exp];
-        if (!iso || i2.date >= iso) { nettoyer(a); continue; }
-        bloquer(a, iso);
-      }
-    } finally {
-      //  ⚠ Rendre la main APRÈS le prochain tour de boucle du navigateur :
-      //  les modifications qu'on vient de faire vont réveiller
-      //  l'observateur, et on ne veut pas repartir pour un tour. Sans ce
-      //  délai, c'est la boucle sans fin.
-      setTimeout(function () { enCours = false; }, 0);
+    if (!dates) return;
+    var liens = document.querySelectorAll('a.xcard[href]');
+    for (var i = 0; i < liens.length; i++) {
+      var a = liens[i];
+      var i2 = infos(a);
+      if (!i2) { nettoyer(a); continue; }
+      var iso = dates[i2.exp];
+      if (!iso || i2.date >= iso) { nettoyer(a); continue; }
+      bloquer(a, iso);
     }
+  }
+
+  /*  ⚠⚠ POURQUOI ON ATTEND LA FIN DU TOUR, ET POURQUOI C'EST ESSENTIEL.
+      CORRIGÉ LE 17/11 APRÈS UN ESSAI RATÉ EN PRODUCTION.
+
+      Un changement de jour ne produit pas UNE salve de modifications,
+      mais DEUX, au même millième de seconde :
+
+        1 · renderGames() refait toute la grille — à cet instant, les
+            cartes automatiques portent encore leur lien de FICHE, sans
+            date : il n'y a donc rien à décider ;
+        2 · syncAutoCards() réécrit leur lien avec le jour choisi — et
+            c'est seulement là que l'information existe.
+
+      Ma première version posait un verrou « je travaille, qu'on me
+      laisse » pendant toute la durée du tour, pour éviter de boucler
+      sur mes propres modifications. Il avalait la deuxième salve :
+      celle qui comptait. Napoléon n'était donc jamais grisé — et
+      pourtant tout marchait quand on modifiait un lien à la main, ce
+      qui rendait le défaut incompréhensible.
+
+      On ne verrouille donc plus rien : on REGROUPE. Toutes les salves
+      d'un même tour déclenchent un seul passage, exécuté une fois le
+      tour terminé, quand les liens ont leur forme définitive.
+
+      Et la boucle, alors ? Elle ne peut pas se produire : passer() ne
+      modifie rien s'il n'y a rien à changer — bloquer() et nettoyer()
+      se retirent d'eux-mêmes quand la carte est déjà dans l'état voulu.
+      Le passage qui suit nos propres modifications ne touche donc à
+      rien, et plus rien ne réveille l'observateur. Deux tours au
+      maximum, toujours. */
+  function demander() {
+    if (prevu) return;
+    prevu = true;
+    setTimeout(function () { prevu = false; passer(); }, 0);
   }
 
   // ----------------------------------------------------------------
@@ -426,14 +452,14 @@
   function surveiller() {
     var grille = document.querySelector('[data-games], .rdate__grid') || document.body;
     try {
-      new MutationObserver(function () { passer(); })
+      new MutationObserver(function () { demander(); })
         .observe(grille, { childList: true, subtree: true, attributes: true,
                            attributeFilter: ['href'] });
     } catch (e) {
       //  Pas d'observateur : on repasse au moins sur les clics de jour.
-      document.addEventListener('click', function () { setTimeout(passer, 60); }, false);
+      document.addEventListener('click', function () { setTimeout(demander, 60); }, false);
     }
-    passer();
+    demander();
   }
 
   function demarrer() {
@@ -451,7 +477,7 @@
 
   //  Pour le banc d'essai.
   window.__seancesSite = {
-    passer: passer, infos: infos, enFrancais: enFrancais,
+    passer: passer, demander: demander, infos: infos, enFrancais: enFrancais,
     poserDates: function (d) { dates = d; },
     dates: function () { return dates; }
   };
