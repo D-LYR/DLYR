@@ -645,6 +645,23 @@
   }
 
   /* ============================================================
+     Pixel TikTok — chargé UNIQUEMENT après consentement
+     ============================================================ */
+  var TIKTOK_PIXEL_ID = 'DC272S3C77U6OQMIFGOG';
+
+  function loadTikTokPixel() {
+    if (window.__tiktokPixelLoaded) return;
+    window.__tiktokPixelLoaded = true;
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+      ttq.load(TIKTOK_PIXEL_ID);
+      ttq.page();
+    }(window, document, 'ttq');
+  }
+
+  /* ============================================================
      Google Ads (gtag.js) — chargé UNIQUEMENT après consentement
      ============================================================ */
   var GOOGLE_ADS_ID = 'AW-18466204211';
@@ -676,16 +693,18 @@
   // « InitiateCheckout » (clic sur un bouton de réservation) part aussi vers Google Ads.
   window.DLYR_track = function (ev, params) {
     if (window.__metaPixelLoaded && window.fbq) window.fbq('track', ev, params || {});
+    // Mêmes évènements vers TikTok (InitiateCheckout et Contact sont des évènements standard TikTok)
+    if (window.__tiktokPixelLoaded && window.ttq) { try { window.ttq.track(ev, params || {}); } catch (e) {} }
     if (ev === 'InitiateCheckout') adsConversion(GOOGLE_ADS_RESERVER);
   };
 
   function analytics() {
     var KEY = 'dlyr_cookie_consent';
     try {
-      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
+      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); loadTikTokPixel(); }
     } catch (e) {}
     window.addEventListener('dlyr:consent', function (e) {
-      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
+      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); loadTikTokPixel(); }
     });
     // Clic sur un lien téléphone ou mail → évènement « Contact »
     document.addEventListener('click', function (e) {
@@ -709,7 +728,7 @@
     b.setAttribute('aria-label', 'Gestion des cookies');
     b.innerHTML =
       '<div class="cookiebar__txt"><strong>Cookies &amp; confidentialit\u00e9</strong>' +
-      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). ' +
+      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta, TikTok). ' +
       '<a href="politique-confidentialite.html#cookies">En savoir plus</a></div>' +
       '<div class="cookiebar__btns">' +
       '<button class="btn btn--lime btn--sm" data-cc="accepted">Tout accepter</button>' +
@@ -738,8 +757,8 @@
   /* ---------- « Gérer les cookies » (pied de page) : retrait / modification du consentement ---------- */
   function cookieSettings() {
     var KEY = 'dlyr_cookie_consent';
-    // Cookies posés par GTM/Google, Clarity et le pixel Meta
-    var TRACKERS = /^(_ga|_gid|_gat|_gcl|_clck|_clsk|_fbp|_fbc)/;
+    // Cookies posés par GTM/Google, Clarity, le pixel Meta et le pixel TikTok
+    var TRACKERS = /^(_ga|_gid|_gat|_gcl|_clck|_clsk|_fbp|_fbc|_ttp|_tt_|ttcsid)/;
     function clearTrackers() {
       var host = location.hostname, parts = host.split('.');
       var domains = ['', host, '.' + host];
