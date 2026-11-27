@@ -51,7 +51,7 @@ window.DLYR_EN = Object.assign(window.DLYR_EN || {}, {
 
   /* ---------- Bandeau cookies ---------- */
   "Cookies & confidentialité": "Cookies & privacy",
-  "Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta).": "We use cookies to keep the site running smoothly and, with your consent, to measure its audience (Microsoft Clarity) and to show you relevant ads (Meta).",
+  "Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta, TikTok).": "We use cookies to keep the site running smoothly and, with your consent, to measure its audience (Microsoft Clarity) and to show you relevant ads (Meta, TikTok).",
   "En savoir plus": "Learn more",
   "Tout accepter": "Accept all",
   "Gérer les cookies": "Manage cookies",
