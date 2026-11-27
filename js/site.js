@@ -1,3 +1,59 @@
+/* ==========================================================================
+   D'LYR — transmettre les étiquettes de campagne au tunnel de réservation
+   (27/11/2026)
+
+   Une publicité (TikTok, Meta, Google) amène le visiteur sur dlyr-vr.com
+   avec ?utm_source=…&utm_id=… Il clique ensuite « Réserver » et part sur
+   reservation.dlyr-vr.com : sans ce bloc, ces étiquettes se perdaient et la
+   réservation payée ne pouvait être rattachée à aucune campagne (onglets
+   Campagnes Meta / TikTok de la console).
+
+   Seules les étiquettes utm_* sont gardées : des noms et numéros de
+   campagne, pas d'identifiant de clic ni de donnée personnelle. Elles vivent
+   dans le sessionStorage de l'onglet, effacé à sa fermeture.
+
+   Les liens ne sont modifiés qu'au tout dernier moment du clic, APRÈS les
+   autres gestionnaires du site (suivi « InitiateCheckout » compris, qui
+   reconnaissent les liens à leur adresse exacte), puis remis en l'état.
+   ========================================================================== */
+(function () {
+  var CLE = 'dlyr.utm';
+  var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_term', 'utm_content'];
+  var HOTES = ['reservation.dlyr-vr.com', 'admin.dlyr-vr.com'];
+
+  try {
+    var ici = new URLSearchParams(location.search), trouve = {}, n = 0;
+    PARAMS.forEach(function (k) { var v = (ici.get(k) || '').trim(); if (v) { trouve[k] = v.slice(0, 200); n++; } });
+    if (n) sessionStorage.setItem(CLE, JSON.stringify(trouve));   // la dernière publicité cliquée l'emporte
+  } catch (e) {}
+
+  function etiquettes() { try { return JSON.parse(sessionStorage.getItem(CLE) || 'null'); } catch (e) { return null; } }
+
+  window.dlyrAvecUtm = function (url) {
+    var t = etiquettes();
+    if (!t || !url) return url;
+    try {
+      var u = new URL(url, location.href);
+      if (HOTES.indexOf(u.hostname) === -1) return url;
+      Object.keys(t).forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, t[k]); });
+      return u.toString();
+    } catch (e) { return url; }
+  };
+
+  //  Sur window, en phase de remontée : passe après les gestionnaires posés
+  //  sur document. Le navigateur suit le lien juste après, avec l'adresse
+  //  complétée ; on la remet ensuite pour les clics suivants.
+  window.addEventListener('click', function (ev) {
+    if (ev.defaultPrevented) return;
+    var a = ev.target && ev.target.closest && ev.target.closest('a[href]');
+    if (!a) return;
+    var avant = a.getAttribute('href'), apres = window.dlyrAvecUtm(a.href);
+    if (!apres || apres === a.href) return;
+    a.setAttribute('href', apres);
+    setTimeout(function () { a.setAttribute('href', avant); }, 0);
+  });
+})();
+
 /* ============================================================
    D'LYR — Site shell (nav + footer + interactions partagées)
    ============================================================ */
@@ -530,7 +586,7 @@
         var a = e.target.closest('a[href="#reserver"], a[href="' + direct + '"], [data-smeetz-open]');
         if (!a) return;
         window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
-        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = direct; }
+        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = window.dlyrAvecUtm ? window.dlyrAvecUtm(direct) : direct; }
       });
       return;
     }
@@ -559,7 +615,7 @@
       if (u) {
         e.preventDefault();
         window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
-        location.href = u;
+        location.href = window.dlyrAvecUtm ? window.dlyrAvecUtm(u) : u;
         return;
       }
       var p = currentProduct();
@@ -645,6 +701,23 @@
   }
 
   /* ============================================================
+     Pixel TikTok — chargé UNIQUEMENT après consentement
+     ============================================================ */
+  var TIKTOK_PIXEL_ID = 'DC272S3C77U6OQMIFGOG';
+
+  function loadTikTokPixel() {
+    if (window.__tiktokPixelLoaded) return;
+    window.__tiktokPixelLoaded = true;
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+      ttq.load(TIKTOK_PIXEL_ID);
+      ttq.page();
+    }(window, document, 'ttq');
+  }
+
+  /* ============================================================
      Google Ads (gtag.js) — chargé UNIQUEMENT après consentement
      ============================================================ */
   var GOOGLE_ADS_ID = 'AW-18466204211';
@@ -676,16 +749,18 @@
   // « InitiateCheckout » (clic sur un bouton de réservation) part aussi vers Google Ads.
   window.DLYR_track = function (ev, params) {
     if (window.__metaPixelLoaded && window.fbq) window.fbq('track', ev, params || {});
+    // Mêmes évènements vers TikTok (InitiateCheckout et Contact sont des évènements standard TikTok)
+    if (window.__tiktokPixelLoaded && window.ttq) { try { window.ttq.track(ev, params || {}); } catch (e) {} }
     if (ev === 'InitiateCheckout') adsConversion(GOOGLE_ADS_RESERVER);
   };
 
   function analytics() {
     var KEY = 'dlyr_cookie_consent';
     try {
-      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
+      if (localStorage.getItem(KEY) === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); loadTikTokPixel(); }
     } catch (e) {}
     window.addEventListener('dlyr:consent', function (e) {
-      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); }
+      if (e.detail === 'accepted') { loadGTM(); loadGoogleAds(); loadClarity(); loadMetaPixel(); loadTikTokPixel(); }
     });
     // Clic sur un lien téléphone ou mail → évènement « Contact »
     document.addEventListener('click', function (e) {
@@ -709,7 +784,7 @@
     b.setAttribute('aria-label', 'Gestion des cookies');
     b.innerHTML =
       '<div class="cookiebar__txt"><strong>Cookies &amp; confidentialit\u00e9</strong>' +
-      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta). ' +
+      'Nous utilisons des cookies pour le bon fonctionnement du site et, avec votre accord, pour mesurer son audience (Microsoft Clarity) et vous proposer des publicités adaptées (Meta, TikTok). ' +
       '<a href="politique-confidentialite.html#cookies">En savoir plus</a></div>' +
       '<div class="cookiebar__btns">' +
       '<button class="btn btn--lime btn--sm" data-cc="accepted">Tout accepter</button>' +
@@ -738,8 +813,8 @@
   /* ---------- « Gérer les cookies » (pied de page) : retrait / modification du consentement ---------- */
   function cookieSettings() {
     var KEY = 'dlyr_cookie_consent';
-    // Cookies posés par GTM/Google, Clarity et le pixel Meta
-    var TRACKERS = /^(_ga|_gid|_gat|_gcl|_clck|_clsk|_fbp|_fbc)/;
+    // Cookies posés par GTM/Google, Clarity, le pixel Meta et le pixel TikTok
+    var TRACKERS = /^(_ga|_gid|_gat|_gcl|_clck|_clsk|_fbp|_fbc|_ttp|_tt_|ttcsid)/;
     function clearTrackers() {
       var host = location.hostname, parts = host.split('.');
       var domains = ['', host, '.' + host];
