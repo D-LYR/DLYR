@@ -1,3 +1,59 @@
+/* ==========================================================================
+   D'LYR — transmettre les étiquettes de campagne au tunnel de réservation
+   (27/11/2026)
+
+   Une publicité (TikTok, Meta, Google) amène le visiteur sur dlyr-vr.com
+   avec ?utm_source=…&utm_id=… Il clique ensuite « Réserver » et part sur
+   reservation.dlyr-vr.com : sans ce bloc, ces étiquettes se perdaient et la
+   réservation payée ne pouvait être rattachée à aucune campagne (onglets
+   Campagnes Meta / TikTok de la console).
+
+   Seules les étiquettes utm_* sont gardées : des noms et numéros de
+   campagne, pas d'identifiant de clic ni de donnée personnelle. Elles vivent
+   dans le sessionStorage de l'onglet, effacé à sa fermeture.
+
+   Les liens ne sont modifiés qu'au tout dernier moment du clic, APRÈS les
+   autres gestionnaires du site (suivi « InitiateCheckout » compris, qui
+   reconnaissent les liens à leur adresse exacte), puis remis en l'état.
+   ========================================================================== */
+(function () {
+  var CLE = 'dlyr.utm';
+  var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_term', 'utm_content'];
+  var HOTES = ['reservation.dlyr-vr.com', 'admin.dlyr-vr.com'];
+
+  try {
+    var ici = new URLSearchParams(location.search), trouve = {}, n = 0;
+    PARAMS.forEach(function (k) { var v = (ici.get(k) || '').trim(); if (v) { trouve[k] = v.slice(0, 200); n++; } });
+    if (n) sessionStorage.setItem(CLE, JSON.stringify(trouve));   // la dernière publicité cliquée l'emporte
+  } catch (e) {}
+
+  function etiquettes() { try { return JSON.parse(sessionStorage.getItem(CLE) || 'null'); } catch (e) { return null; } }
+
+  window.dlyrAvecUtm = function (url) {
+    var t = etiquettes();
+    if (!t || !url) return url;
+    try {
+      var u = new URL(url, location.href);
+      if (HOTES.indexOf(u.hostname) === -1) return url;
+      Object.keys(t).forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, t[k]); });
+      return u.toString();
+    } catch (e) { return url; }
+  };
+
+  //  Sur window, en phase de remontée : passe après les gestionnaires posés
+  //  sur document. Le navigateur suit le lien juste après, avec l'adresse
+  //  complétée ; on la remet ensuite pour les clics suivants.
+  window.addEventListener('click', function (ev) {
+    if (ev.defaultPrevented) return;
+    var a = ev.target && ev.target.closest && ev.target.closest('a[href]');
+    if (!a) return;
+    var avant = a.getAttribute('href'), apres = window.dlyrAvecUtm(a.href);
+    if (!apres || apres === a.href) return;
+    a.setAttribute('href', apres);
+    setTimeout(function () { a.setAttribute('href', avant); }, 0);
+  });
+})();
+
 /* ============================================================
    D'LYR — Site shell (nav + footer + interactions partagées)
    ============================================================ */
@@ -530,7 +586,7 @@
         var a = e.target.closest('a[href="#reserver"], a[href="' + direct + '"], [data-smeetz-open]');
         if (!a) return;
         window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
-        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = direct; }
+        if (a.getAttribute('href') !== direct) { e.preventDefault(); location.href = window.dlyrAvecUtm ? window.dlyrAvecUtm(direct) : direct; }
       });
       return;
     }
@@ -559,7 +615,7 @@
       if (u) {
         e.preventDefault();
         window.DLYR_track('InitiateCheckout', { content_name: pageSlug() });
-        location.href = u;
+        location.href = window.dlyrAvecUtm ? window.dlyrAvecUtm(u) : u;
         return;
       }
       var p = currentProduct();
